@@ -3,7 +3,6 @@ package com.niyue.coding.interviewstreet.luckynumbers;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -23,17 +22,20 @@ public class Solution {
 
     public void solve() {
         getInput();
+
         for (int i = 0; i < T; i++) {
             long start = startNumbers[i];
             long end = endNumbers[i];
             long count = 0;
             for (long j = start; j <= end; j++) {
+                List<Integer> digits = digits(j);
+                long fingerPrint = fingerPrint(digits);
                 boolean isLucky = false;
-                if (solution.containsKey(j)) {
-                    isLucky = solution.get(j);
+                if (solution.containsKey(fingerPrint)) {
+                    isLucky = solution.get(fingerPrint);
                 } else {
-                    isLucky = isLuckyNumber(j);
-                    solution.put(j, isLucky);
+                    isLucky = isLuckyNumber(digits);
+                    solution.put(fingerPrint, isLucky);
                 }
                 if (isLucky) {
                     count++;
@@ -43,35 +45,42 @@ public class Solution {
         }
     }
 
-    private boolean isLuckyNumber(long number) {
-        List<Integer> digits = digits(number);
+    private boolean isLuckyNumber(List<Integer> digits) {
         return isPrime(digitsSum(digits)) && isPrime(digitsSquareSum(digits));
     }
 
     private List<Integer> digits(long number) {
-        List<Integer> digits = new LinkedList<Integer>();
+        List<Integer> digits = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         long remain = number;
-        while (remain > 10) {
+        while (remain >= 10) {
             int mod = (int) (remain % 10);
-            digits.add(mod);
+            digits.set(mod, digits.get(mod) + 1);
             remain = (remain - mod) / 10;
         }
-        digits.add((int) remain);
+        digits.set((int) remain, digits.get((int) remain) + 1);
         return digits;
+    }
+
+    private long fingerPrint(List<Integer> digits) {
+        long fingerPrint = 0;
+        for (int i = 1; i < 10; i++) {
+            fingerPrint = fingerPrint * 10 + digits.get(i);
+        }
+        return fingerPrint;
     }
 
     private int digitsSum(List<Integer> digits) {
         int sum = 0;
-        for (int digit : digits) {
-            sum += digit;
+        for (int i = 1; i < 10; i++) {
+            sum += i * digits.get(i);
         }
         return sum;
     }
 
     private int digitsSquareSum(List<Integer> digits) {
         int sum = 0;
-        for (int digit : digits) {
-            sum += digit * digit;
+        for (int i = 1; i < 10; i++) {
+            sum += squares[i - 1] * digits.get(i);
         }
         return sum;
     }
@@ -90,6 +99,9 @@ public class Solution {
             endNumbers[i] = scanner.nextLong();
         }
     }
+
+    private static final int[] squares = new int[] { 1, 4, 9, 16, 25, 36, 49,
+            64, 81 };
 
     private static final Set<Integer> primes = new HashSet<Integer>(
             Arrays.asList(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
