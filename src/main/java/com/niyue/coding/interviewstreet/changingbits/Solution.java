@@ -1,10 +1,11 @@
 package com.niyue.coding.interviewstreet.changingbits;
 
+import java.util.BitSet;
 import java.util.Scanner;
 
 public class Solution {
     private int N, Q;
-    private int[] A, B, C;
+    private BitSet A, B;
     private Scanner scanner = new Scanner(System.in);
 
     private enum BitOp {
@@ -32,56 +33,28 @@ public class Solution {
             BitOp op = BitOp.fromValue(scanner.next());
             int bit = scanner.nextInt();
             if (op == BitOp.GET_C) {
-                System.out.print(C[bit]);
+                System.out.print(calc(A, B, bit));
             } else {
-                int bitSet = scanner.nextInt();
-                int[] number = A;
-                if (op == BitOp.SET_B) {
-                    number = B;
-                }
-                if (bitSet > number[bit]) {
-                    int lowCarry = (A[bit] + B[bit]) % 2 == C[bit] ? 0 : 1;
-                    number[bit] = 1;
-                    carryBit(bit, true, lowCarry);
-                } else if (bitSet < number[bit]) {
-                    int lowCarry = (A[bit] + B[bit]) % 2 == C[bit] ? 0 : 1;
-                    number[bit] = 0;
-                    carryBit(bit, false, lowCarry);
-                }
-                // ignore if bitSet == number[bit]
+                BitSet number = op == BitOp.SET_A ? A : B;
+                boolean bitSet = scanner.nextInt() == 1;
+                number.set(bit, bitSet);
             }
         }
     }
 
-    private void carryBit(int bit, boolean increase, int lowCarry) {
-        int carry = lowCarry;
-        int i = bit;
-        if (increase) {
-            for (; i < N; i++) {
-                int sum = A[i] + B[i] + carry;
-                C[i] = sum % 2;
-                if (sum < 2) {
-                    carry = 0;
-                    break;
-                } else {
-                    carry = 1;
-                }
-            }
-        } else {
-            for (; i < N; i++) {
-                int sum = A[i] + B[i] + carry;
-                C[i] = sum % 2;
-                if (sum < 2) {
-                    carry = 0;
-                } else {
-                    carry = 1;
-                    break;
-                }
+    private int calc(BitSet a, BitSet b, int bit) {
+        boolean higherSum = bit == N ? false : a.get(bit) != b.get(bit);
+        for (int i = bit - 1; i >= 0; i--) {
+            boolean aBitSet = a.get(i);
+            boolean bBitSet = b.get(i);
+            if (!aBitSet && !bBitSet) {
+                break;
+            } else if (aBitSet && bBitSet) {
+                higherSum = !higherSum;
+                break;
             }
         }
-        if (i == N) {
-            C[i] = carry;
-        }
+        return higherSum ? 1 : 0;
     }
 
     private void getInput() {
@@ -91,26 +64,14 @@ public class Solution {
         String b = scanner.next();
         A = asBinary(a, N);
         B = asBinary(b, N);
-        C = add(A, B);
     }
 
-    private int[] asBinary(String number, int size) {
-        int[] binary = new int[size];
+    private BitSet asBinary(String number, int size) {
+        BitSet binary = new BitSet(size);
         for (int i = 0; i < number.length(); i++) {
-            binary[size - i - 1] = number.charAt(i) - '0';
+            boolean bitSet = (number.charAt(i) - '0') == 1;
+            binary.set(size - i - 1, bitSet);
         }
         return binary;
-    }
-
-    private int[] add(int[] a, int[] b) {
-        int[] sums = new int[N + 1];
-        int carry = 0;
-        for (int i = 0; i < N; i++) {
-            int sum = a[i] + b[i] + carry;
-            sums[i] = sum % 2;
-            carry = sum > 1 ? 1 : 0;
-        }
-        sums[N] = carry;
-        return sums;
     }
 }
