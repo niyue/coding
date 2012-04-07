@@ -1,17 +1,17 @@
 package com.niyue.coding.interviewstreet.changingbits;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.NavigableSet;
 import java.util.Scanner;
-import java.util.Set;
+import java.util.TreeSet;
 
 
 public class Solution {
     private int N, Q;
     private int[] A, B;
     private Scanner scanner = new Scanner(System.in);
-    private List<Set<Integer>> equalBits;
+    private List<NavigableSet<Integer>> equalBits;
     private int noOfPartitions;
     
     public static void main(String[] args) throws java.lang.Exception {
@@ -61,18 +61,10 @@ public class Solution {
         if(bit > 0) {
             int partition = (bit-1) / noOfPartitions;
             for(int i=partition;i>=0;i--) {
-                Set<Integer> equalBitsInPartition = equalBits.get(i);
-                if(!equalBitsInPartition.isEmpty()) {
-                    for(Integer equalBit : equalBitsInPartition) {
-                        if(equalBit < bit) {
-                            if(maxLowerEqualBit == null || equalBit > maxLowerEqualBit) {
-                                maxLowerEqualBit = equalBit;
-                            }
-                        }
-                    }
-                    if(maxLowerEqualBit != null) {
-                        break;
-                    }
+                NavigableSet<Integer> equalBitsInPartition = equalBits.get(i);
+                maxLowerEqualBit = equalBitsInPartition.lower(bit);
+                if(maxLowerEqualBit != null) {
+                    break;
                 }
             }
         }
@@ -99,11 +91,11 @@ public class Solution {
         return binary;
     }
     
-    private List<Set<Integer>> findEqualBits(int[] a, int[] b) {
-        List<Set<Integer>> bits = new ArrayList<Set<Integer>>(noOfPartitions);
+    private List<NavigableSet<Integer>> findEqualBits(int[] a, int[] b) {
+        List<NavigableSet<Integer>> bits = new ArrayList<NavigableSet<Integer>>(noOfPartitions);
         int partitionSize = noOfPartitions;
         for(int i=0;i<noOfPartitions;i++) {
-            bits.add(new LinkedHashSet<Integer>());
+            bits.add(new TreeSet<Integer>());
         }
         for(int i=0;i<N;i++) {
             if(a[i] == b[i]) {
