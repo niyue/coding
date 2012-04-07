@@ -44,7 +44,7 @@ class Solution {
 
     private void printRouteCount(long routeCount) {
         String routeCountValue = routeCount == INFINITE ? "INFINITE PATHS"
-                : String.valueOf(routeCount % 1000000000);
+                : String.valueOf(routeCount);
         System.out.println(routeCountValue);
     }
 
@@ -75,7 +75,7 @@ class Solution {
             routeTable.put(start, routeCount);
         }
         currentRoute.remove(start);
-        return routeCount;
+        return routeCount % 1000000000;
     }
 
     private Map<Integer, Map<Integer, Integer>> getInputRoutes() {
