@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 class Solution {
     private int T;
-    private Map<String, Map<String, Long>> similarities = new HashMap<String, Map<String, Long>>();
+    private Map<Integer, Map<Integer, Long>> similarities;
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -18,49 +18,50 @@ class Solution {
     public void solve() {
         List<String> strings = getInput();
         for (String string : strings) {
+            similarities = new HashMap<Integer, Map<Integer, Long>>();
             System.out.println(similarity(string));
         }
     }
 
     private long similarity(String string) {
         long count = 0;
-        for (int i = 0; i < string.length(); i++) {
-            long suffixSimilarity = similarity(string, string.substring(i));
+        for (int i = string.length() - 1; i >= 0; i--) {
+            long suffixSimilarity = similarity(string, 0, i);
             count += suffixSimilarity;
         }
         return count;
     }
 
-    private long similarity(String string, String suffix) {
+    private long similarity(String string, int startIndex, int suffixIndex) {
         long similarity = 0;
-        if (hasSolution(string, suffix)) {
-            similarity = similarities.get(string).get(suffix);
+        if (hasSolution(startIndex, suffixIndex)) {
+            similarity = similarities.get(startIndex).get(suffixIndex);
         } else {
-            if (suffix.length() > 0) {
-                if (string.charAt(0) == suffix.charAt(0)) {
-                    similarity = 1 + similarity(string.substring(1),
-                            suffix.substring(1));
+            if (string.length() > suffixIndex) {
+                if (string.charAt(startIndex) == string.charAt(suffixIndex)) {
+                    similarity = 1 + similarity(string, startIndex + 1,
+                            suffixIndex + 1);
                 }
-                setSolution(string, suffix, similarity);
+                setSolution(startIndex, suffixIndex, similarity);
             }
         }
 
         return similarity;
     }
 
-    private boolean hasSolution(String string, String suffix) {
+    private boolean hasSolution(int startIndex, int suffixIndex) {
         boolean hasSolution = false;
-        if (similarities.containsKey(string)) {
-            hasSolution = similarities.get(string).containsKey(suffix);
+        if (similarities.containsKey(startIndex)) {
+            hasSolution = similarities.get(startIndex).containsKey(suffixIndex);
         }
         return hasSolution;
     }
 
-    private void setSolution(String string, String suffix, long similarity) {
-        if (!similarities.containsKey(string)) {
-            similarities.put(string, new HashMap<String, Long>());
+    private void setSolution(int startIndex, int suffixIndex, long similarity) {
+        if (!similarities.containsKey(startIndex)) {
+            similarities.put(startIndex, new HashMap<Integer, Long>());
         }
-        similarities.get(string).put(suffix, similarity);
+        similarities.get(startIndex).put(suffixIndex, similarity);
     }
 
     private List<String> getInput() {
