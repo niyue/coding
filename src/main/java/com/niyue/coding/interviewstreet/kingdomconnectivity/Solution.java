@@ -2,15 +2,14 @@ package com.niyue.coding.interviewstreet.kingdomconnectivity;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
 class Solution {
     private static final long INFINITE = -1;
-    private Map<Integer, List<Integer>> routes;
+    // source => target (number of routes to the same target)
+    private Map<Integer, Map<Integer, Integer>> routes;
     private Set<Integer> currentRoute = new HashSet<Integer>();
     private Set<Integer> loopNodes = new HashSet<Integer>();
     private Set<Integer> reachableNodes = new HashSet<Integer>();
@@ -43,23 +42,24 @@ class Solution {
     private long routeCount(int start, int end, Set<Integer> currentRoute) {
         currentRoute.add(start);
         long routeCount = 0;
-        if(routeTable.containsKey(start)) {
+        if (routeTable.containsKey(start)) {
             routeCount = routeTable.get(start);
-        }
-        else {
-            List<Integer> connections = routes.get(start);
+        } else {
+            Map<Integer, Integer> connections = routes.get(start);
             if (connections != null) {
-                for (Integer connectedNode : connections) {
+                for (Integer connectedNode : connections.keySet()) {
                     if (currentRoute.contains(connectedNode)) {
                         loopNodes.add(connectedNode);
                     } else if (connectedNode == end) {
-                        routeCount++;
-                        reachableNodes.add(connectedNode);
+                        routeCount += connections.get(connectedNode); // 1 * no
+                                                                      // of
+                                                                      // routes
                         reachableNodes.addAll(currentRoute);
                     } else {
-                        long connectedNodeCount = routeCount(connectedNode, end,
-                                currentRoute);
-                        routeCount += connectedNodeCount;
+                        long connectedNodeCount = routeCount(connectedNode,
+                                end, currentRoute);
+                        routeCount += connectedNodeCount
+                                * connections.get(connectedNode);
                     }
                 }
             }
@@ -69,18 +69,23 @@ class Solution {
         return routeCount;
     }
 
-    private Map<Integer, List<Integer>> getInputRoutes() {
+    private Map<Integer, Map<Integer, Integer>> getInputRoutes() {
         Scanner scanner = new Scanner(System.in);
         N = scanner.nextInt();
         M = scanner.nextInt();
-        Map<Integer, List<Integer>> connections = new HashMap<Integer, List<Integer>>();
+        Map<Integer, Map<Integer, Integer>> connections = new HashMap<Integer, Map<Integer, Integer>>();
         for (int i = 0; i < M; i++) {
             int source = scanner.nextInt();
             int dest = scanner.nextInt();
             if (!connections.containsKey(source)) {
-                connections.put(source, new LinkedList<Integer>());
+                connections.put(source, new HashMap<Integer, Integer>());
             }
-            connections.get(source).add(dest);
+            Map<Integer, Integer> sourceToTargetMap = connections.get(source);
+            if (!sourceToTargetMap.containsKey(dest)) {
+                sourceToTargetMap.put(dest, 1);
+            } else {
+                sourceToTargetMap.put(dest, sourceToTargetMap.get(dest) + 1);
+            }
         }
 
         return connections;
