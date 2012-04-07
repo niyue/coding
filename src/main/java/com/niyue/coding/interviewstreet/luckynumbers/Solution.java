@@ -1,9 +1,11 @@
 package com.niyue.coding.interviewstreet.luckynumbers;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -12,6 +14,7 @@ public class Solution {
     private int T;
     private long[] startNumbers;
     private long[] endNumbers;
+    private Map<Long, Boolean> solution = new HashMap<Long, Boolean>();
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -25,7 +28,14 @@ public class Solution {
             long end = endNumbers[i];
             long count = 0;
             for (long j = start; j <= end; j++) {
-                if (isLuckyNumber(j)) {
+                boolean isLucky = false;
+                if (solution.containsKey(j)) {
+                    isLucky = solution.get(j);
+                } else {
+                    isLucky = isLuckyNumber(j);
+                    solution.put(j, isLucky);
+                }
+                if (isLucky) {
                     count++;
                 }
             }
@@ -39,7 +49,7 @@ public class Solution {
     }
 
     private List<Integer> digits(long number) {
-        List<Integer> digits = new ArrayList<Integer>();
+        List<Integer> digits = new LinkedList<Integer>();
         long remain = number;
         while (remain > 10) {
             int mod = (int) (remain % 10);
