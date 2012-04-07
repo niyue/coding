@@ -30,6 +30,15 @@ class Solution {
                 break;
             }
         }
+        if (routes.containsKey(N)) {
+            for (Integer node : routes.get(N).keySet()) {
+                long count = routeCount(node, N, new HashSet<Integer>());
+                if (count > 0) {
+                    routeCount = INFINITE;
+                    break;
+                }
+            }
+        }
         printRouteCount(routeCount);
     }
 
