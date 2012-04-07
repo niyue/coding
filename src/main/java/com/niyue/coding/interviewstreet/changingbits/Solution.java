@@ -7,20 +7,6 @@ public class Solution {
     private int[] A, B;
     private Scanner scanner = new Scanner(System.in);
 
-    private enum BitOp {
-        SET_A, SET_B, GET_C;
-        public static BitOp fromValue(String op) {
-            BitOp bitOp = GET_C;
-            char lastChar = op.charAt(op.length() - 1);
-            if (lastChar == 'a') {
-                bitOp = SET_A;
-            } else if (lastChar == 'b') {
-                bitOp = SET_B;
-            }
-            return bitOp;
-        }
-    }
-
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
         sl.solve();
@@ -29,12 +15,13 @@ public class Solution {
     public void solve() {
         getInput();
         for (int i = 0; i < Q; i++) {
-            BitOp op = BitOp.fromValue(scanner.next());
+            String op = scanner.next();
+            char opCode = op.charAt(op.length() - 1);
             int bit = scanner.nextInt();
-            if (op == BitOp.GET_C) {
+            if (opCode == 'c') {
                 System.out.print(calc(A, B, bit));
             } else {
-                int[] number = op == BitOp.SET_A ? A : B;
+                int[] number = opCode == 'a' ? A : B;
                 int bitSet = scanner.nextInt();
                 number[bit] = bitSet;
             }
@@ -45,10 +32,12 @@ public class Solution {
         int higherSum = bit == N ? 0 : a[bit] + b[bit];
         for (int i = bit - 1; i >= 0; i--) {
             int sum = a[i] + b[i];
-            if (sum == 0) {
+            if (sum == 1) {
+                continue;
+            } else if (sum == 0) {
                 break;
-            } else if (sum == 2) {
-                higherSum += 1;
+            } else {
+                higherSum++;
                 break;
             }
         }
@@ -60,14 +49,15 @@ public class Solution {
         Q = scanner.nextInt();
         String a = scanner.next();
         String b = scanner.next();
-        A = asBinary(a, N);
-        B = asBinary(b, N);
+        A = asBinary(a);
+        B = asBinary(b);
     }
 
-    private int[] asBinary(String number, int size) {
-        int[] binary = new int[size];
+    private int[] asBinary(String number) {
+        int[] binary = new int[N];
+        int nMinusOne = N - 1;
         for (int i = 0; i < number.length(); i++) {
-            binary[size - i - 1] = number.charAt(i) - '0';
+            binary[nMinusOne - i] = number.charAt(i) - '0';
         }
         return binary;
     }
