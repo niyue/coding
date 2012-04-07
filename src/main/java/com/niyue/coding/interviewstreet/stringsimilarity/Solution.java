@@ -25,35 +25,42 @@ class Solution {
     private long similarity(String string) {
         long count = 0;
         for (int i = 0; i < string.length(); i++) {
-            boolean found = false;
-            String suffix = string.substring(i);
-            if (similarities.containsKey(string)) {
-                if (similarities.get(string).containsKey(suffix)) {
-                    found = true;
-                }
-            } else {
-                similarities.put(string, new HashMap<String, Long>());
-            }
-            long suffixSimilarity = found ? similarities.get(string)
-                    .get(suffix) : similarity(string, i);
-            if (!found) {
-                similarities.get(string).put(suffix, suffixSimilarity);
-            }
+            long suffixSimilarity = similarity(string, string.substring(i));
             count += suffixSimilarity;
         }
         return count;
     }
 
-    private long similarity(String string, int suffixIndex) {
+    private long similarity(String string, String suffix) {
         long similarity = 0;
-        for (int i = 0; i < string.length() - suffixIndex; i++) {
-            if (string.charAt(i) == string.charAt(suffixIndex + i)) {
-                similarity++;
-            } else {
-                break;
+        if (hasSolution(string, suffix)) {
+            similarity = similarities.get(string).get(suffix);
+        } else {
+            if (suffix.length() > 0) {
+                if (string.charAt(0) == suffix.charAt(0)) {
+                    similarity = 1 + similarity(string.substring(1),
+                            suffix.substring(1));
+                }
+                setSolution(string, suffix, similarity);
             }
         }
+
         return similarity;
+    }
+
+    private boolean hasSolution(String string, String suffix) {
+        boolean hasSolution = false;
+        if (similarities.containsKey(string)) {
+            hasSolution = similarities.get(string).containsKey(suffix);
+        }
+        return hasSolution;
+    }
+
+    private void setSolution(String string, String suffix, long similarity) {
+        if (!similarities.containsKey(string)) {
+            similarities.put(string, new HashMap<String, Long>());
+        }
+        similarities.get(string).put(suffix, similarity);
     }
 
     private List<String> getInput() {
