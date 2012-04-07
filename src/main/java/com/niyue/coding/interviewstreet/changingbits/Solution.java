@@ -31,17 +31,14 @@ public class Solution {
     private int calc(int[] a, int[] b, int bit) {
         int higherSum = bit == N ? 0 : a[bit] + b[bit];
         for (int i = bit - 1; i >= 0; i--) {
-            int sum = a[i] + b[i];
-            if (sum == 1) {
-                continue;
-            } else if (sum == 0) {
-                break;
-            } else {
-                higherSum++;
+            if (a[i] == b[i]) {
+                if (a[i] == 1) {
+                    higherSum++;
+                }
                 break;
             }
         }
-        return higherSum % 2;
+        return higherSum & 1;
     }
 
     private void getInput() {
