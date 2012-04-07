@@ -14,6 +14,7 @@ class Solution {
     private Set<Integer> currentRoute = new HashSet<Integer>();
     private Set<Integer> loopNodes = new HashSet<Integer>();
     private Set<Integer> reachableNodes = new HashSet<Integer>();
+    private Map<Integer, Long> routeTable = new HashMap<Integer, Long>();
     private int N, M;
 
     public static void main(String[] args) throws java.lang.Exception {
@@ -41,23 +42,28 @@ class Solution {
 
     private long routeCount(int start, int end, Set<Integer> currentRoute) {
         currentRoute.add(start);
-
-        List<Integer> connections = routes.get(start);
         long routeCount = 0;
-        if (connections != null) {
-            for (Integer connectedNode : connections) {
-                if (currentRoute.contains(connectedNode)) {
-                    loopNodes.add(connectedNode);
-                } else if (connectedNode == end) {
-                    routeCount++;
-                    reachableNodes.add(connectedNode);
-                    reachableNodes.addAll(currentRoute);
-                } else {
-                    long connectedNodeCount = routeCount(connectedNode, end,
-                            currentRoute);
-                    routeCount += connectedNodeCount;
+        if(routeTable.containsKey(start)) {
+            routeCount = routeTable.get(start);
+        }
+        else {
+            List<Integer> connections = routes.get(start);
+            if (connections != null) {
+                for (Integer connectedNode : connections) {
+                    if (currentRoute.contains(connectedNode)) {
+                        loopNodes.add(connectedNode);
+                    } else if (connectedNode == end) {
+                        routeCount++;
+                        reachableNodes.add(connectedNode);
+                        reachableNodes.addAll(currentRoute);
+                    } else {
+                        long connectedNodeCount = routeCount(connectedNode, end,
+                                currentRoute);
+                        routeCount += connectedNodeCount;
+                    }
                 }
             }
+            routeTable.put(start, routeCount);
         }
         currentRoute.remove(start);
         return routeCount;
