@@ -1,11 +1,10 @@
 package com.niyue.coding.interviewstreet.changingbits;
 
-import java.util.BitSet;
 import java.util.Scanner;
 
 public class Solution {
     private int N, Q;
-    private BitSet A, B;
+    private int[] A, B;
     private Scanner scanner = new Scanner(System.in);
 
     private enum BitOp {
@@ -35,26 +34,25 @@ public class Solution {
             if (op == BitOp.GET_C) {
                 System.out.print(calc(A, B, bit));
             } else {
-                BitSet number = op == BitOp.SET_A ? A : B;
-                boolean bitSet = scanner.nextInt() == 1;
-                number.set(bit, bitSet);
+                int[] number = op == BitOp.SET_A ? A : B;
+                int bitSet = scanner.nextInt();
+                number[bit] = bitSet;
             }
         }
     }
 
-    private int calc(BitSet a, BitSet b, int bit) {
-        boolean higherSum = bit == N ? false : a.get(bit) != b.get(bit);
+    private int calc(int[] a, int[] b, int bit) {
+        int higherSum = bit == N ? 0 : a[bit] + b[bit];
         for (int i = bit - 1; i >= 0; i--) {
-            boolean aBitSet = a.get(i);
-            boolean bBitSet = b.get(i);
-            if (!aBitSet && !bBitSet) {
+            int sum = a[i] + b[i];
+            if (sum == 0) {
                 break;
-            } else if (aBitSet && bBitSet) {
-                higherSum = !higherSum;
+            } else if (sum == 2) {
+                higherSum += 1;
                 break;
             }
         }
-        return higherSum ? 1 : 0;
+        return higherSum % 2;
     }
 
     private void getInput() {
@@ -66,11 +64,10 @@ public class Solution {
         B = asBinary(b, N);
     }
 
-    private BitSet asBinary(String number, int size) {
-        BitSet binary = new BitSet(size);
+    private int[] asBinary(String number, int size) {
+        int[] binary = new int[size];
         for (int i = 0; i < number.length(); i++) {
-            boolean bitSet = (number.charAt(i) - '0') == 1;
-            binary.set(size - i - 1, bitSet);
+            binary[size - i - 1] = number.charAt(i) - '0';
         }
         return binary;
     }
