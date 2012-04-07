@@ -1,11 +1,14 @@
 package com.niyue.coding.interviewstreet.changingbits;
 
+import java.util.NavigableSet;
 import java.util.Scanner;
+import java.util.TreeSet;
 
 public class Solution {
     private int N, Q;
     private int[] A, B;
     private Scanner scanner = new Scanner(System.in);
+    private NavigableSet<Integer> equalBits;
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -23,19 +26,24 @@ public class Solution {
             } else {
                 int[] number = opCode == 'a' ? A : B;
                 int bitSet = scanner.nextInt();
-                number[bit] = bitSet;
+                if (number[bit] != bitSet) {
+                    number[bit] = bitSet;
+                    if (A[bit] == B[bit]) {
+                        equalBits.add(bit);
+                    } else {
+                        equalBits.remove(bit);
+                    }
+                }
             }
         }
     }
 
     private int calc(int[] a, int[] b, int bit) {
         int higherSum = bit == N ? 0 : a[bit] + b[bit];
-        for (int i = bit - 1; i >= 0; i--) {
-            if (a[i] == b[i]) {
-                if (a[i] == 1) {
-                    higherSum++;
-                }
-                break;
+        Integer equalBit = equalBits.lower(bit);
+        if (equalBit != null) {
+            if (a[equalBit] == 1) {
+                higherSum++;
             }
         }
         return higherSum & 1;
@@ -48,14 +56,24 @@ public class Solution {
         String b = scanner.next();
         A = asBinary(a);
         B = asBinary(b);
+        equalBits = findEqualBits(A, B);
     }
 
     private int[] asBinary(String number) {
         int[] binary = new int[N];
-        int nMinusOne = N - 1;
         for (int i = 0; i < number.length(); i++) {
-            binary[nMinusOne - i] = number.charAt(i) - '0';
+            binary[N - 1 - i] = number.charAt(i) - '0';
         }
         return binary;
+    }
+
+    private NavigableSet<Integer> findEqualBits(int[] a, int[] b) {
+        NavigableSet<Integer> bits = new TreeSet<Integer>();
+        for (int i = 0; i < N; i++) {
+            if (a[i] == b[i]) {
+                bits.add(i);
+            }
+        }
+        return bits;
     }
 }
