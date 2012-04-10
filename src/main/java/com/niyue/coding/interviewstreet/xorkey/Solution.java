@@ -1,5 +1,7 @@
 package com.niyue.coding.interviewstreet.xorkey;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Scanner;
 import java.util.TreeSet;
@@ -9,6 +11,9 @@ public class Solution {
 	private int T;
 	private int N, Q;
 	private int[] X;
+	private Map<Integer, int[]> numberBitsMap = new HashMap<Integer, int[]>();
+	private final static int MAX_NUM_BITS = 15;
+	private final static int MAX_BIT_INDEX = MAX_NUM_BITS - 1;
 	
 	public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -24,8 +29,8 @@ public class Solution {
 				int number = scanner.nextInt();
 				int min = scanner.nextInt()-1;
 				int max = scanner.nextInt()-1;
-				int[] bits = asBinary(number);
-				int maxXorKey = query(root, min, max, bits, 14);
+				int[] bits = getBits(number);
+				int maxXorKey = query(root, min, max, bits, MAX_BIT_INDEX);
 				int maxXor = maxXorKey ^ number;
 				System.out.println(maxXor);
 			}
@@ -64,21 +69,10 @@ public class Solution {
 		Node root = new Node();
 		for(int i=0;i<N;i++) {
 			int key = X[i];
-			int[] keyBits = asBinary(key);
-			insert(root, keyBits, 14, i);
+			int[] keyBits = getBits(key);
+			insert(root, keyBits, MAX_BIT_INDEX, i);
 		}
 		return root;
-	}
-	
-	private int[] asBinary(int key) {
-		int[] bits = new int[15];
-		int i = 0;
-		while(key > 0) {
-			bits[i] = key % 2;
-			key = key >> 1;
-        	i++;
-		}
-		return bits;
 	}
 	
 	private void insert(Node node, int[] keyBits, int bitPosition, int keyIndex) {
@@ -128,10 +122,28 @@ public class Solution {
 		public void setValue(int value) {
 			this.value = value;
 		}
-
-		@Override
-		public String toString() {
-			return String.format("{%s, %s}", keyIndexes[0], keyIndexes[1]);
-		}
 	}
+	
+	private int[] getBits(int number) {
+        int[] bits = null;
+        if(numberBitsMap.containsKey(number)) {
+            bits = numberBitsMap.get(number);
+        }
+        else {
+            bits = asBinary(number);
+            numberBitsMap.put(number, bits);
+        }
+        return bits;
+    }
+	
+	private int[] asBinary(int key) {
+        int[] bits = new int[MAX_NUM_BITS];
+        int i = 0;
+        while(key > 0) {
+            bits[i] = key & 1;
+            key = key >> 1;
+            i++;
+        }
+        return bits;
+    }
 }
