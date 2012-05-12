@@ -11,8 +11,9 @@ import java.util.Scanner;
 import java.util.Set;
 
 class Solution {
-    private int N, K;
-    private Set<Integer> computedNumbers = new HashSet<Integer>();
+    private int N;
+    private long K;
+    private Set<Long> computedNumbers = new HashSet<Long>();
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -21,15 +22,23 @@ class Solution {
 
     public void solve() {
         Set<Long> numbers = getInput();
-        List<Integer> primes = primeSieve(K);
-        Map<Integer, Integer> primeFactorsCount = primeFactorsCount(K, primes);
-        Set<Integer> factors = factors(primeFactorsCount);
-        Set<Integer> combinedFactors = new HashSet<Integer>();
+        int squareRootOfK = (int) Math.sqrt(K);
+        // compute all primes less than squareRootOfK which potentially might be prime factors of K
+        List<Long> primes = primeSieve(squareRootOfK);
+        Map<Long, Integer> primeFactorsCount = primeFactorsCount(K, primes);
+        // there might be at most one prime factor of K which is larger than squareRootOfK
+        long equivalentK = equivalentNumber(primeFactorsCount);
+        if(equivalentK != K) {
+            primeFactorsCount.put(K/equivalentK, 1);
+        }
+        
+        Set<Long> factors = factors(primeFactorsCount);
+        Set<Long> combinedFactors = new HashSet<Long>();
         for(long number : numbers) {
-            Map<Integer, Integer> numberPrimeFactorsCount = primeFactorsCount(number, primeFactorsCount);
-            int equivalentNumber = equivalentNumber(numberPrimeFactorsCount);
+            Map<Long, Integer> numberPrimeFactorsCount = primeFactorsCount(number, primeFactorsCount);
+            long equivalentNumber = equivalentNumber(numberPrimeFactorsCount);
             if(!computedNumbers.contains(equivalentNumber)) {
-                Set<Integer> subFactors = factors(numberPrimeFactorsCount);
+                Set<Long> subFactors = factors(numberPrimeFactorsCount);
                 combinedFactors.addAll(subFactors);
                 computedNumbers.add(equivalentNumber);
             }
@@ -38,7 +47,7 @@ class Solution {
     }
     
     // all primes less than n
-    private List<Integer> primeSieve(int n) {
+    private List<Long> primeSieve(int n) {
         boolean[] primeFlags = new boolean[n+1];
         Arrays.fill(primeFlags, true);
         
@@ -51,18 +60,18 @@ class Solution {
             }
         }
         
-        List<Integer> primes = new ArrayList<Integer>();
-        for(int i=2;i<=n;i++) {
-            if(primeFlags[i]) {
+        List<Long> primes = new ArrayList<Long>();
+        for(long i=2;i<=n;i++) {
+            if(primeFlags[(int)i]) {
                 primes.add(i);
             }
         }
         return primes;
     }
     
-    private Map<Integer, Integer> primeFactorsCount(int n, List<Integer> primes) {
-        Map<Integer, Integer> primeFactorsCount = new LinkedHashMap<Integer, Integer>();
-        for(int prime : primes) {
+    private Map<Long, Integer> primeFactorsCount(long n, List<Long> primes) {
+        Map<Long, Integer> primeFactorsCount = new LinkedHashMap<Long, Integer>();
+        for(long prime : primes) {
             while(n % prime == 0) {
                 if(!primeFactorsCount.containsKey(prime)) {
                     primeFactorsCount.put(prime, 0);
@@ -78,10 +87,10 @@ class Solution {
         return primeFactorsCount;
     }
     
-    private Map<Integer, Integer> primeFactorsCount(long n, Map<Integer, Integer> maxPrimeFactorsCount) {
-        Map<Integer, Integer> primeFactorsCount = new LinkedHashMap<Integer, Integer>();
-        for(Entry<Integer, Integer> primeFactorCount : maxPrimeFactorsCount.entrySet()) {
-            int prime = primeFactorCount.getKey();
+    private Map<Long, Integer> primeFactorsCount(long n, Map<Long, Integer> maxPrimeFactorsCount) {
+        Map<Long, Integer> primeFactorsCount = new LinkedHashMap<Long, Integer>();
+        for(Entry<Long, Integer> primeFactorCount : maxPrimeFactorsCount.entrySet()) {
+            long prime = primeFactorCount.getKey();
             while(n % prime == 0) {
                 if(!primeFactorsCount.containsKey(prime)) {
                     primeFactorsCount.put(prime, 0);
@@ -100,38 +109,38 @@ class Solution {
         return primeFactorsCount;
     }
     
-    private int equivalentNumber(Map<Integer, Integer> primeFactorsCount) {
-        int product = 1;
-        for(Entry<Integer, Integer> primeFactorCount : primeFactorsCount.entrySet()) {
-            int prime = primeFactorCount.getKey();
+    private long equivalentNumber(Map<Long, Integer> primeFactorsCount) {
+        long product = 1;
+        for(Entry<Long, Integer> primeFactorCount : primeFactorsCount.entrySet()) {
+            long prime = primeFactorCount.getKey();
             int count = primeFactorCount.getValue();
             product *= Math.pow(prime, count);
         }
         return product;
     }
     
-    private Set<Integer> factors(Map<Integer, Integer> primeFactorsCount) {
-        Set<Integer> factors = new HashSet<Integer>();
+    private Set<Long> factors(Map<Long, Integer> primeFactorsCount) {
+        Set<Long> factors = new HashSet<Long>();
         if(!primeFactorsCount.isEmpty()) {
-            for(Entry<Integer, Integer> primeFactorCount : primeFactorsCount.entrySet()) {
-                int prime = primeFactorCount.getKey();
-                Map<Integer, Integer> subPrimeFactorsCount = decreaseCount(primeFactorsCount, prime);
-                Set<Integer> subFactors = factors(subPrimeFactorsCount);
+            for(Entry<Long, Integer> primeFactorCount : primeFactorsCount.entrySet()) {
+                long prime = primeFactorCount.getKey();
+                Map<Long, Integer> subPrimeFactorsCount = decreaseCount(primeFactorsCount, prime);
+                Set<Long> subFactors = factors(subPrimeFactorsCount);
                 factors.addAll(subFactors);
-                for(Integer factor : subFactors) {
+                for(Long factor : subFactors) {
                     factors.add(factor * prime);
                 }
             }
         }
         else {
-            factors.add(1);
+            factors.add(1L);
         }
         return factors;
     }
     
-    private Map<Integer, Integer> decreaseCount(Map<Integer, Integer> primeFactorsCount, int prime) {
+    private Map<Long, Integer> decreaseCount(Map<Long, Integer> primeFactorsCount, long prime) {
         int count = primeFactorsCount.get(prime);
-        Map<Integer, Integer> subPrimeFactorsCount = new LinkedHashMap<Integer, Integer>(primeFactorsCount);
+        Map<Long, Integer> subPrimeFactorsCount = new LinkedHashMap<Long, Integer>(primeFactorsCount);
         if(count > 1) {
             subPrimeFactorsCount.put(prime, count - 1);
         }
@@ -144,7 +153,7 @@ class Solution {
     private Set<Long> getInput() {
         Scanner scanner = new Scanner(System.in);
         N = scanner.nextInt();
-        K = scanner.nextInt();
+        K = scanner.nextLong();
         Set<Long> inputNumbers = new HashSet<Long>(N);
         for (int i = 0; i < N; i++) {
             inputNumbers.add(scanner.nextLong());
