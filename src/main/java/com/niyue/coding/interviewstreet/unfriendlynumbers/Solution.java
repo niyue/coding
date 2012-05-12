@@ -16,6 +16,7 @@ class Solution {
     private int N;
     private long K;
     private Map<Long, Set<Long>> factorsTree = new HashMap<Long, Set<Long>>();
+    private Map<Long, Set<Long>> childFactorsMap = new HashMap<Long, Set<Long>>();
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -25,7 +26,7 @@ class Solution {
     public void solve() {
         List<Long> unfriendlyNumbers = getInput();
         
-        Map<Long, Integer> primeFactorsCount = integerFactorization(K);
+        Map<Long, Integer> primeFactorsCount = factorize(K);
         
         Set<Long> factors = factors(primeFactorsCount);
         List<Long> orderedFactors = new ArrayList<Long>(factors);
@@ -43,6 +44,17 @@ class Solution {
             }
         }
         System.out.println(factors.size());
+    }
+    
+    private Map<Long, Integer> factorize(long k) {
+        int smallK = (int) Math.sqrt(Math.sqrt(k));
+        List<Long> primes = primeSieve(smallK);
+        Map<Long, Integer> partialPrimeFactors = primeFactorsCount(k, primes);
+        long partialEquivalentNumber = equivalentNumber(partialPrimeFactors);
+        long partialK = k / partialEquivalentNumber;
+        Map<Long, Integer> anotherPartialPrimeFactors = integerFactorization(partialK);
+        partialPrimeFactors.putAll(anotherPartialPrimeFactors);
+        return partialPrimeFactors;
     }
     
     private Map<Long, Integer> integerFactorization(long k) {
@@ -135,24 +147,31 @@ class Solution {
     
     private Set<Long> factors(Map<Long, Integer> primeFactorsCount) {
         Set<Long> factors = new HashSet<Long>();
-        if(!primeFactorsCount.isEmpty()) {
-            for(Entry<Long, Integer> primeFactorCount : primeFactorsCount.entrySet()) {
-                long prime = primeFactorCount.getKey();
-                Map<Long, Integer> subPrimeFactorsCount = decreaseCount(primeFactorsCount, prime);
-                Set<Long> subFactors = factors(subPrimeFactorsCount);
-                factors.addAll(subFactors);
-                for(Long factor : subFactors) {
-                    long largeFactor = factor * prime; 
-                    factors.add(largeFactor);
-                    if(!factorsTree.containsKey(largeFactor)) {
-                        factorsTree.put(largeFactor, new HashSet<Long>());
-                    }
-                    factorsTree.get(largeFactor).add(factor);
-                }
-            }
+        long equivalentNumber = equivalentNumber(primeFactorsCount);
+        if(childFactorsMap.containsKey(equivalentNumber)) {
+            factors = childFactorsMap.get(equivalentNumber);
         }
         else {
-            factors.add(1L);
+            if(!primeFactorsCount.isEmpty()) {
+                for(Entry<Long, Integer> primeFactorCount : primeFactorsCount.entrySet()) {
+                    long prime = primeFactorCount.getKey();
+                    Map<Long, Integer> subPrimeFactorsCount = decreaseCount(primeFactorsCount, prime);
+                    Set<Long> subFactors = factors(subPrimeFactorsCount);
+                    factors.addAll(subFactors);
+                    for(Long factor : subFactors) {
+                        long largeFactor = factor * prime; 
+                        factors.add(largeFactor);
+                        if(!factorsTree.containsKey(largeFactor)) {
+                            factorsTree.put(largeFactor, new HashSet<Long>());
+                        }
+                        factorsTree.get(largeFactor).add(factor);
+                    }
+                }
+            }
+            else {
+                factors.add(1L);
+            }
+            childFactorsMap.put(equivalentNumber, factors);
         }
         return factors;
     }
