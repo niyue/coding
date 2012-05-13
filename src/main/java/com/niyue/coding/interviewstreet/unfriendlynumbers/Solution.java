@@ -2,7 +2,6 @@ package com.niyue.coding.interviewstreet.unfriendlynumbers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -15,7 +14,6 @@ import java.util.Set;
 class Solution {
     private int N;
     private long K;
-    private Map<Long, Set<Long>> factorsTree = new HashMap<Long, Set<Long>>();
     private Map<Long, Set<Long>> childFactorsMap = new HashMap<Long, Set<Long>>();
 
     public static void main(String[] args) throws java.lang.Exception {
@@ -29,21 +27,17 @@ class Solution {
         Map<Long, Integer> primeFactorsCount = factorize(K);
         
         Set<Long> factors = factors(primeFactorsCount);
-        List<Long> orderedFactors = new ArrayList<Long>(factors);
-        Collections.sort(orderedFactors); 
-        Collections.reverse(orderedFactors);
         
-        for(long factor : orderedFactors) {
-            if(factors.contains(factor)) {
-                boolean isDividable = isDividable(factor, unfriendlyNumbers);
-                if(isDividable) {
-                    Set<Long> childFactors = childFactors(factor, factorsTree);
-                    factors.remove(factor);
-                    factors.removeAll(childFactors);
-                }
-            }
+        Set<Long> combinedFactors = new HashSet<Long>();
+        
+        for(long unfriendlyNumber : unfriendlyNumbers) {
+            Map<Long, Integer> numberPrimeFactorsCount = primeFactorsCount(unfriendlyNumber, primeFactorsCount);
+            long equivalentNumber = equivalentNumber(numberPrimeFactorsCount);
+            Set<Long> subFactors = childFactorsMap.get(equivalentNumber);
+            combinedFactors.addAll(subFactors);
         }
-        System.out.println(factors.size());
+        
+        System.out.println(factors.size() - combinedFactors.size());
     }
     
     private Map<Long, Integer> factorize(long k) {
@@ -68,30 +62,6 @@ class Solution {
             primeFactorsCount.put(K/equivalentK, 1);
         }
         return primeFactorsCount;
-    }
-    
-    private Set<Long> childFactors(long factor, Map<Long, Set<Long>> factorsTree) {
-        Set<Long> childFactors = new HashSet<Long>();
-        Set<Long> childFactorSet = factorsTree.get(factor);
-        if(childFactorSet != null) {
-            childFactors.addAll(childFactorSet);
-            for(long childFactor : childFactorSet) {
-                Set<Long> descendantFactorSet = childFactors(childFactor, factorsTree);
-                childFactors.addAll(descendantFactorSet);
-            }
-        }
-        return childFactors;
-    }
-    
-    private boolean isDividable(long factor, List<Long> unfriendlyNumbers) {
-        boolean isDividable = false;
-        for(long number : unfriendlyNumbers) {
-            if(number % factor == 0) {
-                isDividable = true;
-                break;
-            }
-        }
-        return isDividable;
     }
     
     // all primes less than n
@@ -135,6 +105,29 @@ class Solution {
         return primeFactorsCount;
     }
     
+    private Map<Long, Integer> primeFactorsCount(long n, Map<Long, Integer> maxPrimeFactorsCount) {
+        Map<Long, Integer> primeFactorsCount = new LinkedHashMap<Long, Integer>();
+        for(Entry<Long, Integer> primeFactorCount : maxPrimeFactorsCount.entrySet()) {
+            long prime = primeFactorCount.getKey();
+            while(n % prime == 0) {
+                if(!primeFactorsCount.containsKey(prime)) {
+                    primeFactorsCount.put(prime, 0);
+                }
+                int count = primeFactorsCount.get(prime) + 1;
+                primeFactorsCount.put(prime, count);
+                n = n / prime;
+                if(count == maxPrimeFactorsCount.get(prime)) {
+                    break;
+                }
+            }
+            if(n == 1) {
+                break;
+            }
+        }
+        return primeFactorsCount;
+    }
+
+    
     private long equivalentNumber(Map<Long, Integer> primeFactorsCount) {
         long product = 1;
         for(Entry<Long, Integer> primeFactorCount : primeFactorsCount.entrySet()) {
@@ -161,10 +154,6 @@ class Solution {
                     for(Long factor : subFactors) {
                         long largeFactor = factor * prime; 
                         factors.add(largeFactor);
-                        if(!factorsTree.containsKey(largeFactor)) {
-                            factorsTree.put(largeFactor, new HashSet<Long>());
-                        }
-                        factorsTree.get(largeFactor).add(factor);
                     }
                 }
             }
