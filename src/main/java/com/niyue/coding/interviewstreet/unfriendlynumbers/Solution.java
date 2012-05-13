@@ -15,6 +15,7 @@ class Solution {
     private int N;
     private long K;
     private Map<Long, Set<Long>> childFactorsMap = new HashMap<Long, Set<Long>>();
+    private Set<Long> computedNumbers = new HashSet<Long>();
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -33,8 +34,11 @@ class Solution {
         for(long unfriendlyNumber : unfriendlyNumbers) {
             Map<Long, Integer> numberPrimeFactorsCount = primeFactorsCount(unfriendlyNumber, primeFactorsCount);
             long equivalentNumber = equivalentNumber(numberPrimeFactorsCount);
-            Set<Long> subFactors = childFactorsMap.get(equivalentNumber);
-            combinedFactors.addAll(subFactors);
+            if(!computedNumbers.contains(equivalentNumber)) {
+                Set<Long> subFactors = childFactorsMap.get(equivalentNumber);
+                combinedFactors.addAll(subFactors);
+                computedNumbers.add(equivalentNumber);
+            }
         }
         
         System.out.println(factors.size() - combinedFactors.size());
@@ -52,14 +56,14 @@ class Solution {
     }
     
     private Map<Long, Integer> integerFactorization(long k) {
-        int squareRootOfK = (int) Math.sqrt(K);
+        int squareRootOfK = (int) Math.sqrt(k);
         // compute all primes less than squareRootOfK which potentially might be prime factors of K
         List<Long> primes = primeSieve(squareRootOfK);
-        Map<Long, Integer> primeFactorsCount = primeFactorsCount(K, primes);
+        Map<Long, Integer> primeFactorsCount = primeFactorsCount(k, primes);
         // there might be at most one prime factor of K which is larger than squareRootOfK
         long equivalentK = equivalentNumber(primeFactorsCount);
-        if(equivalentK != K) {
-            primeFactorsCount.put(K/equivalentK, 1);
+        if(equivalentK != k) {
+            primeFactorsCount.put(k/equivalentK, 1);
         }
         return primeFactorsCount;
     }
