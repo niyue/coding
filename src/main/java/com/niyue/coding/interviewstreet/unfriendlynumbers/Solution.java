@@ -1,5 +1,8 @@
 package com.niyue.coding.interviewstreet.unfriendlynumbers;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,7 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Scanner;
 import java.util.Set;
 
 class Solution {
@@ -23,7 +25,6 @@ class Solution {
 
     public void solve() {
         List<Long> unfriendlyNumbers = getInput();
-        
         Map<Long, Integer> primeFactorsCount = factorize(K);
         
         Set<Long> unfriendlyEquivalentNumbers = new HashSet<Long>();
@@ -38,7 +39,7 @@ class Solution {
         Set<Long> combinedFactors = new HashSet<Long>();
         for(long number : unfriendlyEquivalentNumbers) {
             Map<Long, Integer> numberPrimeFactorsCount = unfriendlyPrimeFactorsCount.get(number);
-            Set<Long> subFactors = factors(number, numberPrimeFactorsCount, new HashSet<Long>());
+            Set<Long> subFactors = factors(number, numberPrimeFactorsCount);
             combinedFactors.addAll(subFactors);
         }
         
@@ -154,35 +155,31 @@ class Solution {
         return product;
     }
     
-    private Set<Long> factors(long equivalentNumber, Map<Long, Integer> primeFactorsCount, Set<Long> computedPrimes) {
+    private Set<Long> factors(long equivalentNumber, Map<Long, Integer> primeFactorsCount) {
         Set<Long> factors = new HashSet<Long>();
         
         if(childFactorsMap.containsKey(equivalentNumber)) {
             factors = childFactorsMap.get(equivalentNumber);
         }
         else {
-            if(primeFactorsCount.entrySet().size() > computedPrimes.size()) {
+            if(equivalentNumber == 1) {
+                factors.add(1L);
+            }
+            else {
                 for(Entry<Long, Integer> primeCount : primeFactorsCount.entrySet()) {
                     long prime = primeCount.getKey();
                     int count = primeCount.getValue();
                     if(count > 0) {
                         primeFactorsCount.put(prime, count - 1);
-                        if(count == 1) {
-                            computedPrimes.add(prime);
-                        }
-                        Set<Long> subFactors = factors(equivalentNumber / prime, primeFactorsCount, computedPrimes);
+                        Set<Long> subFactors = factors(equivalentNumber / prime, primeFactorsCount);
                         factors.addAll(subFactors);
                         for(Long factor : subFactors) {
                             long largeFactor = factor * prime; 
                             factors.add(largeFactor);
                         }
                         primeFactorsCount.put(prime, count);
-                        computedPrimes.remove(prime);
                     }
                 }
-            }
-            else {
-                factors.add(1L);
             }
             childFactorsMap.put(equivalentNumber, factors);
         }
@@ -190,12 +187,21 @@ class Solution {
     }
     
     private List<Long> getInput() {
-        Scanner scanner = new Scanner(System.in);
-        N = scanner.nextInt();
-        K = scanner.nextLong();
-        List<Long> inputNumbers = new ArrayList<Long>(N);
-        for (int i = 0; i < N; i++) {
-            inputNumbers.add(scanner.nextLong());
+        List<Long> inputNumbers = null;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in), 1024 * 1024 * 10);
+            String firstLine = br.readLine();
+            String[] nnk = firstLine.split(" ");
+            N = Integer.parseInt(nnk[0]);
+            K = Long.parseLong(nnk[1]);
+            
+            inputNumbers = new ArrayList<Long>(N);
+            String[] numbers = br.readLine().split(" ");
+            for (int i = 0; i < numbers.length; i++) {
+                inputNumbers.add(Long.parseLong(numbers[i]));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return inputNumbers;
     }
