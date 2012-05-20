@@ -1,13 +1,15 @@
 package com.niyue.coding.interviewstreet.xorkey;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NavigableSet;
-import java.util.Scanner;
 import java.util.TreeSet;
 
 public class Solution {
-	private Scanner scanner = new Scanner(System.in);
+    private BufferedReader input = new BufferedReader(new InputStreamReader(System.in), 1024 * 1024 * 10);
 	private int T;
 	private int N, Q;
 	private int[] X;
@@ -20,15 +22,17 @@ public class Solution {
         sl.solve();
     }
 	
-	public void solve() {
-		T = scanner.nextInt();
+	public void solve() throws NumberFormatException, IOException {
+	    String firstLine = input.readLine();
+        T = Integer.parseInt(firstLine);
 		for(int t=0;t<T;t++) {
 			getInput();
 			Node root = constructTree();
 			for(int i=0;i<Q;i++) {
-				int number = scanner.nextInt();
-				int min = scanner.nextInt()-1;
-				int max = scanner.nextInt()-1;
+			    String[] query = input.readLine().split(" ");
+				int number = Integer.parseInt(query[0]);
+				int min = Integer.parseInt(query[1]) - 1;
+				int max = Integer.parseInt(query[2]) - 1;
 				int[] bits = getBits(number);
 				int maxXorKey = query(root, min, max, bits, MAX_BIT_INDEX);
 				int maxXor = maxXorKey ^ number;
@@ -37,12 +41,14 @@ public class Solution {
 		}
 	}
 	
-	private void getInput() {
-        N = scanner.nextInt();
-        Q = scanner.nextInt();
+	private void getInput() throws IOException {
+	    String[] nnq = input.readLine().split(" ");
+        N = Integer.parseInt(nnq[0]);
+        Q = Integer.parseInt(nnq[1]);
         X = new int[N];
-        for(int i=0;i<N;i++) {
-        	X[i] = scanner.nextInt();
+        String[] numbers = input.readLine().split(" ");
+        for(int i=0;i<numbers.length;i++) {
+        	X[i] = Integer.parseInt(numbers[i]);
         }
     }
 	
