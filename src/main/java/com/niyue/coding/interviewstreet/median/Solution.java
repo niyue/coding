@@ -10,8 +10,6 @@ class Solution {
     private int n;
     private PriorityQueue<Integer> lowerHalf;
     private PriorityQueue<Integer> higherHalf;
-    private Map<Integer, Integer> lowerHalfNumbers;
-    private Map<Integer, Integer> higherHalfNumbers;
     private Scanner scanner;
 
     public static void main(String[] args) throws java.lang.Exception {
@@ -21,10 +19,8 @@ class Solution {
 
     public void solve() {
         n = getInput();
-        lowerHalf = new PriorityQueue<Integer>(n/2+1, new ReversedComparator<Integer>());
-        higherHalf = new PriorityQueue<Integer>(n/2+1);
-        lowerHalfNumbers = new HashMap<Integer, Integer>(n);
-        higherHalfNumbers = new HashMap<Integer, Integer>(n);
+        lowerHalf = new HashCountingPriorityQueue<Integer>(n/2+1, new ReversedComparator<Integer>());
+        higherHalf = new HashCountingPriorityQueue<Integer>(n/2+1);
         
         for(int i=0;i<n;i++) {
             String operator = scanner.next();
@@ -41,117 +37,48 @@ class Solution {
     }
     
     private double medianAfterInsertion(int operand) {
-        double median = operand;
-        if(lowerHalf.isEmpty() && higherHalf.isEmpty()) {
-            lowerHalf.add(operand);
-            increase(lowerHalfNumbers, operand);
-        } else if(higherHalf.isEmpty()) {
-            int maxInLowerHalf = lowerHalf.peek();
-            if(operand >= maxInLowerHalf) {
-                higherHalf.add(operand);
-                increase(higherHalfNumbers, operand);
-            } else {
-                lowerHalf.remove(maxInLowerHalf);
-                lowerHalf.add(operand);
-                higherHalf.add(maxInLowerHalf);
-                decrease(lowerHalfNumbers, maxInLowerHalf);
-                increase(lowerHalfNumbers, operand);
-                increase(higherHalfNumbers, maxInLowerHalf);
-            }
-            median = (operand + maxInLowerHalf) / 2.0;
+        if(lowerHalf.isEmpty()) {
+            lowerHalf.offer(operand);
         } else {
             int maxInLowerHalf = lowerHalf.peek();
-            int minInHigherHalf = higherHalf.peek();
-            if(lowerHalf.size() == higherHalf.size()) {
-                if(operand <= minInHigherHalf) {
-                    lowerHalf.add(operand);
-                    increase(lowerHalfNumbers, operand);
-                } else {
-                    higherHalf.remove(minInHigherHalf);
-                    higherHalf.add(operand);
-                    lowerHalf.add(minInHigherHalf);
-                    
-                    decrease(higherHalfNumbers, minInHigherHalf);
-                    increase(higherHalfNumbers, operand);
-                    increase(lowerHalfNumbers, minInHigherHalf);
-                }
-                median = lowerHalf.peek();
+            if(operand <= maxInLowerHalf) {
+                lowerHalf.offer(operand);
             } else {
-                if(operand <= minInHigherHalf) {
-                    lowerHalf.add(operand);
-                    maxInLowerHalf = lowerHalf.peek();
-                    lowerHalf.remove(maxInLowerHalf);
-                    higherHalf.add(maxInLowerHalf);
-                    
-                    increase(lowerHalfNumbers, operand);
-                    decrease(lowerHalfNumbers, maxInLowerHalf);
-                    increase(higherHalfNumbers, maxInLowerHalf);
-                } else {
-                    higherHalf.add(operand);
-                    minInHigherHalf = higherHalf.peek();
-                    increase(higherHalfNumbers, operand);
-                }
-                median = (maxInLowerHalf + minInHigherHalf) / 2.0;
+                higherHalf.offer(operand);
             }
         }
-        return median;
+        balance(lowerHalf, higherHalf);
+        return median(lowerHalf, higherHalf);
     }
     
-    private void increase(Map<Integer, Integer> numbers, Integer operand) {
-        if(!numbers.containsKey(operand)) {
-            numbers.put(operand, 0);
-        }
-        numbers.put(operand, numbers.get(operand) + 1);
-    }
-    
-    private void decrease(Map<Integer, Integer> numbers, Integer number) {
-        numbers.put(number, numbers.get(number) - 1);
-    }
-    
-    private double medianAfterRemoval(int operand) {
-        double median = operand;
-        if(lowerHalfNumbers.containsKey(operand) && lowerHalfNumbers.get(operand) > 0) {
-            lowerHalf.remove(operand);
-            decrease(lowerHalfNumbers, operand);
-            
-            if(lowerHalf.size() < higherHalf.size()) {
-                int minInHigherHalf = higherHalf.peek();
-                higherHalf.remove(minInHigherHalf);
-                lowerHalf.add(minInHigherHalf);
-                median = minInHigherHalf;
-                
-                decrease(higherHalfNumbers, minInHigherHalf);
-                increase(lowerHalfNumbers, minInHigherHalf);
-                
-            } else {
-                if(lowerHalf.isEmpty()) {
-                    throw new IllegalArgumentException();
-                } else {
-                    int maxInLowerHalf = lowerHalf.peek();
-                    int minInHigherHalf = higherHalf.peek();
-                    median = (maxInLowerHalf + minInHigherHalf) / 2.0;
-                }
-            }
-        } else if(higherHalfNumbers.containsKey(operand) && higherHalfNumbers.get(operand) > 0) {
-            higherHalf.remove(operand);
-            decrease(higherHalfNumbers, operand);
-            
-            if(lowerHalf.size() - 1 > higherHalf.size()) {
-                int minInHigherHalf = lowerHalf.peek();
-                lowerHalf.remove(minInHigherHalf);
-                higherHalf.add(minInHigherHalf);
-                
-                decrease(lowerHalfNumbers, minInHigherHalf);
-                increase(higherHalfNumbers, minInHigherHalf);
-                
-                median = (lowerHalf.peek() + minInHigherHalf) / 2.0;
-            } else {
-                median = lowerHalf.peek();
-            }
+    private double median(PriorityQueue<Integer> lowerHalf, PriorityQueue<Integer> higherHalf) {
+        if(!lowerHalf.isEmpty()) {
+            return lowerHalf.size() == higherHalf.size() 
+                    ? average(lowerHalf.peek(), higherHalf.peek())
+                    : lowerHalf.peek();
         } else {
             throw new IllegalArgumentException();
         }
-        return median;
+    }
+    
+    private void balance(PriorityQueue<Integer> lowerHalf, PriorityQueue<Integer> higherHalf) {
+        if(lowerHalf.size() == higherHalf.size() + 2) {
+            higherHalf.offer(lowerHalf.poll());
+        } else if(lowerHalf.size() == higherHalf.size() - 1) {
+            lowerHalf.offer(higherHalf.poll());
+        }
+    }
+    
+    private double medianAfterRemoval(int operand) {
+        if(lowerHalf.contains(operand)) {
+            lowerHalf.remove(operand);
+        } else if(higherHalf.contains(operand)) {
+            higherHalf.remove(operand);
+        } else {
+            throw new IllegalArgumentException();
+        }
+        balance(lowerHalf, higherHalf);
+        return median(lowerHalf, higherHalf);
     }
     
     private void print(double median) {
@@ -167,9 +94,62 @@ class Solution {
         return scanner.nextInt();
     }
     
+    private double average(int one, int two) {
+        return one / 2.0 + two / 2.0;
+    }
+    
     private static class ReversedComparator<E extends Comparable<E>> implements Comparator<E> {
         public int compare(E o1, E o2) {
             return o1.compareTo(o2) * -1;
+        }
+    }
+    
+    private static class HashCountingPriorityQueue<E> extends PriorityQueue<E> {
+        private static final long serialVersionUID = 1L;
+        private Map<E, Integer> countsMap = new HashMap<E, Integer>(); 
+        
+        public HashCountingPriorityQueue(int initialCapacity) {
+            super(initialCapacity);
+        }
+        
+        public HashCountingPriorityQueue(int initialCapacity, Comparator<E> comparator) {
+            super(initialCapacity, comparator);
+        }
+        
+        @Override
+        public boolean offer(E e) {
+            increase(e);
+            return super.offer(e);
+        }
+
+        @Override
+        public E poll() {
+            E e = super.poll();
+            decrease(e);
+            return e;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public boolean remove(Object e) {
+            decrease((E) e);
+            return super.remove(e);
+        }
+        
+        @Override
+        public boolean contains(Object o) {
+            return countsMap.containsKey(o) && countsMap.get(o) > 0;
+        }
+
+        private void increase(E element) {
+            if(!countsMap.containsKey(element)) {
+                countsMap.put(element, 0);
+            }
+            countsMap.put(element, countsMap.get(element) + 1);
+        }
+        
+        private void decrease(E element) {
+            countsMap.put(element, countsMap.get(element) - 1);
         }
     }
 }
