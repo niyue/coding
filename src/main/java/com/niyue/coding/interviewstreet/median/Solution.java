@@ -19,7 +19,7 @@ class Solution {
 
     public void solve() {
         n = getInput();
-        lowerHalf = new HashCountingPriorityQueue<Integer>(n/2+1, new ReversedComparator<Integer>());
+        lowerHalf = new HashCountingPriorityQueue<Integer>(n/2+2, new ReversedComparator<Integer>());
         higherHalf = new HashCountingPriorityQueue<Integer>(n/2+1);
         
         for(int i=0;i<n;i++) {
@@ -95,14 +95,12 @@ class Solution {
         return scanner.nextInt();
     }
     
-    private long sum(int one, int two) {
-        long sum = one + two;
-        return sum;
+    private long sum(long one, long two) {
+        return one + two;
     }
     
-    private long doubling(int num) {
-        long doubling = num * 2;
-        return doubling;
+    private long doubling(long num) {
+        return num * 2;
     }
     
     private static class ReversedComparator<E extends Comparable<E>> implements Comparator<E> {
