@@ -26,7 +26,7 @@ class Solution {
             String operator = scanner.next();
             int operand = Integer.parseInt(scanner.next());
             try {
-                double median = operator.equals("a")
+                long median = operator.equals("a")
                         ? medianAfterInsertion(operand)
                         : medianAfterRemoval(operand);
                 print(median);
@@ -36,7 +36,7 @@ class Solution {
         }
     }
     
-    private double medianAfterInsertion(int operand) {
+    private long medianAfterInsertion(int operand) {
         if(lowerHalf.isEmpty()) {
             lowerHalf.offer(operand);
         } else {
@@ -48,14 +48,14 @@ class Solution {
             }
         }
         balance(lowerHalf, higherHalf);
-        return median(lowerHalf, higherHalf);
+        return medianDouble(lowerHalf, higherHalf);
     }
     
-    private double median(PriorityQueue<Integer> lowerHalf, PriorityQueue<Integer> higherHalf) {
+    private long medianDouble(PriorityQueue<Integer> lowerHalf, PriorityQueue<Integer> higherHalf) {
         if(!lowerHalf.isEmpty()) {
             return lowerHalf.size() == higherHalf.size() 
-                    ? average(lowerHalf.peek(), higherHalf.peek())
-                    : lowerHalf.peek();
+                    ? sum(lowerHalf.peek(), higherHalf.peek())
+                    : doubling(lowerHalf.peek());
         } else {
             throw new IllegalArgumentException();
         }
@@ -69,7 +69,7 @@ class Solution {
         }
     }
     
-    private double medianAfterRemoval(int operand) {
+    private long medianAfterRemoval(int operand) {
         if(lowerHalf.contains(operand)) {
             lowerHalf.remove(operand);
         } else if(higherHalf.contains(operand)) {
@@ -78,14 +78,15 @@ class Solution {
             throw new IllegalArgumentException();
         }
         balance(lowerHalf, higherHalf);
-        return median(lowerHalf, higherHalf);
+        return medianDouble(lowerHalf, higherHalf);
     }
     
-    private void print(double median) {
-        if(median == (long) median) {
-            System.out.println((long) median);
-        } else {
+    private void print(long medianDouble) {
+        long median = medianDouble / 2;
+        if(medianDouble % 2 == 0) {
             System.out.println(median);
+        } else {
+            System.out.println(String.format("%d.5", median));
         }
     }
     
@@ -94,8 +95,14 @@ class Solution {
         return scanner.nextInt();
     }
     
-    private double average(int one, int two) {
-        return one / 2.0 + two / 2.0;
+    private long sum(int one, int two) {
+        long sum = one + two;
+        return sum;
+    }
+    
+    private long doubling(int num) {
+        long doubling = num * 2;
+        return doubling;
     }
     
     private static class ReversedComparator<E extends Comparable<E>> implements Comparator<E> {
