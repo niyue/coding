@@ -62,9 +62,9 @@ class Solution {
     }
     
     private void balance(PriorityQueue<Integer> lowerHalf, PriorityQueue<Integer> higherHalf) {
-        if(lowerHalf.size() == higherHalf.size() + 2) {
+        if(lowerHalf.size() > higherHalf.size() + 1) {
             higherHalf.offer(lowerHalf.poll());
-        } else if(lowerHalf.size() == higherHalf.size() - 1) {
+        } else if(lowerHalf.size() < higherHalf.size()) {
             lowerHalf.offer(higherHalf.poll());
         }
     }
@@ -82,11 +82,10 @@ class Solution {
     }
     
     private void print(long medianDouble) {
-        long median = medianDouble / 2;
         if(medianDouble % 2 == 0) {
-            System.out.println(median);
+            System.out.println(medianDouble / 2);
         } else {
-            System.out.println(String.format("%d.5", median));
+            System.out.println(medianDouble / 2.0);
         }
     }
     
