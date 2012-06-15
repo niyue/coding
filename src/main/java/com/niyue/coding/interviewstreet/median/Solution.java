@@ -85,7 +85,12 @@ class Solution {
         if(medianDouble % 2 == 0) {
             System.out.println(medianDouble / 2);
         } else {
-            System.out.println(medianDouble / 2.0);
+            long median = Math.abs(medianDouble / 2);
+            String format = "%d.5";
+            if(medianDouble < 0) {
+                format = "-%d.5";
+            }
+            System.out.println(String.format(format, median));
         }
     }
     
