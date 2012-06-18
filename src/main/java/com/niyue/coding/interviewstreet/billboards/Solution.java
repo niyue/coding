@@ -1,10 +1,12 @@
 package com.niyue.coding.interviewstreet.billboards;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 class Solution {
     private int N, K;
@@ -15,7 +17,7 @@ class Solution {
         sl.solve();
     }
 
-    public void solve() {
+    public void solve() throws NumberFormatException, IOException {
         List<Integer> profits = getInput();
         long maxProfit = maxProfit(profits, 0, K);
         System.out.println(maxProfit);
@@ -24,33 +26,55 @@ class Solution {
     private long maxProfit(List<Integer> profits, int current, int remainingBillboards) {
         long maxProfit = 0;
         if(current < N) {
-            if(result.containsKey(current) && result.get(current).containsKey(remainingBillboards)) {
+            if(hasResult(current, remainingBillboards)) {
                 maxProfit = result.get(current).get(remainingBillboards);
             } else {
-                int currentProfit = profits.get(current);
-                long profitWithCurrent = 0;
-                if(remainingBillboards > 0) {
-                    profitWithCurrent = maxProfit(profits, current+1, remainingBillboards-1) + currentProfit;
+                if(current + remainingBillboards >= N) {
+                    maxProfit = sum(profits, current);
+                } else {
+                    int currentProfit = profits.get(current);
+                    long profitWithCurrent = 0;
+                    if(remainingBillboards > 0) {
+                        profitWithCurrent = maxProfit(profits, current+1, remainingBillboards-1) + currentProfit;
+                    }
+                    long profitWithoutCurrent = maxProfit(profits, current+1, K);
+                    maxProfit = Math.max(profitWithCurrent, profitWithoutCurrent);
                 }
-                long profitWithoutCurrent = maxProfit(profits, current+1, K);
-                maxProfit = Math.max(profitWithCurrent, profitWithoutCurrent);
-                if(!result.containsKey(current)) {
-                    result.put(current, new HashMap<Integer, Long>());
-                }
-                result.get(current).put(remainingBillboards, maxProfit);
+                cacheResult(current, remainingBillboards, maxProfit);
             }
         }
         return maxProfit;
     }
+    
+    private boolean hasResult(int current, int remainingBillboards) {
+        return result.containsKey(current) && result.get(current).containsKey(remainingBillboards);
+    }
+    
+    private void cacheResult(int current, int remainingBillboards, long maxProfit) {
+        if(!result.containsKey(current)) {
+            result.put(current, new HashMap<Integer, Long>());
+        }
+        result.get(current).put(remainingBillboards, maxProfit);
+    }
+    
+    private long sum(List<Integer> profits, int current) {
+        long sum = 0;
+        for(int i=current;i<profits.size();i++) {
+            sum += profits.get(i);
+        }
+        return sum;
+    }
 
-    private List<Integer> getInput() {
-        Scanner scanner = new Scanner(System.in);
-        N = scanner.nextInt();
-        K = scanner.nextInt();
-        List<Integer> profits = new ArrayList<Integer>(N);
+    private List<Integer> getInput() throws NumberFormatException, IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in), 102400);
+        String firstLine = br.readLine();
+        String[] nnk = firstLine.split(" ");
+        N = Integer.parseInt(nnk[0]);
+        K = Integer.parseInt(nnk[1]);
         
+        List<Integer> profits = new ArrayList<Integer>(N);
         for(int i=0;i<N;i++) {
-            int profit = Integer.parseInt(scanner.next());
+            int profit = Integer.parseInt(br.readLine());
             profits.add(profit);
         }
         return profits;
