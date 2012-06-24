@@ -27,44 +27,70 @@ class Solution {
     }
     
     private long ways(int[] currentPosition, int remainingSteps) {
-        long ways = 0;
+        long ways = 1;
         if(remainingSteps > 0) {
             long positionHash = positionHash(currentPosition);
             if(results.containsKey(positionHash) && results.get(positionHash).containsKey(remainingSteps)) {
                 ways = results.get(positionHash).get(remainingSteps);
             } else {
-                for(int d=0;d<N;d++) {
-                    int currentPositionInD = currentPosition[d];
-                    if(currentPosition[d] + 1 <= dimentionMax[d]) {
-                        currentPosition[d] = currentPositionInD + 1;
-                        ways += ways(currentPosition, remainingSteps - 1);
-                        currentPosition[d] = currentPositionInD;
+                ways = 0;
+                int minDistanceToBoundary = minDistanceToBoundary(currentPosition);
+                if(minDistanceToBoundary >= remainingSteps) {
+                    ways = ways(remainingSteps);
+                } else {
+                    for(int d=0;d<N;d++) {
+                        int currentPositionInD = currentPosition[d];
+                        if(currentPosition[d] + 1 <= dimentionMax[d]) {
+                            currentPosition[d] = currentPositionInD + 1;
+                            ways += ways(currentPosition, remainingSteps - 1);
+                            currentPosition[d] = currentPositionInD;
+                        }
+                        if(currentPosition[d] - 1 > 0) {
+                            currentPosition[d] = currentPositionInD - 1;
+                            ways += ways(currentPosition, remainingSteps - 1);
+                            currentPosition[d] = currentPositionInD;
+                        }
+                        ways = ways % 1000000007;
                     }
-                    if(currentPosition[d] - 1 > 0) {
-                        currentPosition[d] = currentPositionInD - 1;
-                        ways += ways(currentPosition, remainingSteps - 1);
-                        currentPosition[d] = currentPositionInD;
-                    }
-                    ways = ways % 1000000007;
                 }
                 if(!results.containsKey(positionHash)) {
                     results.put(positionHash, new HashMap<Integer, Long>());
                 }
                 results.get(positionHash).put(remainingSteps, ways);
             }
-        } else {
-            ways = 1;
+        }
+        return ways;
+    }
+    
+    private int minDistanceToBoundary(int[] currentPosition) {
+        int min = Integer.MAX_VALUE;
+        for(int d=0;d<N;d++) {
+            int maxDimension = dimentionMax[d];
+            int minDistance = Math.min(currentPosition[d] - 1, maxDimension - currentPosition[d]);
+            if(minDistance < min) {
+                min = minDistance;
+            }
+        }
+        return min;
+    }
+    
+    private long ways(int remainingSteps) {
+        long ways = 1;
+        for(int i=remainingSteps;i>0;i--) {
+            ways *= 2 * N;
+            ways %= 1000000007;
         }
         return ways;
     }
     
     private long positionHash(int[] currentPosition) {
-        long hash = 1;
+        long hash = 0;
         for(int position : currentPosition) {
-            hash *= position;
+            hash = hash * 10 + position;
         }
         return hash;
     }
+    
 
     private void getInput() {
         N = scanner.nextInt();
