@@ -1,6 +1,8 @@
 package com.niyue.coding.interviewstreet.gridwalking;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -9,6 +11,7 @@ class Solution {
     private int[] currentPosition;
     private int[] dimentionMax;
     private Map<Long, Map<Integer, Long>> results;
+    private List<Long> powerOfTwoN;
     private Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws java.lang.Exception {
@@ -21,6 +24,7 @@ class Solution {
         for(int t=0;t<T;t++) {
             results = new HashMap<Long, Map<Integer, Long>>();
             getInput();
+            powerOfTwoN = powerOfTwoN(M);
             long ways = ways(currentPosition, M);
             System.out.println(ways);
         }
@@ -36,7 +40,7 @@ class Solution {
                 ways = 0;
                 int minDistanceToBoundary = minDistanceToBoundary(currentPosition);
                 if(minDistanceToBoundary >= remainingSteps) {
-                    ways = ways(remainingSteps);
+                    ways = powerOfTwoN.get(remainingSteps);
                 } else {
                     for(int d=0;d<N;d++) {
                         int currentPositionInD = currentPosition[d];
@@ -74,13 +78,16 @@ class Solution {
         return min;
     }
     
-    private long ways(int remainingSteps) {
+    private List<Long> powerOfTwoN(int number) {
+        List<Long> powerOfTwoN = new ArrayList<Long>(number);
         long ways = 1;
-        for(int i=remainingSteps;i>0;i--) {
+        powerOfTwoN.add(ways);
+        for(int i=0;i<number;i++) {
             ways *= 2 * N;
             ways %= 1000000007;
+            powerOfTwoN.add(ways);
         }
-        return ways;
+        return powerOfTwoN;
     }
     
     private long positionHash(int[] currentPosition) {
