@@ -95,15 +95,34 @@ class Solution {
     
     private int selectVertexToMark(NavigableMap<Integer, Map<Integer, Set<Connection>>> distanceVertexConnectionsMap, int distance) {
     	Map<Integer, Set<Connection>> vertexConnectionsMap = distanceVertexConnectionsMap.get(distance);
-    	int vertex = 0;
-    	int max = -1;
+    	int maxVertex = 0;
     	for(Entry<Integer, Set<Connection>> vertexCount : vertexConnectionsMap.entrySet()) {
-    		if(vertexCount.getValue().size() > max) {
-    			vertex = vertexCount.getKey();
-    			max = vertexCount.getValue().size();
+    		if(isBigger(vertexCount.getKey(), maxVertex, distance, distanceVertexConnectionsMap)) {
+    			maxVertex = vertexCount.getKey();
     		}
     	}
-    	return vertex;
+    	return maxVertex;
+    }
+    
+    private boolean isBigger(int currentVertex, int maxVertex, int distance, NavigableMap<Integer, Map<Integer, Set<Connection>>> distanceVertexConnectionsMap) {
+    	boolean isBigger = false;
+    	if(distance > 0) {
+	    	if(distanceVertexConnectionsMap.containsKey(distance)) {
+	    		Map<Integer, Set<Connection>> vertexConnectionsMap = distanceVertexConnectionsMap.get(distance);
+	    		int currentVertexCount = vertexConnectionsMap.containsKey(currentVertex) ? vertexConnectionsMap.get(currentVertex).size() : 0;
+	    		int maxVertexCount = vertexConnectionsMap.containsKey(maxVertex) ? vertexConnectionsMap.get(maxVertex).size() : 0;
+	    		if(currentVertexCount > maxVertexCount) {
+	    			isBigger = true;
+	    		} else if(currentVertexCount == maxVertexCount) {
+	    			isBigger = isBigger(currentVertex, maxVertex, distance-1, distanceVertexConnectionsMap);
+	    		}
+	    	} else {
+	    		isBigger = isBigger(currentVertex, maxVertex, distance-1, distanceVertexConnectionsMap);
+	    	}
+    	} else {
+    		isBigger = true;
+    	}
+    	return isBigger;
     }
     
     private List<Connection> getInput() {
