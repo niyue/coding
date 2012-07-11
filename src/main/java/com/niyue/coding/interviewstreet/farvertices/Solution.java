@@ -33,7 +33,6 @@ class Solution {
         while(mostDistantEntry.getKey() > maxDistance) {
         	int furthestDistance = mostDistantEntry.getKey();
         	int vertexToMark = selectVertexToMark(distanceVertexConnectionsMap, furthestDistance);
-        	
         	markVertex(distanceVertexConnectionsMap, vertexToMark);
         	markCount++;
         	mostDistantEntry = distanceVertexConnectionsMap.lastEntry();
@@ -135,29 +134,27 @@ class Solution {
             addConnection(connections, v2, v1);
         }
 
-        Set<Integer> visistedVertices = new HashSet<Integer>();
-        for(Connection edge : edges) {
-            int v1 = edge.getV1();
-            int v2 = edge.getV2();
-            if(visistedVertices.isEmpty()) {
-                visistedVertices.add(v1);
-                visistedVertices.add(v2);
-            } else {
-                int expandedVertex = visistedVertices.contains(v1) ? v2 : v1;
-                int visitedVertex = visistedVertices.contains(v1) ? v1 : v2;
-                Set<Integer> connectedVertices = connections.get(visitedVertex);
-                for(int connectedVertex : connectedVertices) {
-                	if(expandedVertex != connectedVertex) {
-                		distances[connectedVertex][expandedVertex] = distances[connectedVertex][visitedVertex] + 1;
-                		distances[expandedVertex][connectedVertex] = distances[connectedVertex][expandedVertex];
-                		addConnection(connections, connectedVertex, expandedVertex);
-                		addConnection(connections, expandedVertex, connectedVertex);
-                	}
-                }
-                visistedVertices.add(expandedVertex);
-            }
-        }
+        Set<Integer> visitedVertices = new HashSet<Integer>();
+        traverse(connections, distances, visitedVertices, edges.get(0).getV1(), -1);
         return distances;
+    }
+    
+    private void traverse(Map<Integer, Set<Integer>> connections, int[][] distances, Set<Integer> visitedVertices, int vertex, int fromVertex) {
+    	if(!visitedVertices.contains(vertex)) {
+    		for(int visitedVertex : visitedVertices) {
+    			expandVertex(distances, vertex, fromVertex, visitedVertex);
+    		}
+    		visitedVertices.add(vertex);
+    		Set<Integer> connectedVertices = connections.get(vertex);
+    		for(int connectedVertex : connectedVertices) {
+    			traverse(connections, distances, visitedVertices, connectedVertex, vertex);
+    		}
+    	}
+    }
+    
+    private void expandVertex(int[][] distances, int expandedVertex, int fromVertex, int visitedVertex) {
+		distances[visitedVertex][expandedVertex] = distances[fromVertex][visitedVertex] + 1;
+		distances[expandedVertex][visitedVertex] = distances[visitedVertex][expandedVertex];
     }
 
     private void addConnection(Map<Integer, Set<Integer>> connections, int v1, int v2) {
