@@ -16,6 +16,7 @@ class Solution {
     private int numberOfVertices; // N
     private int maxDistance; // K
     private int[][] distances;
+    Map<Integer, Map<Integer, Integer>> distanceVertexMap;
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -26,12 +27,12 @@ class Solution {
         List<Connection> edges = getInput();
         distances = distances(edges);
         NavigableMap<Integer, Set<Connection>> distanceMap = distanceMap(distances);
+        distanceVertexMap = distanceVertexMap(distanceMap);
         
         Entry<Integer, Set<Connection>> mostDistantEntry = distanceMap.lastEntry();
         int markCount = 0;
         while(mostDistantEntry.getKey() > maxDistance) {
-        	Set<Connection> mostDistantConnections = mostDistantEntry.getValue();
-        	int markVertex = selectMarkVertex(mostDistantConnections);
+        	int markVertex = selectVertexToMark(mostDistantEntry.getKey());
         	
         	markCount++;
         	markVertex(markVertex, distanceMap);
@@ -44,6 +45,7 @@ class Solution {
     	Iterator<Entry<Integer, Set<Connection>>> iterator = distanceMap.entrySet().iterator();
     	while(iterator.hasNext()) {
     		Entry<Integer, Set<Connection>> entry = iterator.next();
+    		int distance = entry.getKey();
     		Set<Connection> connections = entry.getValue();
     		Iterator<Connection> iter = connections.iterator();
 	    	while(iter.hasNext()) {
@@ -52,6 +54,9 @@ class Solution {
 	    		int v2 = con.getV2();
 	    		if(v1 == vertex || v2 == vertex) {
 	    			iter.remove();
+	    			Map<Integer, Integer> vertexCount = distanceVertexMap.get(distance);
+	    			decreaseCount(vertexCount, v1);
+	    			decreaseCount(vertexCount, v2);
 	    		}
 	    	}
 	    	if(connections.isEmpty()) {
@@ -60,25 +65,53 @@ class Solution {
     	}
     }
     
-    private int selectMarkVertex(Set<Connection> connections) {
+    private int selectVertexToMark(int distance) {
+    	Map<Integer, Integer> vertexCountMap = distanceVertexMap.get(distance);
     	int vertex = 0;
     	int max = -1;
-    	int[] counts = new int[numberOfVertices+1];
-    	for(Connection con : connections) {
-    		int v1 = con.getV1();
-    		int v2 = con.getV2();
-    		counts[v1]++;
-    		if(counts[v1] > max) {
-    			vertex = v1;
-    			max = counts[v1];
-    		}
-    		counts[v2]++;
-    		if(counts[v2] > max) {
-    			vertex = v2;
-    			max = counts[v2];
+    	for(Entry<Integer, Integer> vertexCount : vertexCountMap.entrySet()) {
+    		if(vertexCount.getValue() > max) {
+    			vertex = vertexCount.getKey();
+    			max = vertexCount.getValue();
     		}
     	}
     	return vertex;
+    }
+    
+    private Map<Integer, Map<Integer, Integer>> distanceVertexMap(NavigableMap<Integer, Set<Connection>> distanceMap) {
+    	Map<Integer, Map<Integer, Integer>> distanceVertexMap = new HashMap<Integer, Map<Integer, Integer>>();
+    	for(Entry<Integer, Set<Connection>> distanceConnections : distanceMap.entrySet()) {
+    		int distance = distanceConnections.getKey();
+    		Set<Connection> connections = distanceConnections.getValue();
+    		Map<Integer, Integer> vertexCount = new HashMap<Integer, Integer>();
+    		for(Connection conn : connections) {
+    			int v1 = conn.getV1();
+    			int v2 = conn.getV2();
+    			increaseCount(vertexCount, v1);
+    			increaseCount(vertexCount, v2);
+    		}
+    		distanceVertexMap.put(distance, vertexCount);
+    	}
+    	return distanceVertexMap;
+    }
+    
+    private void increaseCount(Map<Integer, Integer> vertexCount, int v) {
+    	if(!vertexCount.containsKey(v)) {
+    		vertexCount.put(v, 1);
+    	} else {
+    		vertexCount.put(v, vertexCount.get(v) + 1);
+    	}
+    }
+    
+    private void decreaseCount(Map<Integer, Integer> vertexCount, int v) {
+    	if(vertexCount.containsKey(v)) {
+    		int count = vertexCount.get(v);
+    		if(count == 1) {
+    			vertexCount.remove(v);
+    		} else {
+    			vertexCount.put(v, count-1);
+    		}
+    	}
     }
     
     private List<Connection> getInput() throws NumberFormatException, IOException {
@@ -194,6 +227,11 @@ class Solution {
 			if (v2 != other.v2)
 				return false;
 			return true;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("[%d,%d]", v1, v2);
 		}
     }
 }
