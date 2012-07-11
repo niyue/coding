@@ -16,7 +16,8 @@ class Solution {
     private int numberOfVertices; // N
     private int maxDistance; // K
     private int[][] distances;
-    Map<Integer, Map<Integer, Integer>> distanceVertexMap;
+    private Map<Integer, Map<Integer, Integer>> distanceVertexMap;
+    private Map<Integer, Map<Integer, Set<Connection>>> distanceVertexConnectionsMap;
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -28,6 +29,7 @@ class Solution {
         distances = distances(edges);
         NavigableMap<Integer, Set<Connection>> distanceMap = distanceMap(distances);
         distanceVertexMap = distanceVertexMap(distanceMap);
+        distanceVertexConnectionsMap = distanceVertexConnectionsMap(distances);
         
         Entry<Integer, Set<Connection>> mostDistantEntry = distanceMap.lastEntry();
         int markCount = 0;
@@ -41,27 +43,50 @@ class Solution {
         System.out.println(markCount);
     }
     
+    private Map<Integer, Map<Integer, Set<Connection>>> distanceVertexConnectionsMap(int[][] distances) {
+    	Map<Integer, Map<Integer, Set<Connection>>> distanceVertexConnectionsMap = new HashMap<Integer, Map<Integer, Set<Connection>>>();
+    	for(int i=1;i<=numberOfVertices;i++) {
+    		for(int j=i+1;j<=numberOfVertices;j++) {
+    			int distance = distances[i][j];
+    			if(!distanceVertexConnectionsMap.containsKey(distance)) {
+    				Map<Integer, Set<Connection>> vertexConnectionsMap = new HashMap<Integer, Set<Connection>>();
+    				distanceVertexConnectionsMap.put(distance, vertexConnectionsMap);
+    			}
+    			Map<Integer, Set<Connection>> vertexConnectionsMap = distanceVertexConnectionsMap.get(distance);
+    			if(!vertexConnectionsMap.containsKey(i)) {
+    				vertexConnectionsMap.put(i, new HashSet<Connection>());
+    			}
+    			if(!vertexConnectionsMap.containsKey(j)) {
+    				vertexConnectionsMap.put(j, new HashSet<Connection>());
+    			}
+    			Connection i2j = new Connection(i, j);
+    			vertexConnectionsMap.get(i).add(i2j);
+    			vertexConnectionsMap.get(j).add(i2j);
+    		}
+    	}
+    	return distanceVertexConnectionsMap;
+    }
+    
     private void markVertex(int vertex, NavigableMap<Integer, Set<Connection>> distanceMap) {
     	Iterator<Entry<Integer, Set<Connection>>> iterator = distanceMap.entrySet().iterator();
     	while(iterator.hasNext()) {
     		Entry<Integer, Set<Connection>> entry = iterator.next();
     		int distance = entry.getKey();
     		Set<Connection> connections = entry.getValue();
-    		Iterator<Connection> iter = connections.iterator();
-	    	while(iter.hasNext()) {
-	    		Connection con = iter.next();
-	    		int v1 = con.getV1();
-	    		int v2 = con.getV2();
-	    		if(v1 == vertex || v2 == vertex) {
-	    			iter.remove();
-	    			Map<Integer, Integer> vertexCount = distanceVertexMap.get(distance);
-	    			decreaseCount(vertexCount, v1);
-	    			decreaseCount(vertexCount, v2);
-	    		}
-	    	}
-	    	if(connections.isEmpty()) {
-	    		iterator.remove();
-	    	}
+    		
+    		Set<Connection> vertexConnections = distanceVertexConnectionsMap.get(distance).get(vertex);
+    		for(Connection vertexConnection : vertexConnections) {
+    			connections.remove(vertexConnection);
+    			int v1 = vertexConnection.getV1();
+	    		int v2 = vertexConnection.getV2();
+    			Map<Integer, Integer> vertexCount = distanceVertexMap.get(distance);
+    			decreaseCount(vertexCount, v1);
+    			decreaseCount(vertexCount, v2);
+    		}
+    		if(connections.isEmpty()) {
+    			iterator.remove();
+    		}
+    		distanceVertexConnectionsMap.get(distance).remove(vertex);
     	}
     }
     
