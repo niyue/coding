@@ -15,8 +15,6 @@ import java.util.TreeMap;
 class Solution {
     private int numberOfVertices; // N
     private int maxDistance; // K
-    private int[][] distances;
-    private NavigableMap<Integer, Map<Integer, Set<Connection>>> distanceVertexConnectionsMap;
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -26,9 +24,9 @@ class Solution {
     public void solve() throws NumberFormatException, IOException {
         List<Connection> edges = getInput();
         
-        distances = distances(edges);
+        int[][] distances = distances(edges);
         
-        distanceVertexConnectionsMap = distanceVertexConnectionsMap(distances);
+        NavigableMap<Integer, Map<Integer, Set<Connection>>> distanceVertexConnectionsMap = distanceVertexConnectionsMap(distances);
         
         Entry<Integer, Map<Integer, Set<Connection>>> mostDistantEntry = distanceVertexConnectionsMap.lastEntry();
         int markCount = 0;
@@ -49,8 +47,7 @@ class Solution {
     		for(int j=i+1;j<=numberOfVertices;j++) {
     			int distance = distances[i][j];
     			if(!distanceVertexConnectionsMap.containsKey(distance)) {
-    				Map<Integer, Set<Connection>> vertexConnectionsMap = new HashMap<Integer, Set<Connection>>();
-    				distanceVertexConnectionsMap.put(distance, vertexConnectionsMap);
+    				distanceVertexConnectionsMap.put(distance, new HashMap<Integer, Set<Connection>>());
     			}
     			Map<Integer, Set<Connection>> vertexConnectionsMap = distanceVertexConnectionsMap.get(distance);
     			if(!vertexConnectionsMap.containsKey(i)) {
@@ -72,24 +69,27 @@ class Solution {
     	while(iterator.hasNext()) {
     		Entry<Integer, Map<Integer, Set<Connection>>> entry = iterator.next();
     		int distance = entry.getKey();
-    		Map<Integer, Set<Connection>> vertexConnectionsMap = distanceVertexConnectionsMap.get(distance);
-    		
-    		List<Connection> markedVertexConnections = new ArrayList<Connection>(vertexConnectionsMap.get(vertex));
-    		for(Connection connection : markedVertexConnections) {
-    			vertexConnectionsMap.get(connection.getV1()).remove(connection);
-    			vertexConnectionsMap.get(connection.getV2()).remove(connection);
-    		}
-    		
-    		Iterator<Entry<Integer, Set<Connection>>> iter = vertexConnectionsMap.entrySet().iterator();
-    		while(iter.hasNext()) {
-    			Set<Connection> connections = iter.next().getValue();
-    			if(connections.isEmpty()) {
-    				iter.remove();
+    		if(distanceVertexConnectionsMap.containsKey(distance)) {
+    			Map<Integer, Set<Connection>> vertexConnectionsMap = distanceVertexConnectionsMap.get(distance);
+    			if(vertexConnectionsMap.containsKey(vertex)) {
+    				List<Connection> markedVertexConnections = new ArrayList<Connection>(vertexConnectionsMap.get(vertex));
+    				for(Connection connection : markedVertexConnections) {
+    					vertexConnectionsMap.get(connection.getV1()).remove(connection);
+    					vertexConnectionsMap.get(connection.getV2()).remove(connection);
+    				}
+    				
+    				Iterator<Entry<Integer, Set<Connection>>> iter = vertexConnectionsMap.entrySet().iterator();
+    				while(iter.hasNext()) {
+    					Set<Connection> connections = iter.next().getValue();
+    					if(connections.isEmpty()) {
+    						iter.remove();
+    					}
+    				}
+    				
+    				if(vertexConnectionsMap.isEmpty()) {
+    					iterator.remove();
+    				}
     			}
-    		}
-    		
-    		if(vertexConnectionsMap.isEmpty()) {
-    			iterator.remove();
     		}
     	}
     }
