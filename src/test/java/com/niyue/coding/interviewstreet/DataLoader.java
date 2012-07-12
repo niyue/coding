@@ -3,7 +3,7 @@ package com.niyue.coding.interviewstreet;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TestLoader {
+public final class DataLoader {
     /**
      * The convention is:
      * 1) Tests are placed under the same path/package of test class

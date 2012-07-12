@@ -1,4 +1,4 @@
-package com.niyue.coding.interviewstreet.farvertices;
+package com.niyue.coding.interviewstreet.median;
 
 import java.util.Collection;
 
@@ -10,14 +10,14 @@ import com.niyue.coding.interviewstreet.BaseTest;
 import com.niyue.coding.interviewstreet.DataLoader;
 
 @RunWith(Parameterized.class)
-public class FarVerticesTest extends BaseTest {
-    public FarVerticesTest(String input, String output) {
+public class MedianTest extends BaseTest {
+    public MedianTest(String input, String output) {
         super(input, output);
     }
     
     @Parameters
     public static Collection<String[]> data() {
-        return DataLoader.load(FarVerticesTest.class);
+        return DataLoader.load(MedianTest.class);
     }
 
     @Override

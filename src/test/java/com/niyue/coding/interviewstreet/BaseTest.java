@@ -31,7 +31,7 @@ public abstract class BaseTest {
     }
     
     @Test
-    public void test() throws Exception {
+    public void testSolution() throws Exception {
         solve();
         assertEquals(expectedOutput().trim(), actualOutputData.toString().trim());
     }
