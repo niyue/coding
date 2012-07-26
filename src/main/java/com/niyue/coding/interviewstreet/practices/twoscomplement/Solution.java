@@ -33,7 +33,7 @@ class Solution {
     private long count(int number) {
     	long count = 0;
     	if(number < 0) {
-    		count = -32 * number - count(-1 * number - 1);
+    		count = -32 * (long) number - count(-1 * number - 1);
     	} else if(number > 0) {
     		int nearestPowerOfTwo = nearestPowerOfTwo(number);
     		int remaining = number - nearestPowerOfTwo;
