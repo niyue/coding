@@ -1,4 +1,4 @@
-package com.niyue.coding.interviewstreet.meetingpoint;
+package com.niyue.coding.interviewstreet.eventree;
 
 import java.util.Collection;
 

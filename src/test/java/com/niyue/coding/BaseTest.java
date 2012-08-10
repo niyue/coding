@@ -1,4 +1,4 @@
-package com.niyue.coding.interviewstreet;
+package com.niyue.coding;
 
 import static org.junit.Assert.assertEquals;
 

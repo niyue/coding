@@ -1,4 +1,4 @@
-package com.niyue.coding.interviewstreet;
+package com.niyue.coding;
 
 import java.util.ArrayList;
 import java.util.List;
