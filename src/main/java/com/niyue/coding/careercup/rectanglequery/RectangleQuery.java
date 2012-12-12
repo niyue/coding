@@ -17,6 +17,7 @@ import java.util.TreeMap;
  * xn,yn,xn',yn',n are non-negative integers, and all rectangles are parallel with axis. 
  * Design a query which return, for a specific grid unit (x,y)(x+1,y+1), how many rectangles cover it? 
  * Minimize the time complexity of the query and the pre-processing. 1<n<1000
+ * It is essentially a 2D version of this problem, http://www.careercup.com/question?id=14680789
  */
 public class RectangleQuery {
 	private List<Rectangle> rectangles;
