@@ -70,5 +70,23 @@ public class DisjointIntervalTest {
 				new Interval(1, 5),
 				new Interval(10, 27))));
 	}
-
+	
+	@Test
+	public void testIntervalWithMaxInteger() {
+		DisjointInterval di = new DisjointInterval();
+		List<Interval> intervals = di.merge(
+				new Interval(1, 3),
+				new Interval(3, Integer.MAX_VALUE)
+		);
+		assertThat(intervals.size(), equalTo(1));
+		assertThat(intervals, equalTo(Arrays.asList(
+				new Interval(1, Integer.MAX_VALUE))));
+	}
+	
+	@Test
+	public void testEmptySetOfInterval() {
+		DisjointInterval di = new DisjointInterval();
+		List<Interval> intervals = di.merge();
+		assertThat(intervals.size(), equalTo(0));
+	}
 }

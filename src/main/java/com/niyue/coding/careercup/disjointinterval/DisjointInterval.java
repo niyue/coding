@@ -15,23 +15,32 @@ public class DisjointInterval {
 		for(Interval i : disjoinIntervals) {
 			disjointIntervalList.add(i);
 		}
-		disjointIntervalList.add(new Interval(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		
 		Collections.sort(disjointIntervalList);
 		
 		List<Interval> mergedIntervals = new ArrayList<Interval>();
 		
-		Interval current = disjointIntervalList.get(0);
-		for(int i=0;i<disjointIntervalList.size()-1;i++) {
-			Interval next = disjointIntervalList.get(i+1);
-			if(isJoint(current, next)) {
-				current = merge(current, next);
-			} else {
-				mergedIntervals.add(current);
-				current = next;
+		if(disjointIntervalList.size() > 0) {
+			Interval current = disjointIntervalList.get(0);
+			for(int i=0;i<disjointIntervalList.size();i++) {
+				if(isLastInterval(i, disjointIntervalList.size())) {
+					mergedIntervals.add(current);
+				} else {
+					Interval next = disjointIntervalList.get(i+1);
+					if(isJoint(current, next)) {
+						current = merge(current, next);
+					} else {
+						mergedIntervals.add(current);
+						current = next;
+					}
+				}
 			}
 		}
 		return mergedIntervals;
+	}
+	
+	private boolean isLastInterval(int current, int length) {
+		return current == length - 1;
 	}
 	
 	private Interval merge(Interval i1, Interval i2) {
