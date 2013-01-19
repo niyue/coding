@@ -48,8 +48,51 @@ public class Solution {
      * @return the rank for the given number in the numbers derived from the given finger print
      */
     long rank(FingerPrint fingerPrint, long number) {
-        List<Integer> nextGreaterNumber = nextGreaterNumber(fingerPrint, number, fingerPrint.digits.size());
-        return 0;
+        List<Integer> digits = fingerPrint.getDigits();
+        int totalDigits = totalDigitsNumber(digits);
+        List<Integer> numberDigits = digits(number, totalDigits);
+        return rank(fingerPrint.getDigits(), numberDigits, 0);
+    }
+
+    long rank(List<Integer> digits, List<Integer> number, int startIndex) {
+        long rank = 0;
+        if(startIndex < number.size()) {
+            int digit = number.get(startIndex);
+
+            for(int i = 0;i < digit;i++) {
+                if(digits.get(i) > 0) {
+                    decreaseDigitCount(digits, i);
+                    long rankForI = combinations(digits);
+                    rank += rankForI;
+                    increaseDigitCount(digits, i);
+                }
+            }
+
+            if(digits.get(digit) > 0) {
+                decreaseDigitCount(digits, digit);
+                long subRank = rank(digits, number, startIndex + 1);
+                rank += subRank;
+                increaseDigitCount(digits, digit);
+            }
+        }
+        return rank;
+    }
+
+    private int totalDigitsNumber(List<Integer> digits) {
+        int totalDigits = 0;
+        for(int i=0;i < digits.size();i++) {
+            totalDigits += digits.get(i);
+        }
+        return totalDigits;
+    }
+
+    long combinations(List<Integer> digits) {
+        int totalDigits = totalDigitsNumber(digits);
+        long combination = combinations[totalDigits];
+        for(int i=0;i < digits.size();i++) {
+            combination /= combinations[digits.get(i)];
+        }
+        return combination;
     }
 
     private List<Integer> digits(long number, int length) {
@@ -66,62 +109,6 @@ public class Solution {
         }
         Collections.reverse(digits);
         return digits;
-    }
-
-    // find the a minimum number that is greater than the given number from all numbers generated from the given finger print
-    List<Integer> nextGreaterNumber(FingerPrint fingerPrint, long number, int length) {
-        List<Integer> digits = digits(number, length);
-        List<Integer> fingerPrintDigits = fullDigits(fingerPrint);
-        return findNextGreaterNumber(digits, fingerPrintDigits);
-    }
-
-    // for example, digits: [1, 9, 9], fingerPrintDigits: [0, 2, 1]
-    // output should be [2, 0, 1]
-    List<Integer> findNextGreaterNumber(List<Integer> digits, List<Integer> fingerPrintDigits) {
-        int[] states = new int[digits.size()];
-        LinkedList<Integer> nextGreaterNumber = new LinkedList<Integer>();
-        for(int i = 0;i < digits.size() && i >= 0;) {
-            if(states[i] == 0) {
-                if(hasEqualDigit(digits.get(i), fingerPrintDigits)) {
-                    states[i] = 1;
-                    nextGreaterNumber.add(digits.get(i));
-                    decreaseDigitCount(fingerPrintDigits, digits.get(i));
-                    i++;
-                } else {
-                    i = greaterNumberState(digits, fingerPrintDigits, nextGreaterNumber, states, i);
-                }
-            } else if(states[i] == 1) {
-                i = greaterNumberState(digits, fingerPrintDigits, nextGreaterNumber, states, i);
-            }
-        }
-        return nextGreaterNumber;
-    }
-
-    private int greaterNumberState(List<Integer> digits, List<Integer> fingerPrintDigits, LinkedList<Integer> nextGreaterNumber, int[] states, int currentDigitIndex) {
-        int firstGreaterNumber = firstGreaterDigit(digits.get(currentDigitIndex), fingerPrintDigits);
-        if(firstGreaterNumber != -1) {
-            nextGreaterNumber.add(firstGreaterNumber);
-            decreaseDigitCount(fingerPrintDigits, firstGreaterNumber);
-            addMinimumNumber(nextGreaterNumber, fingerPrintDigits);
-            currentDigitIndex = digits.size();
-        } else {
-            if(currentDigitIndex > 0) {
-                states[currentDigitIndex] = 0;
-                int digit = nextGreaterNumber.removeLast();
-                increaseDigitCount(fingerPrintDigits, digit);
-            }
-            currentDigitIndex--;
-        }
-        return currentDigitIndex;
-    }
-
-    List<Integer> addMinimumNumber(List<Integer> nextGreaterNumber, List<Integer> fingerPrintDigits) {
-        for(int i=0;i < fingerPrintDigits.size();i++) {
-            for(int j=0;j < fingerPrintDigits.get(i);j++) {
-                nextGreaterNumber.add(i);
-            }
-        }
-        return nextGreaterNumber;
     }
 
     private void decreaseDigitCount(List<Integer> fingerPrintDigits, int digit) {
@@ -281,6 +268,9 @@ public class Solution {
             return string.toString();
         }
     }
+
+    private final long[] combinations = new long[] {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600,
+            6227020800L, 87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L};
 
     private static final int[] squares = new int[] { 1, 4, 9, 16, 25, 36, 49, 64, 81 };
 

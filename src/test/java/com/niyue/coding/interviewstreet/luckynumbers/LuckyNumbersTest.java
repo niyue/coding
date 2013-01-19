@@ -163,6 +163,7 @@ public class LuckyNumbersTest {
     }
 
     @Test
+    @Ignore
     public void testGenerateAllValidFingerPrints() {
         Solution solution = new Solution();
         List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints();
@@ -184,40 +185,150 @@ public class LuckyNumbersTest {
     }
 
     @Test
-    public void testAddMinimumNumber() {
+    public void testCombinationFor0() {
         Solution solution = new Solution();
-        List<Integer> min = solution.addMinimumNumber(new ArrayList(), Arrays.asList(1, 1, 1));
-        assertThat(min, is(Arrays.asList(0, 1, 2)));
+        long combination = solution.combinations(Arrays.asList(1));
+        assertEquals(1, combination);
     }
 
     @Test
-    public void testAddSimpleMinimumNumber() {
+    public void testCombinationForTwoZeros() {
         Solution solution = new Solution();
-        List<Integer> number = new ArrayList<Integer>();
-        number.add(2);
-        List<Integer> min = solution.addMinimumNumber(number, Arrays.asList(1, 1, 0));
-        assertThat(min, is(Arrays.asList(2, 0, 1)));
+        long combination = solution.combinations(Arrays.asList(2));
+        assertEquals(1, combination);
     }
 
     @Test
-    public void testNextGreaterNumberThreeDigits() {
+    public void testCombinationForOneZeroOneOne() {
         Solution solution = new Solution();
-        List<Integer> nextGreaterNumber = solution.nextGreaterNumber(new Solution.FingerPrint(1, 1, 1), 199, 3);
-        assertThat(nextGreaterNumber, is(Arrays.asList(2, 0, 1)));
+        long combination = solution.combinations(Arrays.asList(1, 1));
+        assertEquals(2, combination);
     }
 
     @Test
-    public void testNoNextGreaterNumber() {
+    public void testCombinationForOneZeroTwoOnes() {
         Solution solution = new Solution();
-        List<Integer> nextGreaterNumber = solution.nextGreaterNumber(new Solution.FingerPrint(0, 1, 0), 105, 3);
-        assertTrue(nextGreaterNumber.isEmpty());
+        long combination = solution.combinations(Arrays.asList(1, 2));
+        assertEquals(3, combination);
     }
 
     @Test
-    public void testNextGreaterNumberLastDigit() {
+    public void testCombinationForTwoZerosTwoOnes() {
         Solution solution = new Solution();
-        List<Integer> nextGreaterNumber = solution.nextGreaterNumber(new Solution.FingerPrint(1, 1, 1), 101, 3);
-        assertThat(nextGreaterNumber, is(Arrays.asList(1, 0, 2)));
+        long combination = solution.combinations(Arrays.asList(2, 2));
+        assertEquals(6, combination);
+    }
+
+    @Test
+    public void testCombinationForThreeZerosTwoOnes() {
+        Solution solution = new Solution();
+        long combination = solution.combinations(Arrays.asList(3, 2));
+        assertEquals(10, combination);
+    }
+
+    @Test
+    public void testCombinationForOneZeroTwoOnesOneTwo() {
+        Solution solution = new Solution();
+        long combination = solution.combinations(Arrays.asList(1, 2, 1));
+        assertEquals(12, combination);
+    }
+
+    @Test
+    public void testRank() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 1120);
+        assertEquals(6, rank);
+    }
+
+    @Test
+    public void testRank1121() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 1121);
+        assertEquals(7, rank);
+    }
+
+    @Test
+    public void testRank1210() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 1210);
+        assertEquals(8, rank);
+    }
+
+    @Test
+    public void testRank0112() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 0112);
+        assertEquals(0, rank);
+    }
+
+    @Test
+    public void testRank2011() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 2011);
+        assertEquals(9, rank);
+    }
+
+    @Test
+    public void testRank2110() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 2110);
+        assertEquals(11, rank);
+    }
+
+    @Test
+    public void testRank9999() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 2222);
+        assertEquals(12, rank);
+    }
+
+    @Test
+    public void testSimpleRank() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{1, 2}), 110);
+        assertEquals(2, rank);
+    }
+
+    @Test
+    public void testRankWithOneDigit() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(1), 0);
+        assertEquals(0, rank);
+    }
+
+    @Test
+    public void testRankWith01() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{1, 1}), 01);
+        assertEquals(0, rank);
+    }
+
+    @Test
+    public void testRankWith10() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{1, 1}), 10);
+        assertEquals(1, rank);
+    }
+
+    @Test
+    public void testRankWith01001() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{3, 2}), 1001);
+        assertEquals(3, rank);
+    }
+
+    @Test
+    public void testRankWith11000() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{3, 2}), 11000);
+        assertEquals(9, rank);
+    }
+
+    @Test
+    public void testRankWith10010() {
+        Solution solution = new Solution();
+        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{3, 2}), 10010);
+        assertEquals(7, rank);
     }
 
     private void assertFingerPrintSetEquals(List<Solution.FingerPrint> fingerPrints, String... fingerPrintStrings) {
