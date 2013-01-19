@@ -21,8 +21,8 @@ public class Solution {
 
     public void solve() {
         getInput();
-
-        List<FingerPrint> luckyNumberFingerPrints = generateAllLuckyNumberFingerPrints();
+        int MAX_NUMBER_OF_DIGITS = 18;
+        List<FingerPrint> luckyNumberFingerPrints = generateAllLuckyNumberFingerPrints(MAX_NUMBER_OF_DIGITS);
 
         for (int i = 0; i < T; i++) {
             long start = startNumbers[i];
@@ -88,9 +88,9 @@ public class Solution {
 
     long combinations(List<Integer> digits) {
         int totalDigits = totalDigitsNumber(digits);
-        long combination = combinations[totalDigits];
+        long combination = factorials[totalDigits];
         for(int i=0;i < digits.size();i++) {
-            combination /= combinations[digits.get(i)];
+            combination /= factorials[digits.get(i)];
         }
         return combination;
     }
@@ -119,36 +119,11 @@ public class Solution {
         fingerPrintDigits.set(digit, fingerPrintDigits.get(digit) + 1);
     }
 
-
-    private boolean hasEqualDigit(int digit, List<Integer> fingerPrintDigits) {
-        return fingerPrintDigits.get(digit) > 0;
-    }
-
-    int firstGreaterDigit(int digit, List<Integer> fingerPrintDigits) {
-        int first = -1;
-        for(int i = digit + 1;i < fingerPrintDigits.size();i++) {
-            if(fingerPrintDigits.get(i) > 0) {
-                first = i;
-            }
-        }
-        return first;
-    }
-
-    private List<Integer> fullDigits(FingerPrint fingerPrint) {
-        List<Integer> fingerPrintDigits = fingerPrint.getDigits();
-        List<Integer> digits = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-        for(int i = 0;i < fingerPrintDigits.size();i++) {
-            digits.set(i, fingerPrintDigits.get(i));
-        }
-        return digits;
-    }
-
-    List<FingerPrint> generateAllLuckyNumberFingerPrints() {
-        int MAX_DIGITS = 18;
-        SortedSet<Integer> primesUnderMaxSum = primes.headSet(9 * 9 * MAX_DIGITS);
+    List<FingerPrint> generateAllLuckyNumberFingerPrints(int maxNumberOfDigits) {
+        SortedSet<Integer> primesUnderMaxSum = primes.headSet(9 * 9 * maxNumberOfDigits);
         List<FingerPrint> luckyNumberFingerPrints = new LinkedList<FingerPrint>();
         for(int prime : primesUnderMaxSum) {
-            List<FingerPrint> fingerPrintsForPrime = validSquareFingerPrints(prime, 9, MAX_DIGITS);
+            List<FingerPrint> fingerPrintsForPrime = validSquareFingerPrints(prime, 9, maxNumberOfDigits);
             for(FingerPrint fingerPrint : fingerPrintsForPrime) {
                 int sum = digitsSum(fingerPrint.getDigits());
                 if(isPrime(sum)) { // a lucky number finger print
@@ -205,6 +180,14 @@ public class Solution {
         int sum = 0;
         for (int i = 1; i < 10; i++) {
             sum += i * digits.get(i);
+        }
+        return sum;
+    }
+
+    private int digitsSquareSum(List<Integer> digits) {
+        int sum = 0;
+        for (int i = 1; i < 10; i++) {
+            sum += squares[i] * digits.get(i);
         }
         return sum;
     }
@@ -269,10 +252,10 @@ public class Solution {
         }
     }
 
-    private final long[] combinations = new long[] {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600,
+    private final long[] factorials = new long[] {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600,
             6227020800L, 87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L};
 
-    private static final int[] squares = new int[] { 1, 4, 9, 16, 25, 36, 49, 64, 81 };
+    private static final int[] squares = new int[] { 0, 1, 4, 9, 16, 25, 36, 49, 64, 81 };
 
     private static final SortedSet<Integer> primes = new TreeSet<Integer>(
             Arrays.asList(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,

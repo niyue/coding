@@ -163,25 +163,25 @@ public class LuckyNumbersTest {
     }
 
     @Test
-    @Ignore
     public void testGenerateAllValidFingerPrints() {
         Solution solution = new Solution();
-        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints();
-        System.out.println(validFingerPrints.size());
+        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(1);
+        assertEquals(0, validFingerPrints.size());
     }
 
     @Test
-    public void testFirstGreaterDigit() {
+    public void testGenerateAllValidFingerPrintsTwoDigits() {
         Solution solution = new Solution();
-        int firstGreaterDigit = solution.firstGreaterDigit(1, Arrays.asList(1, 1, 1));
-        assertEquals(2, firstGreaterDigit);
+        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(2);
+        assertTrue(validFingerPrints.size() > 0);
+        assertEquals(10, validFingerPrints.size());
     }
 
     @Test
-    public void testNoFirstGreaterDigit() {
+    public void testGenerateAllValidFingerPrintsFiveDigits() {
         Solution solution = new Solution();
-        int firstGreaterDigit = solution.firstGreaterDigit(5, Arrays.asList(1, 1, 1));
-        assertEquals(-1, firstGreaterDigit);
+        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(5);
+        assertTrue(validFingerPrints.size() > 0);
     }
 
     @Test
