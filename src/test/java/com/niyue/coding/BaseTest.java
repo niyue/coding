@@ -25,7 +25,7 @@ public abstract class BaseTest {
     
     @Before
     public void setUpStreams() {
-        redirecInputToInputFile();
+        redirectInputToInputFile();
         
         redirectOutputToMemory();
     }
@@ -36,7 +36,7 @@ public abstract class BaseTest {
         assertEquals(expectedOutput().trim(), actualOutputData.toString().trim());
     }
     
-    private void redirecInputToInputFile() {
+    private void redirectInputToInputFile() {
         InputStream inputStream = this.getClass().getResourceAsStream(inputFile);
         System.setIn(inputStream);
     }

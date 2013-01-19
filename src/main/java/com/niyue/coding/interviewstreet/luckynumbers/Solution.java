@@ -1,12 +1,6 @@
 package com.niyue.coding.interviewstreet.luckynumbers;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class Solution {
 
@@ -14,6 +8,11 @@ public class Solution {
     private long[] startNumbers;
     private long[] endNumbers;
     private Map<Long, Boolean> solution = new HashMap<Long, Boolean>();
+    private Map<Integer, Map<Integer, Set<FingerPrint>>> fingerPrintDB = new HashMap<Integer, Map<Integer, Set<FingerPrint>>>();
+    private Map<String, List<FingerPrint>> naturalFingerPrints = new HashMap<String, List<FingerPrint>>();
+    private Map<String, List<FingerPrint>> squareFingerPrints = new HashMap<String, List<FingerPrint>>();
+    private List<Integer> NATURAL_NUMBERS = Arrays.asList(0, 1, 2, 3, 4,  5,  6,  7,  8,  9 );
+    private List<Integer> SQUARED_NUMBERS = Arrays.asList(0, 1, 4, 9, 16, 25, 36, 49, 64, 81);
 
     public static void main(String[] args) throws java.lang.Exception {
         Solution sl = new Solution();
@@ -23,64 +22,202 @@ public class Solution {
     public void solve() {
         getInput();
 
+        List<FingerPrint> luckyNumberFingerPrints = generateAllLuckyNumberFingerPrints();
+
         for (int i = 0; i < T; i++) {
             long start = startNumbers[i];
             long end = endNumbers[i];
             long count = 0;
-            for (long j = start; j <= end; j++) {
-                List<Integer> digits = digits(j);
-                long fingerPrint = fingerPrint(digits);
-                boolean isLucky = false;
-                if (solution.containsKey(fingerPrint)) {
-                    isLucky = solution.get(fingerPrint);
-                } else {
-                    isLucky = isLuckyNumber(digits);
-                    solution.put(fingerPrint, isLucky);
-                }
-                if (isLucky) {
-                    count++;
-                }
+            for(FingerPrint fingerPrint : luckyNumberFingerPrints) {
+                long startRank = rank(fingerPrint, start);
+                long endRank = rank(fingerPrint, end);
+                count += endRank - startRank;
             }
             System.out.println(count);
         }
     }
 
-    private boolean isLuckyNumber(List<Integer> digits) {
-        return isPrime(digitsSum(digits)) && isPrime(digitsSquareSum(digits));
+    /**
+     * Compute the rank for a number when a finger print is given
+     * For any given finger print, many numbers can be derived from this finger print.
+     * For example, a finger print (0, 2, 1) means there are zero "0", two "1" and one "2" in this finger print, and there are three numbers that can derived from it, including: 112, 121, 211
+     * The rank means the given number's order in the set of numbers derived from this finger print when they are compared numerically
+     * For example, a number 199 will rank #3 in the example above since it is larger than 112 and 121 but smaller than 211
+     * @param fingerPrint the FingerPrint given
+     * @param number the number given to be ranked
+     * @return the rank for the given number in the numbers derived from the given finger print
+     */
+    long rank(FingerPrint fingerPrint, long number) {
+        List<Integer> nextGreaterNumber = nextGreaterNumber(fingerPrint, number, fingerPrint.digits.size());
+        return 0;
     }
 
-    private List<Integer> digits(long number) {
-        List<Integer> digits = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    private List<Integer> digits(long number, int length) {
+        List<Integer> digits = new ArrayList();
         long remain = number;
         while (remain >= 10) {
             int mod = (int) (remain % 10);
-            digits.set(mod, digits.get(mod) + 1);
+            digits.add(mod);
             remain = (remain - mod) / 10;
         }
-        digits.set((int) remain, digits.get((int) remain) + 1);
+        digits.add((int) remain);
+        for(int i = digits.size();i < length;i++) {
+            digits.add(0);
+        }
+        Collections.reverse(digits);
         return digits;
     }
 
-    private long fingerPrint(List<Integer> digits) {
-        long fingerPrint = 0;
-        for (int i = 1; i < 10; i++) {
-            fingerPrint = fingerPrint * 10 + digits.get(i);
+    // find the a minimum number that is greater than the given number from all numbers generated from the given finger print
+    List<Integer> nextGreaterNumber(FingerPrint fingerPrint, long number, int length) {
+        List<Integer> digits = digits(number, length);
+        List<Integer> fingerPrintDigits = fullDigits(fingerPrint);
+        return findNextGreaterNumber(digits, fingerPrintDigits);
+    }
+
+    // for example, digits: [1, 9, 9], fingerPrintDigits: [0, 2, 1]
+    // output should be [2, 0, 1]
+    List<Integer> findNextGreaterNumber(List<Integer> digits, List<Integer> fingerPrintDigits) {
+        int[] states = new int[digits.size()];
+        LinkedList<Integer> nextGreaterNumber = new LinkedList<Integer>();
+        for(int i = 0;i < digits.size() && i >= 0;) {
+            if(states[i] == 0) {
+                if(hasEqualDigit(digits.get(i), fingerPrintDigits)) {
+                    states[i] = 1;
+                    nextGreaterNumber.add(digits.get(i));
+                    decreaseDigitCount(fingerPrintDigits, digits.get(i));
+                    i++;
+                } else {
+                    i = greaterNumberState(digits, fingerPrintDigits, nextGreaterNumber, states, i);
+                }
+            } else if(states[i] == 1) {
+                i = greaterNumberState(digits, fingerPrintDigits, nextGreaterNumber, states, i);
+            }
         }
-        return fingerPrint;
+        return nextGreaterNumber;
+    }
+
+    private int greaterNumberState(List<Integer> digits, List<Integer> fingerPrintDigits, LinkedList<Integer> nextGreaterNumber, int[] states, int currentDigitIndex) {
+        int firstGreaterNumber = firstGreaterDigit(digits.get(currentDigitIndex), fingerPrintDigits);
+        if(firstGreaterNumber != -1) {
+            nextGreaterNumber.add(firstGreaterNumber);
+            decreaseDigitCount(fingerPrintDigits, firstGreaterNumber);
+            addMinimumNumber(nextGreaterNumber, fingerPrintDigits);
+            currentDigitIndex = digits.size();
+        } else {
+            if(currentDigitIndex > 0) {
+                states[currentDigitIndex] = 0;
+                int digit = nextGreaterNumber.removeLast();
+                increaseDigitCount(fingerPrintDigits, digit);
+            }
+            currentDigitIndex--;
+        }
+        return currentDigitIndex;
+    }
+
+    List<Integer> addMinimumNumber(List<Integer> nextGreaterNumber, List<Integer> fingerPrintDigits) {
+        for(int i=0;i < fingerPrintDigits.size();i++) {
+            for(int j=0;j < fingerPrintDigits.get(i);j++) {
+                nextGreaterNumber.add(i);
+            }
+        }
+        return nextGreaterNumber;
+    }
+
+    private void decreaseDigitCount(List<Integer> fingerPrintDigits, int digit) {
+        fingerPrintDigits.set(digit, fingerPrintDigits.get(digit) - 1);
+    }
+
+    private void increaseDigitCount(List<Integer> fingerPrintDigits, int digit) {
+        fingerPrintDigits.set(digit, fingerPrintDigits.get(digit) + 1);
+    }
+
+
+    private boolean hasEqualDigit(int digit, List<Integer> fingerPrintDigits) {
+        return fingerPrintDigits.get(digit) > 0;
+    }
+
+    int firstGreaterDigit(int digit, List<Integer> fingerPrintDigits) {
+        int first = -1;
+        for(int i = digit + 1;i < fingerPrintDigits.size();i++) {
+            if(fingerPrintDigits.get(i) > 0) {
+                first = i;
+            }
+        }
+        return first;
+    }
+
+    private List<Integer> fullDigits(FingerPrint fingerPrint) {
+        List<Integer> fingerPrintDigits = fingerPrint.getDigits();
+        List<Integer> digits = Arrays.asList(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        for(int i = 0;i < fingerPrintDigits.size();i++) {
+            digits.set(i, fingerPrintDigits.get(i));
+        }
+        return digits;
+    }
+
+    List<FingerPrint> generateAllLuckyNumberFingerPrints() {
+        int MAX_DIGITS = 18;
+        SortedSet<Integer> primesUnderMaxSum = primes.headSet(9 * 9 * MAX_DIGITS);
+        List<FingerPrint> luckyNumberFingerPrints = new LinkedList<FingerPrint>();
+        for(int prime : primesUnderMaxSum) {
+            List<FingerPrint> fingerPrintsForPrime = validSquareFingerPrints(prime, 9, MAX_DIGITS);
+            for(FingerPrint fingerPrint : fingerPrintsForPrime) {
+                int sum = digitsSum(fingerPrint.getDigits());
+                if(isPrime(sum)) { // a lucky number finger print
+                    luckyNumberFingerPrints.add(fingerPrint);
+                }
+            }
+        }
+        return luckyNumberFingerPrints;
+    }
+
+    // there are totally remainingNumberOfDigits, and max digit allowed is startingDigit, generate all finger prints that sums to the given sum
+    List<FingerPrint> validFingerPrints(int sum, int startingDigit, int remainingNumberOfDigits) {
+        return validFingerPrints(sum, startingDigit, remainingNumberOfDigits, NATURAL_NUMBERS, naturalFingerPrints);
+    }
+
+    List<FingerPrint> validSquareFingerPrints(int sum, int startingDigit, int remainingNumberOfDigits) {
+        return validFingerPrints(sum, startingDigit, remainingNumberOfDigits, SQUARED_NUMBERS, squareFingerPrints);
+    }
+
+    private List<FingerPrint> validFingerPrints(int sum, int startingDigit, int remainingNumberOfDigits, List<Integer> mappedNumbers, Map<String, List<FingerPrint>> fingerPrintStore) {
+        List<FingerPrint> fingerPrints = null;
+        String key = fingerPrintKey(sum, startingDigit, remainingNumberOfDigits);
+        if(fingerPrintStore.containsKey(key)) {
+            fingerPrints = fingerPrintStore.get(key);
+        } else {
+            fingerPrints = new LinkedList<FingerPrint>();
+            if(startingDigit > 0 || sum == 0) {
+                if(sum == 0) {
+                    FingerPrint allZeroFingerPrint = new FingerPrint(startingDigit, remainingNumberOfDigits);
+                    fingerPrints.add(allZeroFingerPrint);
+                } else {
+                    int mappedNumber = mappedNumbers.get(startingDigit);
+                    int maxTimes = sum < mappedNumber ? 0 : sum / mappedNumber;
+                    if(maxTimes <= remainingNumberOfDigits) {
+                        for(int j = maxTimes;j >= 0;j--) {
+                            List<FingerPrint> subFingerPrints = validFingerPrints(sum - mappedNumber * j, startingDigit - 1, remainingNumberOfDigits - j, mappedNumbers, fingerPrintStore);
+                            for(FingerPrint subFingerPrint : subFingerPrints) {
+                                fingerPrints.add(subFingerPrint.newSet(startingDigit, j));
+                            }
+                        }
+                    }
+                }
+            }
+            fingerPrintStore.put(key, fingerPrints);
+        }
+        return fingerPrints;
+    }
+
+    private String fingerPrintKey(int sum, int startingDigit, int remainingNumberOfDigits) {
+        return String.format("%d %d %d", sum, startingDigit, remainingNumberOfDigits);
     }
 
     private int digitsSum(List<Integer> digits) {
         int sum = 0;
         for (int i = 1; i < 10; i++) {
             sum += i * digits.get(i);
-        }
-        return sum;
-    }
-
-    private int digitsSquareSum(List<Integer> digits) {
-        int sum = 0;
-        for (int i = 1; i < 10; i++) {
-            sum += squares[i - 1] * digits.get(i);
         }
         return sum;
     }
@@ -100,10 +237,54 @@ public class Solution {
         }
     }
 
-    private static final int[] squares = new int[] { 1, 4, 9, 16, 25, 36, 49,
-            64, 81 };
+    public static final class FingerPrint {
+        private final int startingDigit;
+        private List<Integer> digits;
 
-    private static final Set<Integer> primes = new HashSet<Integer>(
+        public FingerPrint(int startingDigit, int numberOfZero) {
+            this.startingDigit = startingDigit;
+            this.digits = new ArrayList<Integer>(startingDigit + 1);
+            digits.add(numberOfZero);
+            for(int i=1;i<startingDigit + 1;i++) {
+                digits.add(0);
+            }
+        }
+
+        public FingerPrint(List<Integer> currentDigits, int numberOfTimes) {
+            this.startingDigit = currentDigits.size() - 1;
+            digits = new ArrayList<Integer>(currentDigits.size() + 1);
+            for(int i=0;i<currentDigits.size();i++) {
+                digits.add(currentDigits.get(i));
+            }
+            digits.add(numberOfTimes);
+        }
+
+        public FingerPrint(Integer... digits) {
+            this.startingDigit = 0;
+            this.digits = Arrays.asList(digits);
+        }
+
+        public List<Integer> getDigits() {
+            return digits;
+        }
+
+        public FingerPrint newSet(int digit, int numberOfTimes) {
+            return new FingerPrint(digits, numberOfTimes);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder string = new StringBuilder();
+            for(Integer digit : digits) {
+                string.append(digit).append(" ");
+            }
+            return string.toString();
+        }
+    }
+
+    private static final int[] squares = new int[] { 1, 4, 9, 16, 25, 36, 49, 64, 81 };
+
+    private static final SortedSet<Integer> primes = new TreeSet<Integer>(
             Arrays.asList(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
                     47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107,
                     109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173,
@@ -123,13 +304,5 @@ public class Solution {
                     1163, 1171, 1181, 1187, 1193, 1201, 1213, 1217, 1223, 1229,
                     1231, 1237, 1249, 1259, 1277, 1279, 1283, 1289, 1291, 1297,
                     1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381,
-                    1399, 1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453,
-                    1459, 1471, 1481, 1483, 1487, 1489, 1493, 1499, 1511, 1523,
-                    1531, 1543, 1549, 1553, 1559, 1567, 1571, 1579, 1583, 1597,
-                    1601, 1607, 1609, 1613, 1619, 1621, 1627, 1637, 1657, 1663,
-                    1667, 1669, 1693, 1697, 1699, 1709, 1721, 1723, 1733, 1741,
-                    1747, 1753, 1759, 1777, 1783, 1787, 1789, 1801, 1811, 1823,
-                    1831, 1847, 1861, 1867, 1871, 1873, 1877, 1879, 1889, 1901,
-                    1907, 1913, 1931, 1933, 1949, 1951, 1973, 1979, 1987, 1993,
-                    1997, 1999));
+                    1399, 1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453));
 }
