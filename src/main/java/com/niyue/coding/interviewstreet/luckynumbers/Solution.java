@@ -149,7 +149,9 @@ public class Solution {
     private void preFillZeroSumResult(FingerPrintStore fingerPrintStore, int maxNumberOfDigits) {
         for(int i=0;i < 10;i++) {
             for(int j = 0;j <= maxNumberOfDigits;j++) {
-                FingerPrint allZeroFingerPrint = new FingerPrint(i, j);
+                int[] digits = new int[i + 1];
+                digits[0] = j;
+                FingerPrint allZeroFingerPrint = new FingerPrint(digits);
                 fingerPrintStore.put(0, i, j, Collections.singletonList(allZeroFingerPrint));
             }
         }
@@ -167,7 +169,7 @@ public class Solution {
                     for(int j = maxTimes;j >= 0;j--) {
                         List<FingerPrint> subFingerPrints = validFingerPrints(sum - mappedNumber * j, startingDigit - 1, remainingNumberOfDigits - j, mappedNumbers, fingerPrintStore);
                         for(FingerPrint subFingerPrint : subFingerPrints) {
-                            fingerPrints.add(subFingerPrint.newSet(j));
+                            fingerPrints.add(new FingerPrint(subFingerPrint, j));
                         }
                     }
                 }
@@ -211,33 +213,46 @@ public class Solution {
     }
 
     public static final class FingerPrint {
-        private int[] digits;
+        public FingerPrint extendFrom;
+        public int numberOfDigits;
+        public int digit;
 
-        public FingerPrint(int startingDigit, int numberOfZero) {
-            this.digits = new int[startingDigit + 1];
-            digits[0] = numberOfZero;
-            // the remaining will be zero
+        public FingerPrint(int numberOfZero) {
+            this.extendFrom = null;
+            this.numberOfDigits = numberOfZero;
+            this.digit = 0;
         }
 
-        public FingerPrint(int[] currentDigits, int numberOfTimes) {
-            digits = Arrays.copyOf(currentDigits, currentDigits.length + 1);
-            digits[currentDigits.length] = numberOfTimes;
+        public FingerPrint(FingerPrint extendFrom, int numberOfTimes) {
+            this.extendFrom = extendFrom;
+            this.numberOfDigits = numberOfTimes;
+            this.digit = extendFrom.digit + 1;
         }
 
         public FingerPrint(int... digits) {
-            this.digits = digits;
+            this.digit = digits.length - 1;
+            this.numberOfDigits = digits[digits.length - 1];
+            if(digits.length > 1) {
+                this.extendFrom = new FingerPrint(Arrays.copyOf(digits, digits.length - 1));
+            }
         }
 
         public int[] getDigits() {
-            return digits;
-        }
+            int[] digits = new int[digit + 1];
 
-        public FingerPrint newSet(int numberOfTimes) {
-            return new FingerPrint(digits, numberOfTimes);
+            digits[digit] = numberOfDigits;
+            FingerPrint currentExtendFrom = this.extendFrom;
+            while(currentExtendFrom != null) {
+                digits[currentExtendFrom.digit] = currentExtendFrom.numberOfDigits;
+                currentExtendFrom = currentExtendFrom.extendFrom;
+            }
+
+            return digits;
         }
 
         @Override
         public String toString() {
+            int[] digits = getDigits();
             StringBuilder string = new StringBuilder();
             for(Integer digit : digits) {
                 string.append(digit).append(" ");

@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -140,6 +141,17 @@ public class LuckyNumbersTest {
         List<Solution.FingerPrint> fingerPrints = solution.validSquareFingerPrints(2, 2, 2);
         assertFingerPrintSetEquals(fingerPrints, "0 2 0 ");
     }
+
+    @Test
+    public void testFingerPrintToString() {
+        Solution.FingerPrint finterPrint = new Solution.FingerPrint(0, 2, 0);
+        assertEquals(2, finterPrint.digit);
+        assertEquals("0 2 0 ", finterPrint.toString());
+        Solution.FingerPrint extendedFingerPrint = new Solution.FingerPrint(finterPrint, 0);
+        assertEquals(3, extendedFingerPrint.digit);
+        assertEquals("0 2 0 0 ", extendedFingerPrint.toString());
+    }
+
 
     @Test
     public void testGenerateFingerPrintsForSquare232() {
@@ -332,6 +344,17 @@ public class LuckyNumbersTest {
         Solution solution = new Solution();
         long rank = solution.rank(new Solution.FingerPrint(new int[]{3, 2}), 10010);
         assertEquals(7, rank);
+    }
+
+    @Test
+    public void testFingerPrintDigits() {
+        Solution.FingerPrint fingerPrint = new Solution.FingerPrint(2, 3);
+        assertEquals(1, fingerPrint.digit);
+        assertEquals(3, fingerPrint.numberOfDigits);
+        assertEquals(0, fingerPrint.extendFrom.digit);
+        assertEquals(2, fingerPrint.extendFrom.numberOfDigits);
+        assertNull(fingerPrint.extendFrom.extendFrom);
+        assertEquals(2, fingerPrint.getDigits().length);
     }
 
     private void assertFingerPrintSetEquals(List<Solution.FingerPrint> fingerPrints, String... fingerPrintStrings) {
