@@ -174,62 +174,65 @@ public class LuckyNumbersTest {
         Solution solution = new Solution();
         List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(2);
         assertTrue(validFingerPrints.size() > 0);
+//        for(Solution.FingerPrint fingerPrint : validFingerPrints) {
+//            System.out.println(fingerPrint);
+//        }
         assertEquals(10, validFingerPrints.size());
     }
 
     @Test
-    public void testGenerateAllValidFingerPrintsFiveDigits() {
+    public void testGenerateAllValidFingerPrints15Digits() {
         Solution solution = new Solution();
-        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(5);
+        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(15);
         assertTrue(validFingerPrints.size() > 0);
     }
 
     @Test
     public void testCombinationFor0() {
         Solution solution = new Solution();
-        long combination = solution.combinations(Arrays.asList(1));
+        long combination = solution.combinations(new int[]{1});
         assertEquals(1, combination);
     }
 
     @Test
     public void testCombinationForTwoZeros() {
         Solution solution = new Solution();
-        long combination = solution.combinations(Arrays.asList(2));
+        long combination = solution.combinations(new int[]{2});
         assertEquals(1, combination);
     }
 
     @Test
     public void testCombinationForOneZeroOneOne() {
         Solution solution = new Solution();
-        long combination = solution.combinations(Arrays.asList(1, 1));
+        long combination = solution.combinations(new int[]{1, 1});
         assertEquals(2, combination);
     }
 
     @Test
     public void testCombinationForOneZeroTwoOnes() {
         Solution solution = new Solution();
-        long combination = solution.combinations(Arrays.asList(1, 2));
+        long combination = solution.combinations(new int[]{1, 2});
         assertEquals(3, combination);
     }
 
     @Test
     public void testCombinationForTwoZerosTwoOnes() {
         Solution solution = new Solution();
-        long combination = solution.combinations(Arrays.asList(2, 2));
+        long combination = solution.combinations(new int[]{2, 2});
         assertEquals(6, combination);
     }
 
     @Test
     public void testCombinationForThreeZerosTwoOnes() {
         Solution solution = new Solution();
-        long combination = solution.combinations(Arrays.asList(3, 2));
+        long combination = solution.combinations(new int[]{3, 2});
         assertEquals(10, combination);
     }
 
     @Test
     public void testCombinationForOneZeroTwoOnesOneTwo() {
         Solution solution = new Solution();
-        long combination = solution.combinations(Arrays.asList(1, 2, 1));
+        long combination = solution.combinations(new int[]{1, 2, 1});
         assertEquals(12, combination);
     }
 
@@ -285,7 +288,7 @@ public class LuckyNumbersTest {
     @Test
     public void testSimpleRank() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{1, 2}), 110);
+        long rank = solution.rank(new Solution.FingerPrint(new int[]{1, 2}), 110);
         assertEquals(2, rank);
     }
 
@@ -299,35 +302,35 @@ public class LuckyNumbersTest {
     @Test
     public void testRankWith01() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{1, 1}), 01);
+        long rank = solution.rank(new Solution.FingerPrint(new int[]{1, 1}), 01);
         assertEquals(0, rank);
     }
 
     @Test
     public void testRankWith10() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{1, 1}), 10);
+        long rank = solution.rank(new Solution.FingerPrint(new int[]{1, 1}), 10);
         assertEquals(1, rank);
     }
 
     @Test
     public void testRankWith01001() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{3, 2}), 1001);
+        long rank = solution.rank(new Solution.FingerPrint(new int[]{3, 2}), 1001);
         assertEquals(3, rank);
     }
 
     @Test
     public void testRankWith11000() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{3, 2}), 11000);
+        long rank = solution.rank(new Solution.FingerPrint(new int[]{3, 2}), 11000);
         assertEquals(9, rank);
     }
 
     @Test
     public void testRankWith10010() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new Integer[]{3, 2}), 10010);
+        long rank = solution.rank(new Solution.FingerPrint(new int[]{3, 2}), 10010);
         assertEquals(7, rank);
     }
 
