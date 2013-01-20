@@ -186,16 +186,16 @@ public class Solution {
         return sum;
     }
 
-    private int digitsSquareSum(List<Integer> digits) {
+    private int digitsSquareSum(int[] digits) {
         int sum = 0;
         for (int i = 1; i < 10; i++) {
-            sum += SQUARED_NUMBERS[i] * digits.get(i);
+            sum += SQUARED_NUMBERS[i] * digits[i];
         }
         return sum;
     }
 
     private boolean isPrime(int sum) {
-        return primes.contains(sum);
+        return primeSet.contains(sum);
     }
 
     private void getInput() {
@@ -284,4 +284,6 @@ public class Solution {
                     1231, 1237, 1249, 1259, 1277, 1279, 1283, 1289, 1291, 1297,
                     1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381,
                     1399, 1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453));
+
+    private static final Set<Integer> primeSet = new HashSet<Integer>(primes);
 }
