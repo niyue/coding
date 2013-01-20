@@ -79,8 +79,8 @@ public class Solution {
 
     private int totalDigitsNumber(int[] digits) {
         int totalDigits = 0;
-        for(int i=0;i < digits.length;i++) {
-            totalDigits += digits[i];
+        for (int digit : digits) {
+            totalDigits += digit;
         }
         return totalDigits;
     }
@@ -88,14 +88,14 @@ public class Solution {
     long combinations(int[] digits) {
         int totalDigits = totalDigitsNumber(digits);
         long combination = factorials[totalDigits];
-        for(int i=0;i < digits.length;i++) {
-            combination /= factorials[digits[i]];
+        for (int digit : digits) {
+            combination /= factorials[digit];
         }
         return combination;
     }
 
     private List<Integer> digits(long number, int length) {
-        List<Integer> digits = new ArrayList();
+        List<Integer> digits = new ArrayList<Integer>();
         long remain = number;
         while (remain >= 10) {
             int mod = (int) (remain % 10);
@@ -119,13 +119,14 @@ public class Solution {
     }
 
     List<FingerPrint> generateAllLuckyNumberFingerPrints(int maxNumberOfDigits) {
-        SortedSet<Integer> primesUnderMaxSum = primes.headSet(9 * 9 * maxNumberOfDigits);
+        SortedSet<Integer> primesUnderMaxSum = PRIMES.headSet(9 * 9 * maxNumberOfDigits);
         List<FingerPrint> luckyNumberFingerPrints = new LinkedList<FingerPrint>();
         for(int prime : primesUnderMaxSum) {
             List<FingerPrint> fingerPrintsForPrime = validSquareFingerPrints(prime, 9, maxNumberOfDigits);
             for(FingerPrint fingerPrint : fingerPrintsForPrime) {
                 int sum = digitsSum(fingerPrint.getDigits());
-                if(isPrime(sum)) { // a lucky number finger print
+                // a lucky number finger print
+                if(isPrime(sum)) {
                     luckyNumberFingerPrints.add(fingerPrint);
                 }
             }
@@ -195,7 +196,7 @@ public class Solution {
     }
 
     private boolean isPrime(int sum) {
-        return primeSet.contains(sum);
+        return PRIME_SET.contains(sum);
     }
 
     private void getInput() {
@@ -263,7 +264,7 @@ public class Solution {
     private static final long[] factorials = new long[] {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600,
             6227020800L, 87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L};
 
-    private static final SortedSet<Integer> primes = new TreeSet<Integer>(
+    private static final SortedSet<Integer> PRIMES = new TreeSet<Integer>(
             Arrays.asList(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
                     47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107,
                     109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173,
@@ -285,5 +286,5 @@ public class Solution {
                     1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381,
                     1399, 1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453));
 
-    private static final Set<Integer> primeSet = new HashSet<Integer>(primes);
+    private static final Set<Integer> PRIME_SET = new HashSet<Integer>(PRIMES);
 }
