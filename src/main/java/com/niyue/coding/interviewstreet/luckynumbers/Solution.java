@@ -28,8 +28,8 @@ public class Solution {
             long end = endNumbers[i];
             long count = 0;
             for(FingerPrint fingerPrint : luckyNumberFingerPrints) {
-                long startRank = rank(fingerPrint, start);
-                long endRank = rank(fingerPrint, end);
+                long startRank = rank(fingerPrint, start, MAX_NUMBER_OF_DIGITS);
+                long endRank = rank(fingerPrint, end, MAX_NUMBER_OF_DIGITS);
                 count += endRank - startRank;
             }
             System.out.println(count);
@@ -46,14 +46,12 @@ public class Solution {
      * @param number the number given to be ranked
      * @return the rank for the given number in the numbers derived from the given finger print
      */
-    long rank(FingerPrint fingerPrint, long number) {
-        int[] digits = fingerPrint.getDigits();
-        int totalDigits = totalDigitsNumber(digits);
-        List<Integer> numberDigits = digits(number, totalDigits);
-        return rank(fingerPrint.getDigits(), numberDigits, 0);
+    long rank(FingerPrint fingerPrint, long number, int maxNumberOfDigits) {
+        List<Integer> numberDigits = splitDigits(number, maxNumberOfDigits);
+        return rank(fingerPrint.getDigits(), numberDigits, 0, maxNumberOfDigits);
     }
 
-    long rank(int[] digits, List<Integer> number, int startIndex) {
+    long rank(int[] digits, List<Integer> number, int startIndex, int totalNumberOfDigits) {
         long rank = 0;
         if(startIndex < number.size()) {
             int digit = number.get(startIndex);
@@ -61,7 +59,7 @@ public class Solution {
             for(int i = 0;i < digit;i++) {
                 if(digits[i] > 0) {
                     decreaseDigitCount(digits, i);
-                    long rankForI = combinations(digits);
+                    long rankForI = combinations(digits, totalNumberOfDigits - 1);
                     rank += rankForI;
                     increaseDigitCount(digits, i);
                 }
@@ -69,7 +67,7 @@ public class Solution {
 
             if(digits[digit] > 0) {
                 decreaseDigitCount(digits, digit);
-                long subRank = rank(digits, number, startIndex + 1);
+                long subRank = rank(digits, number, startIndex + 1, totalNumberOfDigits - 1);
                 rank += subRank;
                 increaseDigitCount(digits, digit);
             }
@@ -77,24 +75,15 @@ public class Solution {
         return rank;
     }
 
-    private int totalDigitsNumber(int[] digits) {
-        int totalDigits = 0;
+    long combinations(int[] digits, int totalNumberOfDigits) {
+        long combination = FACTORIALS[totalNumberOfDigits];
         for (int digit : digits) {
-            totalDigits += digit;
-        }
-        return totalDigits;
-    }
-
-    long combinations(int[] digits) {
-        int totalDigits = totalDigitsNumber(digits);
-        long combination = factorials[totalDigits];
-        for (int digit : digits) {
-            combination /= factorials[digit];
+            combination /= FACTORIALS[digit];
         }
         return combination;
     }
 
-    private List<Integer> digits(long number, int length) {
+    private List<Integer> splitDigits(long number, int length) {
         List<Integer> digits = new ArrayList<Integer>();
         long remain = number;
         while (remain >= 10) {
@@ -257,7 +246,7 @@ public class Solution {
             for(Integer digit : digits) {
                 string.append(digit).append(" ");
             }
-            return string.toString();
+            return string.toString().trim();
         }
     }
 
@@ -276,7 +265,7 @@ public class Solution {
         }
     }
 
-    private static final long[] factorials = new long[] {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600,
+    private static final long[] FACTORIALS = new long[] {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600,
             6227020800L, 87178291200L, 1307674368000L, 20922789888000L, 355687428096000L, 6402373705728000L};
 
     private static final SortedSet<Integer> PRIMES = new TreeSet<Integer>(
