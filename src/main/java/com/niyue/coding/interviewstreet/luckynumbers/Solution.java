@@ -58,18 +58,18 @@ public class Solution {
 
             for(int i = 0;i < digit;i++) {
                 if(digits[i] > 0) {
-                    decreaseDigitCount(digits, i);
+                	digits[i]--;
                     long rankForI = combinations(digits, totalNumberOfDigits - 1);
                     rank += rankForI;
-                    increaseDigitCount(digits, i);
+                    digits[i]++;
                 }
             }
 
             if(digits[digit] > 0) {
-                decreaseDigitCount(digits, digit);
+            	digits[digit]--;
                 long subRank = rank(digits, number, startIndex + 1, totalNumberOfDigits - 1);
                 rank += subRank;
-                increaseDigitCount(digits, digit);
+                digits[digit]++;
             }
         }
         return rank;
@@ -97,14 +97,6 @@ public class Solution {
         }
         Collections.reverse(digits);
         return digits;
-    }
-
-    private void decreaseDigitCount(int[] fingerPrintDigits, int digit) {
-        fingerPrintDigits[digit] = fingerPrintDigits[digit] - 1;
-    }
-
-    private void increaseDigitCount(int[] fingerPrintDigits, int digit) {
-        fingerPrintDigits[digit] = fingerPrintDigits[digit] + 1;
     }
 
     List<int[]> generateAllLuckyNumberFingerPrints(int maxNumberOfDigits) {
@@ -188,7 +180,7 @@ public class Solution {
     }
 
     private boolean isPrime(int sum) {
-        return PRIME_SET.contains(sum);
+        return PRIME_NUMBERS[sum];
     }
 
     private void getInput() {
@@ -283,6 +275,12 @@ public class Solution {
                     1231, 1237, 1249, 1259, 1277, 1279, 1283, 1289, 1291, 1297,
                     1301, 1303, 1307, 1319, 1321, 1327, 1361, 1367, 1373, 1381,
                     1399, 1409, 1423, 1427, 1429, 1433, 1439, 1447, 1451, 1453));
-
-    private static final Set<Integer> PRIME_SET = new HashSet<Integer>(PRIMES);
+    private static final boolean[] PRIME_NUMBERS = primeNumberTable();
+    private static boolean[] primeNumberTable() {
+    	boolean[] isPrime = new boolean[PRIMES.last() + 1];
+    	for(int prime : PRIMES) {
+    		isPrime[prime] = true;
+    	}
+    	return isPrime;
+    }
 }
