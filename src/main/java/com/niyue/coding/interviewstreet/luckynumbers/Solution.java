@@ -26,10 +26,12 @@ public class Solution {
         for (int i = 0; i < T; i++) {
             long start = startNumbers[i];
             long end = endNumbers[i];
+            int[] startDigits = splitDigits(start, MAX_NUMBER_OF_DIGITS);
+            int[] endDigits = splitDigits(end, MAX_NUMBER_OF_DIGITS);
             long count = 0;
             for(int[] luckyDigits : luckyNumberFingerPrints) {
-                long startRank = rank(luckyDigits, start, MAX_NUMBER_OF_DIGITS);
-                long endRank = rank(luckyDigits, end, MAX_NUMBER_OF_DIGITS);
+                long startRank = rank(luckyDigits, startDigits, MAX_NUMBER_OF_DIGITS);
+                long endRank = rank(luckyDigits, endDigits, MAX_NUMBER_OF_DIGITS);
                 count += endRank - startRank;
             }
             System.out.println(count);
@@ -46,15 +48,14 @@ public class Solution {
      * @param number the number given to be ranked
      * @return the rank for the given number in the numbers derived from the given finger print
      */
-    long rank(int[] luckyDigits, long number, int maxNumberOfDigits) {
-        List<Integer> numberDigits = splitDigits(number, maxNumberOfDigits);
+    long rank(int[] luckyDigits, int[] numberDigits, int maxNumberOfDigits) {
         return rank(luckyDigits, numberDigits, 0, maxNumberOfDigits);
     }
 
-    long rank(int[] digits, List<Integer> number, int startIndex, int totalNumberOfDigits) {
+    long rank(int[] digits, int[] number, int startIndex, int totalNumberOfDigits) {
         long rank = 0;
-        if(startIndex < number.size()) {
-            int digit = number.get(startIndex);
+        if(startIndex < number.length) {
+            int digit = number[startIndex];
 
             for(int i = 0;i < digit;i++) {
                 if(digits[i] > 0) {
@@ -83,20 +84,28 @@ public class Solution {
         return combination;
     }
 
-    private List<Integer> splitDigits(long number, int length) {
-        List<Integer> digits = new ArrayList<Integer>();
+    private int[] splitDigits(long number, int length) {
+    	int[] digits = new int[length];
+    	
         long remain = number;
-        while (remain >= 10) {
+        int i = 0;
+        while (remain > 0) {
             int mod = (int) (remain % 10);
-            digits.add(mod);
+            digits[i] = mod;
             remain = (remain - mod) / 10;
+            i++;
         }
-        digits.add((int) remain);
-        for(int i = digits.size();i < length;i++) {
-            digits.add(0);
-        }
-        Collections.reverse(digits);
+        digits = reverse(digits);
         return digits;
+    }
+    
+    private int[] reverse(int[] digits) {
+    	for(int i = 0; i < digits.length / 2; i++){
+    	    int temp = digits[i];
+    	    digits[i] = digits[digits.length - i - 1];
+    	    digits[digits.length - i - 1] = temp;
+    	}
+    	return digits;
     }
 
     List<int[]> generateAllLuckyNumberFingerPrints(int maxNumberOfDigits) {

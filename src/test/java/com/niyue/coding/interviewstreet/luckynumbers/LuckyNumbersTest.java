@@ -247,98 +247,98 @@ public class LuckyNumbersTest {
     @Test
     public void testRank() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 2, 1}, 1120, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, new int[] {1, 1, 2, 0}, 4);
         assertEquals(6, rank);
     }
 
     @Test
     public void testRank1121() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 2, 1}, 1121, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, new int[] {1, 1, 2, 1}, 4);
         assertEquals(7, rank);
     }
 
     @Test
     public void testRank1210() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 2, 1}, 1210, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, new int[] {1, 2, 1, 0}, 4);
         assertEquals(8, rank);
     }
 
     @Test
     public void testRank0112() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 2, 1}, 0112, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, new int[] {0, 1, 1, 2}, 4);
         assertEquals(0, rank);
     }
 
     @Test
     public void testRank2011() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 2, 1}, 2011, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, new int[] {2, 0, 1, 1}, 4);
         assertEquals(9, rank);
     }
 
     @Test
     public void testRank2110() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 2, 1}, 2110, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, new int[] {2, 1, 1, 0}, 4);
         assertEquals(11, rank);
     }
 
     @Test
-    public void testRank9999() {
+    public void testRank2222() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 2, 1}, 2222, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, new int[] {2, 2, 2, 2}, 4);
         assertEquals(12, rank);
     }
 
     @Test
     public void testSimpleRank() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 2}, 110, 3);
+        long rank = solution.rank(new int[]{1, 2}, new int[] {1, 1, 0}, 3);
         assertEquals(2, rank);
     }
 
     @Test
     public void testRankWithOneDigit() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1}, 0, 1);
+        long rank = solution.rank(new int[]{1}, new int[] {0}, 1);
         assertEquals(0, rank);
     }
 
     @Test
     public void testRankWith01() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 1}, 01, 2);
+        long rank = solution.rank(new int[]{1, 1}, new int[] {0, 1}, 2);
         assertEquals(0, rank);
     }
 
     @Test
     public void testRankWith10() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{1, 1}, 10, 2);
+        long rank = solution.rank(new int[]{1, 1}, new int[] {1, 0}, 2);
         assertEquals(1, rank);
     }
 
     @Test
     public void testRankWith01001() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{3, 2}, 1001, 5);
+        long rank = solution.rank(new int[]{3, 2}, new int[] {0, 1, 0, 0, 1}, 5);
         assertEquals(3, rank);
     }
 
     @Test
     public void testRankWith11000() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{3, 2}, 11000, 5);
+        long rank = solution.rank(new int[]{3, 2}, new int[] {1, 1, 0, 0, 0}, 5);
         assertEquals(9, rank);
     }
 
     @Test
     public void testRankWith10010() {
         Solution solution = new Solution();
-        long rank = solution.rank(new int[]{3, 2}, 10010, 5);
+        long rank = solution.rank(new int[]{3, 2}, new int[] {1, 0, 0, 1, 0}, 5);
         assertEquals(7, rank);
     }
 
