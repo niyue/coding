@@ -1,5 +1,6 @@
 package com.niyue.coding.leetcode.reverseinteger;
 
+// http://leetcode.com/onlinejudge#question_7
 public class Solution {
     public int reverse(int x) {
         boolean positive = true;
