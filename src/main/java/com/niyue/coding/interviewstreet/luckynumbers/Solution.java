@@ -21,15 +21,15 @@ public class Solution {
     public void solve() {
         getInput();
 
-        List<FingerPrint> luckyNumberFingerPrints = generateAllLuckyNumberFingerPrints(MAX_NUMBER_OF_DIGITS);
+        List<int[]> luckyNumberFingerPrints = generateAllLuckyNumberFingerPrints(MAX_NUMBER_OF_DIGITS);
 
         for (int i = 0; i < T; i++) {
             long start = startNumbers[i];
             long end = endNumbers[i];
             long count = 0;
-            for(FingerPrint fingerPrint : luckyNumberFingerPrints) {
-                long startRank = rank(fingerPrint, start, MAX_NUMBER_OF_DIGITS);
-                long endRank = rank(fingerPrint, end, MAX_NUMBER_OF_DIGITS);
+            for(int[] luckyDigits : luckyNumberFingerPrints) {
+                long startRank = rank(luckyDigits, start, MAX_NUMBER_OF_DIGITS);
+                long endRank = rank(luckyDigits, end, MAX_NUMBER_OF_DIGITS);
                 count += endRank - startRank;
             }
             System.out.println(count);
@@ -42,13 +42,13 @@ public class Solution {
      * For example, a finger print (0, 2, 1) means there are zero "0", two "1" and one "2" in this finger print, and there are three numbers that can derived from it, including: 112, 121, 211
      * The rank means the given number's order in the set of numbers derived from this finger print when they are compared numerically
      * For example, a number 199 will rank #3 in the example above since it is larger than 112 and 121 but smaller than 211
-     * @param fingerPrint the FingerPrint given
+     * @param luckyDigits the digits for a lucky number finger print
      * @param number the number given to be ranked
      * @return the rank for the given number in the numbers derived from the given finger print
      */
-    long rank(FingerPrint fingerPrint, long number, int maxNumberOfDigits) {
+    long rank(int[] luckyDigits, long number, int maxNumberOfDigits) {
         List<Integer> numberDigits = splitDigits(number, maxNumberOfDigits);
-        return rank(fingerPrint.getDigits(), numberDigits, 0, maxNumberOfDigits);
+        return rank(luckyDigits, numberDigits, 0, maxNumberOfDigits);
     }
 
     long rank(int[] digits, List<Integer> number, int startIndex, int totalNumberOfDigits) {
@@ -75,7 +75,7 @@ public class Solution {
         return rank;
     }
 
-    long combinations(int[] digits, int totalNumberOfDigits) {
+    long combinations(final int[] digits, int totalNumberOfDigits) {
         long combination = FACTORIALS[totalNumberOfDigits];
         for (int digit : digits) {
             combination /= FACTORIALS[digit];
@@ -107,16 +107,17 @@ public class Solution {
         fingerPrintDigits[digit] = fingerPrintDigits[digit] + 1;
     }
 
-    List<FingerPrint> generateAllLuckyNumberFingerPrints(int maxNumberOfDigits) {
+    List<int[]> generateAllLuckyNumberFingerPrints(int maxNumberOfDigits) {
         SortedSet<Integer> primesUnderMaxSum = PRIMES.headSet(9 * 9 * maxNumberOfDigits);
-        List<FingerPrint> luckyNumberFingerPrints = new LinkedList<FingerPrint>();
+        List<int[]> luckyNumberFingerPrints = new LinkedList<int[]>();
         for(int prime : primesUnderMaxSum) {
             List<FingerPrint> fingerPrintsForPrime = validSquareFingerPrints(prime, 9, maxNumberOfDigits);
             for(FingerPrint fingerPrint : fingerPrintsForPrime) {
-                int sum = digitsSum(fingerPrint.getDigits());
-                // a lucky number finger print
+                int[] digits = fingerPrint.getDigits();
+
+                int sum = digitsSum(digits);
                 if(isPrime(sum)) {
-                    luckyNumberFingerPrints.add(fingerPrint);
+                    luckyNumberFingerPrints.add(digits);
                 }
             }
         }
@@ -202,15 +203,9 @@ public class Solution {
     }
 
     public static final class FingerPrint {
-        public FingerPrint extendFrom;
-        public int numberOfDigits;
-        public int digit;
-
-        public FingerPrint(int numberOfZero) {
-            this.extendFrom = null;
-            this.numberOfDigits = numberOfZero;
-            this.digit = 0;
-        }
+        public final FingerPrint extendFrom;
+        public final int numberOfDigits;
+        public final int digit;
 
         public FingerPrint(FingerPrint extendFrom, int numberOfTimes) {
             this.extendFrom = extendFrom;
@@ -223,17 +218,16 @@ public class Solution {
             this.numberOfDigits = digits[digits.length - 1];
             if(digits.length > 1) {
                 this.extendFrom = new FingerPrint(Arrays.copyOf(digits, digits.length - 1));
+            } else {
+                this.extendFrom = null;
             }
         }
 
         public int[] getDigits() {
             int[] digits = new int[digit + 1];
 
-            digits[digit] = numberOfDigits;
-            FingerPrint currentExtendFrom = this.extendFrom;
-            while(currentExtendFrom != null) {
-                digits[currentExtendFrom.digit] = currentExtendFrom.numberOfDigits;
-                currentExtendFrom = currentExtendFrom.extendFrom;
+            for(FingerPrint current = this;current != null;current = current.extendFrom) {
+                digits[current.digit] = current.numberOfDigits;
             }
 
             return digits;
@@ -251,9 +245,9 @@ public class Solution {
     }
 
     private static class FingerPrintStore {
-        private List<FingerPrint>[][][] store;
-        public FingerPrintStore(int MAX_SUM, int MAX_NUMBER_OF_DIGITS) {
-            store = new List[MAX_SUM+1][10][MAX_NUMBER_OF_DIGITS+1];
+        private final List<FingerPrint>[][][] store;
+        public FingerPrintStore(int maxSum, int maxNumberOfDigits) {
+            store = new List[maxSum+1][10][maxNumberOfDigits+1];
         }
 
         public void put(int sum, int startingDigit, int remainingNumberOfDigits, List<FingerPrint> fingerPrints) {

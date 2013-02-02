@@ -1,15 +1,14 @@
 package com.niyue.coding.interviewstreet.luckynumbers;
 
-import org.junit.Ignore;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Test;
-
-import java.util.*;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 public class LuckyNumbersTest {
 
@@ -177,25 +176,22 @@ public class LuckyNumbersTest {
     @Test
     public void testGenerateAllValidFingerPrints() {
         Solution solution = new Solution();
-        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(1);
+        List<int[]> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(1);
         assertEquals(0, validFingerPrints.size());
     }
 
     @Test
     public void testGenerateAllValidFingerPrintsTwoDigits() {
         Solution solution = new Solution();
-        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(2);
+        List<int[]> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(2);
         assertTrue(validFingerPrints.size() > 0);
-//        for(Solution.FingerPrint fingerPrint : validFingerPrints) {
-//            System.out.println(fingerPrint);
-//        }
         assertEquals(10, validFingerPrints.size());
     }
 
     @Test
     public void testGenerateAllValidFingerPrints15Digits() {
         Solution solution = new Solution();
-        List<Solution.FingerPrint> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(15);
+        List<int[]> validFingerPrints = solution.generateAllLuckyNumberFingerPrints(15);
         assertTrue(validFingerPrints.size() > 0);
     }
 
@@ -251,98 +247,98 @@ public class LuckyNumbersTest {
     @Test
     public void testRank() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 1120, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, 1120, 4);
         assertEquals(6, rank);
     }
 
     @Test
     public void testRank1121() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 1121, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, 1121, 4);
         assertEquals(7, rank);
     }
 
     @Test
     public void testRank1210() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 1210, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, 1210, 4);
         assertEquals(8, rank);
     }
 
     @Test
     public void testRank0112() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 0112, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, 0112, 4);
         assertEquals(0, rank);
     }
 
     @Test
     public void testRank2011() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 2011, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, 2011, 4);
         assertEquals(9, rank);
     }
 
     @Test
     public void testRank2110() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 2110, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, 2110, 4);
         assertEquals(11, rank);
     }
 
     @Test
     public void testRank9999() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(1, 2, 1), 2222, 4);
+        long rank = solution.rank(new int[]{1, 2, 1}, 2222, 4);
         assertEquals(12, rank);
     }
 
     @Test
     public void testSimpleRank() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new int[]{1, 2}), 110, 3);
+        long rank = solution.rank(new int[]{1, 2}, 110, 3);
         assertEquals(2, rank);
     }
 
     @Test
     public void testRankWithOneDigit() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(1), 0, 1);
+        long rank = solution.rank(new int[]{1}, 0, 1);
         assertEquals(0, rank);
     }
 
     @Test
     public void testRankWith01() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new int[]{1, 1}), 01, 2);
+        long rank = solution.rank(new int[]{1, 1}, 01, 2);
         assertEquals(0, rank);
     }
 
     @Test
     public void testRankWith10() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new int[]{1, 1}), 10, 2);
+        long rank = solution.rank(new int[]{1, 1}, 10, 2);
         assertEquals(1, rank);
     }
 
     @Test
     public void testRankWith01001() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new int[]{3, 2}), 1001, 5);
+        long rank = solution.rank(new int[]{3, 2}, 1001, 5);
         assertEquals(3, rank);
     }
 
     @Test
     public void testRankWith11000() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new int[]{3, 2}), 11000, 5);
+        long rank = solution.rank(new int[]{3, 2}, 11000, 5);
         assertEquals(9, rank);
     }
 
     @Test
     public void testRankWith10010() {
         Solution solution = new Solution();
-        long rank = solution.rank(new Solution.FingerPrint(new int[]{3, 2}), 10010, 5);
+        long rank = solution.rank(new int[]{3, 2}, 10010, 5);
         assertEquals(7, rank);
     }
 
