@@ -1,14 +1,8 @@
 package com.niyue.coding.leetcode.treemaxpathsum;
 
-/**
- * Definition for binary tree
- * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
- * }
- */
+// Given a binary tree, find the maximum path sum.
+// The path may start and end at any node in the tree.
+// http://leetcode.com/onlinejudge#question_124
 public class Solution {
     public int maxPathSum(TreeNode root) {
         return maxPathAndSum(root)[1];    
