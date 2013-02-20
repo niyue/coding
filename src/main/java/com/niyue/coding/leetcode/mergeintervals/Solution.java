@@ -2,32 +2,23 @@ package com.niyue.coding.leetcode.mergeintervals;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
 
 // http://leetcode.com/onlinejudge#question_56
 // sort the interval array and for each interval, merge joint interval into larger one
 public class Solution {
     public ArrayList<Interval> merge(ArrayList<Interval> intervals) {
-        List<ComparableInterval> comparableIntervals = new ArrayList<ComparableInterval>();
-        for(Interval interval : intervals) {
-            comparableIntervals.add(new ComparableInterval(interval));
-        }
-        
-        Collections.sort(comparableIntervals);
-        ArrayList<Interval> sortedIntervals = new ArrayList<Interval>();
-        for(ComparableInterval ci : comparableIntervals) {
-            sortedIntervals.add(ci.interval);    
-        }
+        Collections.sort(intervals, new IntervalComparator());
         
     	ArrayList<Interval> mergedIntervals = new ArrayList<Interval>();
 		
-		if(sortedIntervals.size() > 0) {
-			Interval current = sortedIntervals.get(0);
-			for(int i=0;i<sortedIntervals.size();i++) {
-				if(isLastInterval(i, sortedIntervals.size())) {
+		if(intervals.size() > 0) {
+			Interval current = intervals.get(0);
+			for(int i=0;i<intervals.size();i++) {
+				if(isLastInterval(i, intervals.size())) {
 					mergedIntervals.add(current);
 				} else {
-					Interval next = sortedIntervals.get(i+1);
+					Interval next = intervals.get(i+1);
 					if(isJoint(current, next)) {
 						current = merge(current, next);
 					} else {
@@ -38,7 +29,6 @@ public class Solution {
 			}
 		}
 		return mergedIntervals;
-        
     }
     
     private boolean isLastInterval(int current, int length) {
@@ -53,16 +43,10 @@ public class Solution {
 		return i1.end >= i2.start;
 	}
     
-    public static class ComparableInterval implements Comparable<ComparableInterval> {
-    	public Interval interval;
-		
-		public ComparableInterval(Interval interval) {
-			this.interval = interval;
-		}
-
+    public static class IntervalComparator implements Comparator<Interval> {
 		@Override
-		public int compareTo(ComparableInterval ci) {
-			return this.interval.start - ci.interval.start;
+		public int compare(Interval i1, Interval i2) {
+			return i1.start - i2.start;
 		}
     }
     
