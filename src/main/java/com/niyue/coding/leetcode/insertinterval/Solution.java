@@ -2,6 +2,13 @@ package com.niyue.coding.leetcode.insertinterval;
 
 import java.util.ArrayList;
 
+// http://leetcode.com/onlinejudge#question_57
+// 1) use binary search to locate the range of intervals that might need to be merged. 
+// Binary search the newInterval.start and newInterval.end in all intervals, the range is [binarySearchResultForNewIntervalStart, binarySearchResultForNewIntervalEnd]
+// 2) Add [0, binarySearchResultForNewIntervalStart] to merged intervals since they don't have to be merged at all
+// 3) Process a very special index [binarySearchResultForNewIntervalStart] for merging according to different cases
+// 4) Merge the intervals in range [binarySearchResultForNewIntervalStart, binarySearchResultForNewIntervalEnd] into single one until the first non joint interval is met
+// 5) Add the remaining intervals from [binarySearchResultForNewIntervalEnd, interlvals.length] which don't have to be merged at all 
 public class Solution {
     public ArrayList<Interval> insert(ArrayList<Interval> intervals, Interval newInterval) {
         ArrayList<Interval> mergedIntervals = new ArrayList<Interval>();
