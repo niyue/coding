@@ -59,7 +59,6 @@ public class Solution {
     
     // find a position whose value is the greatest one that is less or equal to key
     private int binarySearch(ArrayList<Interval> intervals, int key, int start, int end) {
-    	int position = start;
     	if(intervals.size() > start && intervals.get(start).start <= key) {
     		while(start <= end) {
     			int mid = start + (end - start) / 2;
@@ -70,9 +69,8 @@ public class Solution {
     				end = mid - 1;
     			}
     		}
-    		position = start;
     	}
-        return position - 1;
+        return start - 1;
     }
     
     private boolean isJoint(Interval v1, Interval v2) {

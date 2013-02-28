@@ -1,5 +1,7 @@
 package com.niyue.coding.leetcode.sqrt;
 
+// http://leetcode.com/onlinejudge#question_69
+// Use binary search to get the square root of a number
 public class Solution {
     public int sqrt(int x) {
         if(x == 0 || x == 1) {
