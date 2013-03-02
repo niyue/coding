@@ -180,7 +180,8 @@ public class Solution {
         return sum;
     }
 
-    private int digitsSquareSum(int[] digits) {
+    @SuppressWarnings("unused")
+	private int digitsSquareSum(int[] digits) {
         int sum = 0;
         for (int i = 1; i < 10; i++) {
             sum += SQUARED_NUMBERS[i] * digits[i];
@@ -247,7 +248,8 @@ public class Solution {
 
     private static class FingerPrintStore {
         private final List<FingerPrint>[][][] store;
-        public FingerPrintStore(int maxSum, int maxNumberOfDigits) {
+        @SuppressWarnings("unchecked")
+		public FingerPrintStore(int maxSum, int maxNumberOfDigits) {
             store = new List[maxSum+1][10][maxNumberOfDigits+1];
         }
 
