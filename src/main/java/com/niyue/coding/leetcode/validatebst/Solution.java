@@ -2,7 +2,8 @@ package com.niyue.coding.leetcode.validatebst;
 
 import com.niyue.coding.leetcode.common.TreeNode;
 
-
+// http://leetcode.com/onlinejudge#question_98
+// Validate if a tree is binary search tree
 public class Solution {
     public boolean isValidBST(TreeNode root) {
         boolean valid = true;
