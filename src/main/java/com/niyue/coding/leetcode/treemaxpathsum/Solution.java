@@ -1,5 +1,7 @@
 package com.niyue.coding.leetcode.treemaxpathsum;
 
+import com.niyue.coding.leetcode.common.TreeNode;
+
 // Given a binary tree, find the maximum path sum.
 // The path may start and end at any node in the tree.
 // http://leetcode.com/onlinejudge#question_124
@@ -53,11 +55,4 @@ public class Solution {
         }    
         return maxPath;
     }
-    
-    public class TreeNode {
-    	int val;
-    	TreeNode left;
-    	TreeNode right;
-    	TreeNode(int x) { val = x; }
-	}
 }

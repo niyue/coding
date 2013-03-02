@@ -4,7 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.niyue.coding.leetcode.sortedarraytobst.Solution.TreeNode;
+import com.niyue.coding.leetcode.common.TreeNode;
 
 public class SortedArrayToBstTest {
 

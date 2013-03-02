@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import com.niyue.coding.leetcode.flattenbinarytree.Solution.TreeNode;
+import com.niyue.coding.leetcode.common.TreeNode;
 
 public class FlattenBinaryTreeTest {
 

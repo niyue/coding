@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import com.niyue.coding.leetcode.partitionlist.Solution.ListNode;
+import com.niyue.coding.leetcode.common.ListNode;
 
 public class PartitionListTest {
 

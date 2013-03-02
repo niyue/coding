@@ -2,6 +2,8 @@ package com.niyue.coding.leetcode.sumroottoleafnumbers;
 
 import java.util.LinkedList;
 
+import com.niyue.coding.leetcode.common.TreeNode;
+
 // http://leetcode.com/onlinejudge#question_129
 public class Solution {
 	private int sum = 0;
@@ -43,12 +45,5 @@ public class Solution {
     
     private boolean isLeaf(TreeNode node) {
         return node.left == null && node.right == null;
-    }
-    
-    public static class TreeNode {
-   	 	public int val;
-   	 	public TreeNode left;
-   	 	public TreeNode right;
-   	 	public TreeNode(int x) { val = x; }
     }
 }

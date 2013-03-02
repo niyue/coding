@@ -1,16 +1,10 @@
 package com.niyue.coding.leetcode.addtwonumbers;
 
+import com.niyue.coding.leetcode.common.ListNode;
+
 // http://leetcode.com/onlinejudge#question_2
 
 public class Solution {
-	// Definition for singly-linked list.
-	public static class ListNode {
-		int val;
-		ListNode next = null;
-		ListNode(int x) {
-			val = x;
-		}
-	}
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         int carry = 0;
         ListNode s1 = l1;

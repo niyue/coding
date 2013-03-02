@@ -1,5 +1,7 @@
 package com.niyue.coding.leetcode.partitionlist;
 
+import com.niyue.coding.leetcode.common.ListNode;
+
 // http://leetcode.com/onlinejudge#question_86
 // Partition the linked list to two lists (one for small values, one for big values), just like the partition in quick sort, and combine two lists finally
 public class Solution {
@@ -29,13 +31,5 @@ public class Solution {
             small = big;
         }
         return small;
-    }
-    
-    public static final class ListNode {
-    	public int val;
-    	public ListNode next;
-    	public ListNode(int val) {
-    		this.val = val;
-    	}
     }
 }

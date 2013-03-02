@@ -1,5 +1,7 @@
 package com.niyue.coding.leetcode.sortedarraytobst;
 
+import com.niyue.coding.leetcode.common.TreeNode;
+
 public class Solution {
     public TreeNode sortedArrayToBST(int[] num) {
         return toBST(num, 0, num.length - 1);           
@@ -17,12 +19,5 @@ public class Solution {
             bst = node;
         }
         return bst;
-    }
-    
-    public static class TreeNode {
-    	int val;
-    	TreeNode left;
-    	TreeNode right;
-    	TreeNode(int x) { val = x; }
     }
 }

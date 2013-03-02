@@ -1,5 +1,8 @@
 package com.niyue.coding.leetcode.sortedlisttobst;
 
+import com.niyue.coding.leetcode.common.ListNode;
+import com.niyue.coding.leetcode.common.TreeNode;
+
 // http://leetcode.com/onlinejudge#question_109
 // O(n) solution to convert sorted linked list to BST
 public class Solution {
@@ -35,22 +38,5 @@ public class Solution {
         }
         
         return new Object[] {root, node};
-    }
-    
-    public static final class ListNode {
-    	int val;
-    	ListNode next;
-    	ListNode(int x) {
-    		this.val = x;
-    	}
-    }
-    
-    public static final class TreeNode {
-    	int val;
-    	TreeNode left;
-    	TreeNode right;
-    	TreeNode(int val) {
-    		this.val = val;
-    	}
     }
 }

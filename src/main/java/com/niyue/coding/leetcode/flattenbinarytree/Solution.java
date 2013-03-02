@@ -1,5 +1,7 @@
 package com.niyue.coding.leetcode.flattenbinarytree;
 
+import com.niyue.coding.leetcode.common.TreeNode;
+
 // http://leetcode.com/onlinejudge#question_114
 // Flatten a binary tree into a singly linked list 
 // flatten to doubly linked list will make leetcode's online judge report time limit exceeded, I guess there is some infinite loop during leetcode's result verification for doubly linked list
@@ -46,12 +48,5 @@ public class Solution {
         }
         
         return firstAndLast;
-    }
-    
-    public static class TreeNode {
-    	 public int val;
-    	 public TreeNode left;
-    	 public TreeNode right;
-    	 public TreeNode(int x) { val = x; }
     }
 }

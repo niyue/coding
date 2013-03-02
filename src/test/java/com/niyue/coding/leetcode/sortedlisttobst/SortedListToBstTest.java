@@ -5,8 +5,8 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import com.niyue.coding.leetcode.sortedlisttobst.Solution.ListNode;
-import com.niyue.coding.leetcode.sortedlisttobst.Solution.TreeNode;
+import com.niyue.coding.leetcode.common.ListNode;
+import com.niyue.coding.leetcode.common.TreeNode;
 
 public class SortedListToBstTest {
 

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.niyue.coding.leetcode.sumroottoleafnumbers.Solution.TreeNode;
+import com.niyue.coding.leetcode.common.TreeNode;
 
 
 public class SumRootToLeafNumbersTest {
