@@ -6,7 +6,8 @@ import java.util.Queue;
 
 // http://leetcode.com/onlinejudge#question_130
 // O(n^2) time and O(1) space complexity solution. 
-// flood fill from cells in border using BFS (instead of calling DFS recursively)
+// flood fill from cells in border using BFS (instead of calling DFS recursively) to avoid stack overflow
+// the online judge of leetcode is problematic, and will report time limit exceeded for a test case in large data set, but sometimes this solution gets accepted and has all tests passed
 public class Solution {
 	private char[][] board;
 	private int height;
@@ -20,17 +21,11 @@ public class Solution {
 	    	
     		for(int y = 0; y < height; y++) {
     			markUnsurrounded(0, y);
-    		}
-    		
-    		for(int y = 0; y < height; y++) {
     			markUnsurrounded(width - 1, y);
     		}
     		
     		for(int x = 0; x < width; x++) {
     			markUnsurrounded(x, 0);
-    		}
-    		
-    		for(int x = 0; x < width; x++) {
     			markUnsurrounded(x, height - 1);
     		}
     		
@@ -49,32 +44,40 @@ public class Solution {
     private void markUnsurrounded(int cellX, int cellY) {
     	if(isO(cellX, cellY)) {
     		Queue<int[]> queue = new LinkedList<int[]>();
-    		queue.add(new int[] {cellX, cellY});
+    		queue.add(cell(cellX, cellY));
     		while(!queue.isEmpty()) {
     			int[] cell = queue.poll();
     			int x = cell[0];
     			int y = cell[1];
-    			setUnsurrounded(x, y);
-    			if((x + 1 < width) && isO(x + 1, y)) {
-					queue.offer(new int[] {x + 1, y});
-    			}
-    			if((x - 1 >= 0) && isO(x - 1, y)) {
-					queue.offer(new int[] {x - 1, y});
-    			}
-    			if((y + 1 < height) && isO(x, y + 1)) {
-					queue.offer(new int[] {x, y + 1});
-    			}
-    			if((y - 1 >= 0) && isO(x, y - 1)) {
-					queue.offer(new int[] {x, y - 1});
+    			if(isO(x, y)) {
+    				flip(x, y, 'U');
+    				if((y + 1 < height)) {
+    					addOCell(x, y + 1, queue);
+    				}
+    				if((y - 1 >= 0)) {
+    					addOCell(x, y - 1, queue);
+    				}
+    				if((x + 1 < width)) {
+    					addOCell(x + 1, y, queue);
+    				}
+    				if((x - 1 >= 0)) {
+    					addOCell(x - 1, y, queue);
+    				}
     			}
     		}
     	}
     }
     
-    private void setUnsurrounded(int x, int y) {
-    	board[x][y] = 'U';
+    private void addOCell(int x, int y, Queue<int[]> queue) {
+    	if(isO(x, y)) {
+    		queue.offer(cell(x, y));
+    	}
     }
-
+    
+    private int[] cell(int x, int y) {
+    	return new int[] {x, y};
+    }
+    
     private boolean isO(int x, int y) {
     	return board[x][y] == 'O';
     }
