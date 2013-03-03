@@ -1,11 +1,14 @@
 package com.niyue.coding.leetcode.surroundedregions;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+
 // http://leetcode.com/onlinejudge#question_130
 // O(n^2) time and O(n^2) space complexity solution. flood fill to detect if a region is surrounded
-// this solution needs to traverse the board twice and is too slow to pass large data set in leetcode online judge
+// this solution needs to traverse the board only once
 public class Solution {
 	private boolean[][] visited;
-	private boolean[][] surrounded;
 	private char[][] board;
 	private int height;
 	private int width;
@@ -16,68 +19,88 @@ public class Solution {
     		visited = new boolean[board.length][board[0].length];
 	    	width = board.length;
 	    	height = board[0].length;
-	    	surrounded = new boolean[board.length][board[0].length];
 	    	
-	    	for(int i = 0; i < board.length; i++) {
-	    		for(int j = 0; j < board[i].length; j++) {
-	    			if(isO(i, j) && isUnvisited(i, j)) {
-	    				if(isSurrounded(i, j)) {
-	    					surrounded[i][j] = true;
-	    				}	
-	    			}
-	    		}
-	    	}
-
-	    	for(int i = 0; i < board.length; i++) {
-	    		for(int j = 0; j < board[i].length; j++) {
-	    			if(surrounded[i][j]) {
-	    				flip(i, j);
+	    	for(int x = 0; x < board.length; x++) {
+	    		for(int y = 0; y < board[x].length; y++) {
+	    			if(isO(x, y) && isUnvisited(x, y)) {
+	    				Collection<Cell> surroundedCells = surroundedCells(x, y);
+	    				for(Cell cell : surroundedCells) {
+	    					flip(cell);
+	    				}
 	    			}
 	    		}
 	    	}
     	}
     }
 
-    private boolean isSurrounded(int i, int j) {
-    	boolean isSurrounded = true;
-    	visit(i, j);
-    	if(isBorder(i, j)) {
-    		isSurrounded = false;
-    	} else {
-    		isSurrounded = 	
-    			(isX(i + 1, j) || isSurrounded(i + 1, j)) &&
-    			(isX(i, j + 1) || isSurrounded(i, j + 1));
+    private Collection<Cell> surroundedCells(int x, int y) {
+    	Collection<Cell> surroundedCells = new LinkedList<Cell>();
+    	surroundedCells.add(new Cell(x, y));
+    	visit(x, y);
+    	if(isBorder(x, y)) {
+    		surroundedCells = Collections.emptyList();
     	}
-    	return isSurrounded;
+		else {
+			if(isO(x + 1, y)) {
+				surroundedCells = addSurroundedCells(x + 1, y, surroundedCells);
+			}
+			if(!surroundedCells.isEmpty() && isO(x, y + 1)) {
+				surroundedCells = addSurroundedCells(x, y + 1, surroundedCells);
+			}
+		}
+    	return surroundedCells;
     }
 
-    private void flip(int i, int j) {
-    	board[i][j] = 'X';
-    	if(isO(i + 1, j)) {
-    		flip(i + 1, j);
-    	}
-    	if(isO(i, j + 1)) {
-    		flip(i, j + 1);
-    	}
+    private Collection<Cell> addSurroundedCells(int x, int y, Collection<Cell> surroundedCells) {
+    	Collection<Cell> rightSurroundedCells = surroundedCells(x, y);
+		if(rightSurroundedCells.isEmpty()) {
+			surroundedCells = Collections.emptyList();
+		} else {
+			surroundedCells.addAll(rightSurroundedCells);
+		}
+		return surroundedCells;
+    }
+    private void flip(Cell c) {
+    	board[c.x][c.y] = 'X';
     }
 	
-	private boolean isBorder(int i, int j) {
-    	return i == 0 || j == 0 || i == width - 1 || j == height - 1;
+	private boolean isBorder(int x, int y) {
+    	return x == 0 || y == 0 || x == width - 1 || y == height - 1;
     }
 
-    private boolean isO(int i, int j) {
-    	return board[i][j] == 'O';
+    private boolean isO(int x, int y) {
+    	return board[x][y] == 'O';
     }
 
-    private boolean isX(int i, int j) {
-    	return board[i][j] == 'X';
+    private boolean isUnvisited(int x, int y) {
+    	return !visited[x][y];
     }
 
-    private boolean isUnvisited(int i, int j) {
-    	return !visited[i][j];
+    private void visit(int x, int y) {
+    	visited[x][y] = true;
     }
-
-    private void visit(int i, int j) {
-    	visited[i][j] = true;
+    
+    private static class Cell {
+    	public int x;
+    	public int y;
+    	public Cell(int x, int y) {
+    		this.x = x; 
+    		this.y = y;
+    	}
+    	
+    	public boolean equals(Object c) {
+    		if(c == null) {
+    			return false;
+    		}
+    		if(!(c instanceof Cell)) {
+    			return false;
+    		}
+    		Cell that = (Cell) c;
+    		return this.x == that.x && this.y == that.y;
+    	}
+    	
+    	public int hashCode() {
+    		return String.format("%s,%s", x, y).hashCode();
+    	}
     }
 }

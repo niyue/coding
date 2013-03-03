@@ -44,4 +44,42 @@ public class SurroundedRegionsTest {
 		sl.solve(board);
 		assertEquals('X', board[1][1]);
 	}
+	
+	@Test
+	// leetcode online judge reported an its internal error when submitted
+	public void test3x3O() {
+		char[][] board = new char[][] {
+				{'O', 'O', 'O'},
+				{'O', 'O', 'O'},
+				{'O', 'O', 'O'}
+		};
+		Solution sl = new Solution();
+		sl.solve(board);
+		assertEquals('O', board[0][0]);
+		assertEquals('O', board[0][1]);
+		assertEquals('O', board[0][2]);
+		assertEquals('O', board[1][0]);
+		assertEquals('O', board[1][1]);
+		assertEquals('O', board[1][2]);
+		assertEquals('O', board[2][0]);
+		assertEquals('O', board[2][1]);
+		assertEquals('O', board[2][2]);
+	}
+	
+	@Test
+	// added to verify the running time
+	public void testSample() {
+		char[][] board = new char[][] {
+				{'X', 'X', 'X', 'X'},
+				{'X', 'O', 'O', 'X'},
+				{'X', 'X', 'O', 'X'},
+				{'X', 'O', 'X', 'X'}
+		};
+		Solution sl = new Solution();
+		sl.solve(board);
+		assertEquals('X', board[1][1]);
+		assertEquals('X', board[1][2]);
+		assertEquals('X', board[2][2]);
+		assertEquals('O', board[3][1]);
+	}
 }
