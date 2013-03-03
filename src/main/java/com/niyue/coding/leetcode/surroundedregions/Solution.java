@@ -1,9 +1,12 @@
 package com.niyue.coding.leetcode.surroundedregions;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 
 // http://leetcode.com/onlinejudge#question_130
 // O(n^2) time and O(1) space complexity solution. 
-// flood fill from cells in border
+// flood fill from cells in border using BFS (instead of calling DFS recursively)
 public class Solution {
 	private char[][] board;
 	private int height;
@@ -43,27 +46,26 @@ public class Solution {
     	}
     }
     
-    private void markUnsurrounded(int x, int y) {
-    	if(isO(x, y)) {
-    		setUnsurrounded(x, y);
-    		if(x + 1 < width) {
-    			if(isO(x + 1, y)) {
-    				markUnsurrounded(x + 1, y);
+    private void markUnsurrounded(int cellX, int cellY) {
+    	if(isO(cellX, cellY)) {
+    		Queue<int[]> queue = new LinkedList<int[]>();
+    		queue.add(new int[] {cellX, cellY});
+    		while(!queue.isEmpty()) {
+    			int[] cell = queue.poll();
+    			int x = cell[0];
+    			int y = cell[1];
+    			setUnsurrounded(x, y);
+    			if((x + 1 < width) && isO(x + 1, y)) {
+					queue.offer(new int[] {x + 1, y});
     			}
-    		}
-    		if(x - 1 >= 0) {
-    			if(isO(x - 1, y)) {
-    				markUnsurrounded(x - 1, y);
+    			if((x - 1 >= 0) && isO(x - 1, y)) {
+					queue.offer(new int[] {x - 1, y});
     			}
-    		}
-    		if(y + 1 < height) {
-    			if(isO(x, y + 1)) {
-    				markUnsurrounded(x, y + 1);
+    			if((y + 1 < height) && isO(x, y + 1)) {
+					queue.offer(new int[] {x, y + 1});
     			}
-    		}
-    		if(y - 1 >= 0) {
-    			if(isO(x, y - 1)) {
-    				markUnsurrounded(x, y - 1);
+    			if((y - 1 >= 0) && isO(x, y - 1)) {
+					queue.offer(new int[] {x, y - 1});
     			}
     		}
     	}
