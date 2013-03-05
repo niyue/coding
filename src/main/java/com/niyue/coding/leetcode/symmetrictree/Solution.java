@@ -62,4 +62,31 @@ public class Solution {
         }
         return isSymmetric;
     }
+    
+    /**
+     * A recursive solution to this problem
+     */
+    public static class RecursiveSolution {
+    	public boolean isSymmetric(TreeNode root) {
+    		boolean isSymmetric = true;
+    		if(root != null) {
+    			isSymmetric = isSymmetric(root.left, root.right);
+    		}
+    		return isSymmetric;
+    	}
+    	
+    	private boolean isSymmetric(TreeNode left, TreeNode right) {
+    		boolean isSymmetric = false;
+    		if(left == null && right == null) {
+    			isSymmetric = true;
+    		} else if(left != null && right != null) {
+    			isSymmetric = 
+    					left.val == right.val && 
+    					isSymmetric(left.left, right.right) && 
+    					isSymmetric(left.right, right.left);
+    		}
+    		return isSymmetric;
+    	}
+    }
 }
+
