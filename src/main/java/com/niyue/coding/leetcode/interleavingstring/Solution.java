@@ -1,18 +1,18 @@
 package com.niyue.coding.leetcode.interleavingstring;
 
 // http://leetcode.com/onlinejudge#question_97
-// O(length1 * length2 * length3) time and space, use dynamic programming
+// O(length1 * length2) time and space, use dynamic programming
 public class Solution {
     private char[] s1;
     private char[] s2;
     private char[] s3;
-    private Boolean[][][] result;
+    private Boolean[][] result;
 
     public boolean isInterleave(String string1, String string2, String string3) {
         s1 = string1.toCharArray();
         s2 = string2.toCharArray();
         s3 = string3.toCharArray();       
-        result = new Boolean[s1.length + 1][s2.length + 1][s3.length + 1];
+        result = new Boolean[s1.length + 1][s2.length + 1];
         boolean isInterleave = false;
         if(s1.length + s2.length == s3.length) {
             isInterleave = isInterleave(0, 0, 0);
@@ -20,10 +20,11 @@ public class Solution {
         return isInterleave;
     }
 
+    // only length1 * length2 space is required since length3 == length1 + length2 is invariant
     private boolean isInterleave(int i1, int i2, int i3) {
         boolean isInterleave = false;
-        if(result[i1][i2][i3] != null) {
-            isInterleave = result[i1][i2][i3];
+        if(result[i1][i2] != null) {
+            isInterleave = result[i1][i2];
         } else {
             if(i3 < s3.length) {
                 boolean isS1Interleave = false;
@@ -38,7 +39,7 @@ public class Solution {
             } else {
                 isInterleave = i1 == s1.length && i2 == s2.length;
             }
-            result[i1][i2][i3] = isInterleave;
+            result[i1][i2] = isInterleave;
         }
         return isInterleave;
     }
