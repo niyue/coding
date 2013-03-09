@@ -11,6 +11,8 @@ public class Solution {
     private List<TreeNode> queue;
 
     public void recoverTree(TreeNode root) {
+    	peak = null;
+    	bottom = null;
         if(root != null) {
             queue = new ArrayList<TreeNode>(3);
             visit(root);

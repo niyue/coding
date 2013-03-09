@@ -24,6 +24,7 @@ public class RecoverBinaryTreeTest {
 	}
 	
 	@Test
+	// didn't handle switching first and last case
 	public void testSwitchFirstAndLast() {
 		TreeNode root = new TreeNode(1);
 		root.left = new TreeNode(3);
@@ -40,6 +41,7 @@ public class RecoverBinaryTreeTest {
 	}
 	
 	@Test
+	// forget to reset peak and bottom variable because the function may be run multiple times for different test cases 
 	public void test1324() {
 		TreeNode root = new TreeNode(68);
 		root.left = new TreeNode(41);
