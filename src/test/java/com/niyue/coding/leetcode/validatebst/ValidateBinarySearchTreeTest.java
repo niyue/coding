@@ -31,4 +31,15 @@ public class ValidateBinarySearchTreeTest {
 		boolean isBst = sl.isValidBST(root);
 		assertFalse(isBst);
 	}
+	
+	@Test
+	// current should not be null in while
+	public void testIterativeSolution() {
+		TreeNode root = new TreeNode(1);
+		root.left = new TreeNode(1);
+		IterativeSolution sl = new IterativeSolution();
+		boolean isBst = sl.isValidBST(root);
+		assertFalse(isBst);
+	}
 }
+
