@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.niyue.coding.leetcode.common.TreeNode;
 
+// http://leetcode.com/onlinejudge#question_99
+// in order traversal for the tree, and keep the last visited nodes and check their relative order
 public class Solution {
     private TreeNode peak;
     private TreeNode bottom;
