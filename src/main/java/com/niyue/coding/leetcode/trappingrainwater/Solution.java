@@ -3,61 +3,50 @@ package com.niyue.coding.leetcode.trappingrainwater;
 import java.util.Deque;
 import java.util.LinkedList;
 
+// http://leetcode.com/onlinejudge#question_42
 public class Solution {
     public int trap(int[] A) {
-        int[] leftBigger = leftNearestBigger(A);
-        int[] rightBigger = rightNearestBigger(A);
+        int[] leftMax = leftMax(A);
+        int[] rightMax = rightMax(A);
         int water = 0;
         for(int i = 1; i < A.length - 1; i++) {
-            int left = leftBigger[i];
-            int right = rightBigger[i];
+            int left = leftMax[i];
+            int right = rightMax[i];
             if(left != -1 && right != -1) {
-                int width = right - left - 1;
                 int height = Math.min(A[left], A[right]) - A[i];
-                water += width * height;
-                System.out.println(width * height);
+                water += height;
             }
         }        
         return water;
     }
 
-    private int[] leftNearestBigger(int[] A) {
-        int[] leftBigger = new int[A.length];
+    private int[] leftMax(int[] A) {
+        int[] max = new int[A.length];
         Deque<Integer> stack = new LinkedList<Integer>();
         for(int i = 0; i < A.length; i++) {
-            while(!stack.isEmpty()) {
-                if(A[i] >= A[stack.peekFirst()]) {
-                    stack.removeFirst();
-                } else {
-                    leftBigger[i] = stack.peekFirst();
-                    break;
-                }
-            }           
-            if(stack.isEmpty()) {
-                leftBigger[i] = -1;
+            if(stack.isEmpty() || A[i] >= A[stack.peekFirst()]) {
+                stack.clear();
+                stack.addFirst(i);
+                max[i] = -1;
+            } else {
+                max[i] = stack.peekFirst();
             }
-            stack.addFirst(i);
         }
-        return leftBigger;
+        return max;
     }
 
-    private int[] rightNearestBigger(int[] A) {
-        int[] rightBigger = new int[A.length];
+    private int[] rightMax(int[] A) {
+        int[] max = new int[A.length];
         Deque<Integer> stack = new LinkedList<Integer>();
         for(int i = A.length - 1; i >= 0; i--) {
-            while(!stack.isEmpty()) {
-                if(A[i] >= A[stack.peekFirst()]) {
-                    stack.removeFirst();
-                } else {
-                    rightBigger[i] = stack.peekFirst();
-                    break;
-                }
-            }           
-            if(stack.isEmpty()) {
-                rightBigger[i] = -1;
+            if(stack.isEmpty() || A[i] >= A[stack.peekFirst()]) {
+                stack.clear();
+                stack.addFirst(i);
+                max[i] = -1;
+            } else {
+                max[i] = stack.peekFirst();
             }
-            stack.addFirst(i);
         }
-        return rightBigger;
+        return max;
     }
 }
