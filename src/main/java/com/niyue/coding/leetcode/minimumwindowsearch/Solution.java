@@ -1,24 +1,25 @@
 package com.niyue.coding.leetcode.minimumwindowsearch;
 
+import java.util.HashMap;
 import java.util.Map;
 
+// http://leetcode.com/onlinejudge#question_76
 public class Solution {
     public String minWindow(String S, String T) {
         char[] s = S.toCharArray();
         char[] t = T.toCharArray();
-        Map<Integer, Integer> count = charCount(t);
+        CharCountingMap count = charCount(t);
         int end = firstEnd(s, count);
         String minWindow = "";
 
         if(end != -1) {
-        	Map<Integer, Integer> runningCount = count(s, 0, end, count);
+        	CharCountingMap runningCount = count(s, 0, end, count);
             int minWindowStart = moveStart(runningCount, count, s, 0, end);
             int minWindowEnd = end;
             int start = minWindowStart;
             for(int i = end + 1; i < s.length; i++) {
-            	int charVal = (int) s[i];
-            	if(count.containsKey(charVal)) {
-            		runningCount.put(charVal, runningCount.get(charVal) + 1);
+            	if(count.contains(s[i])) {
+            		runningCount.increase(s[i]);
             	}
                 if(s[i] == s[start]) {
                     end = i;
@@ -34,20 +35,12 @@ public class Solution {
         return minWindow;
     }
     
-    private int firstEnd(char[] s, Map<Integer, Integer> count) {
-    	Map<Integer, Integer> runningCount = new java.util.LinkedHashMap<Integer, Integer>(count);
+    private int firstEnd(char[] s, CharCountingMap count) {
+    	CharCountingMap runningCount = new CharCountingMap(count);
         int end = -1;
         for(int i = 0; i < s.length; i++) {
-            int charVal = (int) s[i];
-            if(runningCount.containsKey(charVal)) {
-                int decreasedCount = runningCount.get(charVal) - 1;
-                if(decreasedCount == 0) {
-                    runningCount.remove(charVal);
-                } else {
-                    runningCount.put(charVal, decreasedCount);
-                }
-            }
-            if(runningCount.isEmpty()) {
+        	runningCount.decrease(s[i]);
+            if(runningCount.isAllZero()) {
                 end = i;
                 break;
             }
@@ -55,26 +48,21 @@ public class Solution {
         return end;
     }
 
-    private Map<Integer, Integer> count(char[] s, int start, int end, Map<Integer, Integer> count) {
-        Map<Integer, Integer> runningCount = new java.util.LinkedHashMap<Integer, Integer>();
+    private CharCountingMap count(char[] s, int start, int end, CharCountingMap count) {
+    	CharCountingMap runningCount = new CharCountingMap();
         for(int i = start; i <= end; i++) {
-            int charVal = (int) s[i];
-            if(count.containsKey(charVal)) {
-                if(!runningCount.containsKey(charVal)) {
-                    runningCount.put(charVal, 0);
-                }
-                runningCount.put(charVal, runningCount.get(charVal) + 1);
+            if(count.contains(s[i])) {
+            	runningCount.increase(s[i]);
             }
         }
         return runningCount;
     }
 
-    private int moveStart(Map<Integer, Integer> runningCount, Map<Integer, Integer> charCount, char[] s, int currentStart, int currentEnd) {
+    private int moveStart(CharCountingMap runningCount, CharCountingMap charCount, char[] s, int currentStart, int currentEnd) {
         for(int i = currentStart; i <= currentEnd; i++) {
-            int charVal = (int) s[i];
-            if(charCount.containsKey(charVal)) {
-                if(runningCount.get(charVal) > charCount.get(charVal)) {
-                    runningCount.put(charVal, runningCount.get(charVal) - 1);    
+            if(charCount.contains(s[i])) {
+                if(runningCount.getCount(s[i]) > charCount.getCount(s[i])) {
+                	runningCount.decrease(s[i]);
                 } else {
                     currentStart = i;
                     break;
@@ -84,15 +72,55 @@ public class Solution {
         return currentStart;
     }
 
-    private Map<Integer, Integer> charCount(char[] t) {
-        Map<Integer, Integer> count = new java.util.LinkedHashMap<Integer, Integer>();
+    private CharCountingMap charCount(char[] t) {
+        CharCountingMap charCount = new CharCountingMap();
         for(char c : t) {
-            int charVal = (int) c;
-            if(!count.containsKey(charVal)) {
-                count.put(charVal, 0);
-            }
-            count.put(charVal, count.get(charVal) + 1);
+            charCount.increase(c);
         }
-        return count;
+        return charCount;
+    }
+    
+    private static class CharCountingMap {
+    	private Map<Integer, Integer> countMap = new HashMap<Integer, Integer>();
+    	private int zeroCount = 0;
+    	
+    	public CharCountingMap() {}
+    	
+    	public CharCountingMap(CharCountingMap that) {
+    		this.countMap = new HashMap<Integer, Integer>(that.countMap);
+    	}
+    	
+    	public void increase(char c) {
+    		int charVal = (int) c;
+    		if(!countMap.containsKey(charVal)) {
+    			countMap.put(charVal, 0);
+    		}
+    		countMap.put(charVal, countMap.get(charVal) + 1);
+    	}
+    	
+    	public void decrease(char c) {
+    		int charVal = (int) c;
+    		if(countMap.containsKey(charVal)) {
+    			int count = countMap.get(charVal) - 1;
+    			if(count == 0) {
+    				zeroCount++;
+    			}
+    			countMap.put(charVal, count);
+    		}
+    	}
+    	
+    	public boolean contains(char c) {
+    		int charVal = (int) c;
+    		return countMap.containsKey(charVal);
+    	}
+    	
+    	public int getCount(char c) {
+    		int charVal = (int) c;
+    		return countMap.get(charVal);
+    	}
+    	
+    	public boolean isAllZero() {
+    		return zeroCount == countMap.size();
+    	}
     }
 }
