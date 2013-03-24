@@ -2,7 +2,7 @@ package com.niyue.coding.leetcode.nqueensii;
 
 
 // http://leetcode.com/onlinejudge#question_52
-// a direct variant from n queens problem, too slow to pass the large data set (count solutions for 12 queens)
+// use int array to replace Deque to make the program run 30% faster to pass the large date set (count 12 queens)
 public class Solution {
     private int count;
     private int N;
@@ -29,8 +29,10 @@ public class Solution {
 
     private boolean isPlaceable(int row, int col, int[] queens) {
         boolean isPlaceable = true;
+        int leftDiagnoal = row + col;
+        int rightDiagnoal = row - col;
         for(int i = 0; i < row; i++) {
-        	if(col == queens[i] || row + col == i + queens[i] || row - col == i - queens[i]) {
+        	if(col == queens[i] || leftDiagnoal == i + queens[i] || rightDiagnoal == i - queens[i]) {
                 isPlaceable = false;
                 break;
             }
