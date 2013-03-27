@@ -10,24 +10,49 @@ public class Solution {
     
     private boolean isMatch(char[] s, int si, char[] p, int pi) {
         boolean isMatch = false;
-        if(si == s.length && pi == p.length) {
-            isMatch = true;
-        } else if(si == s.length && pi != p.length || si != s.length && pi == p.length) {
-            isMatch = false;
+        // pattern reaches its end
+        if(pi == p.length) {
+            isMatch = si == s.length;
         } else {
-            if(p[pi] == '.') {
-                isMatch = isMatch(s, si + 1, p, pi + 1);
-            } else if(p[pi] == '*') {
-                for(int i = 0; i <= s.length - si; i++) {
-                    if(isMatch(s, si + i, p, pi + 1)) {
-                        isMatch = true;
-                        break;
+            if(pi + 1 < p.length && p[pi + 1] == '*') {
+                if(p[pi] == '.') {
+                    for(int i = si; i <= s.length; i++) {
+                        if(isMatch(s, i, p, pi + 2)) {
+                            isMatch = true;
+                            break;
+                        }
+                    }
+                } else {
+                    int maxMatch = count(s, si, p[pi]);
+                    for(int i = 0; i <= maxMatch; i++) {
+                        if(isMatch(s, si + i, p, pi + 2)) {
+                            isMatch = true;
+                            break;
+                        }
                     }
                 }
+            } else if(p[pi] == '.') {
+                isMatch = isMatch(s, si + 1, p, pi + 1);
             } else {
-                isMatch = s[si] == p[pi] ? isMatch(s, si + 1, p, pi + 1) : false;
+            	// text reaches its end and the remaining pattern is not wildcard
+            	if(si < s.length) {
+            		isMatch = s[si] == p[pi] ? isMatch(s, si + 1, p, pi + 1) : false;
+            	}
             }
         }
         return isMatch;
+    }
+    
+    // count how many times pchar appears in s from si, namely, the maximum possible matched characters for pattern x*
+    private int count(char[] s, int si, char pchar) {
+    	int maxMatch = 0;
+        for(int i = si; i < s.length; i++) {
+            if(s[i] == pchar) {
+                maxMatch++;
+            } else {
+                break;
+            }
+        }
+        return maxMatch;
     }
 }
