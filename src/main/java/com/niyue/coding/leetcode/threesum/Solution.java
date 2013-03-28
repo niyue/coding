@@ -8,11 +8,11 @@ import java.util.Map;
 import java.util.Set;
 
 // http://leetcode.com/onlinejudge#question_15
-// an O(n^2) time and space solution to the three sum problem, but it is too slow to pass the large data set tests
+// an O(n^2) time and space solution to the three sum problem
 public class Solution {
-	private Set<String> existingSolutions;
+	private Map<Integer, Set<Integer>> existingSolutions;
     public ArrayList<ArrayList<Integer>> threeSum(int[] num) {
-    	existingSolutions = new HashSet<String>();
+    	existingSolutions = new HashMap<Integer, Set<Integer>>();
     	Arrays.sort(num);
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         for(int i = 0; i < num.length; i++) {
@@ -35,13 +35,15 @@ public class Solution {
     }
 
     private void add(ArrayList<ArrayList<Integer>> solutions, int i, int j, int k) {
-    	ArrayList<Integer> solution = new ArrayList<Integer>();
-    	solution.add(i);
-    	solution.add(j);
-    	solution.add(k);
-    	String key = String.format("%s,%s", i, j);
-    	if(!existingSolutions.contains(key)) {
-    		existingSolutions.add(key);
+    	if(!existingSolutions.containsKey(i)) {
+    		existingSolutions.put(i, new HashSet<Integer>());
+    	}
+    	if(!existingSolutions.get(i).contains(j)) {
+    		existingSolutions.get(i).add(j);
+    		ArrayList<Integer> solution = new ArrayList<Integer>();
+    		solution.add(i);
+    		solution.add(j);
+    		solution.add(k);
     		solutions.add(solution);
     	}
     }
