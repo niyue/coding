@@ -49,7 +49,9 @@ public class Solution {
         Set<ArrayList<Integer>> solutionSet = new HashSet<ArrayList<Integer>>();
         for(int i = 0; i < twoSumList.size(); i++) {
             for(int j = i + 1; j < twoSumList.size(); j++) {
-            	solutionSet.add(newSolution(twoSumList.get(i), twoSumList.get(j)));
+                if(isIndexDifferent(twoSumList.get(i), twoSumList.get(j))) {
+                	solutionSet.add(newSolution(twoSumList.get(i), twoSumList.get(j)));
+                }
             }
         }
         return solutionSet;
@@ -59,10 +61,19 @@ public class Solution {
         Set<ArrayList<Integer>> solutionSet = new HashSet<ArrayList<Integer>>();
         for(List<Integer> twoSum : twoSumList) {
             for(List<Integer> anotherTwoSum : anotherTwoSumList) {
-        		solutionSet.add(newSolution(twoSum, anotherTwoSum));   
+            	if(isIndexDifferent(twoSum, anotherTwoSum)) {
+            		solutionSet.add(newSolution(twoSum, anotherTwoSum));   
+            	}
             }
         }
         return solutionSet;
+    }
+
+    private boolean isIndexDifferent(List<Integer> twoSum, List<Integer> anotherTwoSum) {
+        return twoSum.get(0) != anotherTwoSum.get(0) &&
+               twoSum.get(1) != anotherTwoSum.get(1) &&
+               twoSum.get(0) != anotherTwoSum.get(1) &&
+               twoSum.get(1) != anotherTwoSum.get(0);
     }
 
     private ArrayList<Integer> newSolution(List<Integer> twoSum, List<Integer> anotherTwoSum) {
