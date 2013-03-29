@@ -2,7 +2,6 @@ package com.niyue.coding.leetcode.foursum;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,10 +12,8 @@ import java.util.Set;
 // http://leetcode.com/onlinejudge#question_18
 // O(n^2) solution to the four sum problem
 public class Solution {
-	private int[] num;
-    public ArrayList<ArrayList<Integer>> fourSum(int[] numbers, int target) {
+    public ArrayList<ArrayList<Integer>> fourSum(int[] num, int target) {
         Set<ArrayList<Integer>> solutions = new HashSet<ArrayList<Integer>>();
-        num = numbers;
         Arrays.sort(num);
         Map<Integer, List<List<Integer>>> twoSums = new HashMap<Integer, List<List<Integer>>>();
         for(int i = 0; i < num.length; i++) {
@@ -29,60 +26,21 @@ public class Solution {
             }
         }        
 
-        java.util.Iterator<Map.Entry<Integer, List<List<Integer>>>> iter = twoSums.entrySet().iterator();
-        while(iter.hasNext()) {
-            Map.Entry<Integer, List<List<Integer>>> twoSum = iter.next();
-            int anotherTwoSum = target - twoSum.getKey();
-            List<List<Integer>> twoSumList = twoSum.getValue();
-            if(anotherTwoSum == twoSum.getKey() && twoSumList.size() > 1) {
-                solutions.addAll(twoEqualSums(twoSumList));
-            } else if(twoSums.containsKey(anotherTwoSum)) {
-                List<List<Integer>> anotherTwoSumList = twoSums.get(anotherTwoSum);
-                solutions.addAll(twoSums(twoSumList, anotherTwoSumList));
-            }    
-            iter.remove();
+        for(int first = 0; first < num.length - 3; first++) {
+        	for(int fourth = first + 3; fourth < num.length; fourth++) {
+        		int twoSum = num[first] + num[fourth];
+        		int anotherTwoSum = target - twoSum;
+        		if(twoSums.containsKey(anotherTwoSum)) {
+        			List<List<Integer>> anotherTwoSumList = twoSums.get(anotherTwoSum);
+        			for(List<Integer> secondAndThird : anotherTwoSumList) {
+        				if(first < secondAndThird.get(0) && secondAndThird.get(1) < fourth) {
+        					solutions.add(new ArrayList<Integer>(Arrays.asList(num[first], num[secondAndThird.get(0)], num[secondAndThird.get(1)], num[fourth])));
+        				}
+        			}
+        		}
+        	}
         }
+
         return new ArrayList<ArrayList<Integer>>(solutions);
-    }
-
-    private Set<ArrayList<Integer>> twoEqualSums(List<List<Integer>> twoSumList) {
-        Set<ArrayList<Integer>> solutionSet = new HashSet<ArrayList<Integer>>();
-        for(int i = 0; i < twoSumList.size(); i++) {
-            for(int j = i + 1; j < twoSumList.size(); j++) {
-                if(isIndexDifferent(twoSumList.get(i), twoSumList.get(j))) {
-                	solutionSet.add(newSolution(twoSumList.get(i), twoSumList.get(j)));
-                }
-            }
-        }
-        return solutionSet;
-    }
-
-    private Set<ArrayList<Integer>> twoSums(List<List<Integer>> twoSumList, List<List<Integer>> anotherTwoSumList) {
-        Set<ArrayList<Integer>> solutionSet = new HashSet<ArrayList<Integer>>();
-        for(List<Integer> twoSum : twoSumList) {
-            for(List<Integer> anotherTwoSum : anotherTwoSumList) {
-            	if(isIndexDifferent(twoSum, anotherTwoSum)) {
-            		solutionSet.add(newSolution(twoSum, anotherTwoSum));   
-            	}
-            }
-        }
-        return solutionSet;
-    }
-
-    private boolean isIndexDifferent(List<Integer> twoSum, List<Integer> anotherTwoSum) {
-        return twoSum.get(0) != anotherTwoSum.get(0) &&
-               twoSum.get(1) != anotherTwoSum.get(1) &&
-               twoSum.get(0) != anotherTwoSum.get(1) &&
-               twoSum.get(1) != anotherTwoSum.get(0);
-    }
-
-    private ArrayList<Integer> newSolution(List<Integer> twoSum, List<Integer> anotherTwoSum) {
-        ArrayList<Integer> solution = new ArrayList<Integer>();
-        solution.add(num[twoSum.get(0)]);   
-        solution.add(num[twoSum.get(1)]);
-        solution.add(num[anotherTwoSum.get(0)]);
-        solution.add(num[anotherTwoSum.get(1)]);
-        Collections.sort(solution);    
-        return solution;
     }
 }
