@@ -4,14 +4,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 // http://leetcode.com/onlinejudge#question_18
+// O(n^2) solution to the four sum problem
 public class Solution {
-    public ArrayList<ArrayList<Integer>> fourSum(int[] num, int target) {
-        ArrayList<ArrayList<Integer>> solutions = new ArrayList<ArrayList<Integer>>();
+	private int[] num;
+    public ArrayList<ArrayList<Integer>> fourSum(int[] numbers, int target) {
+        Set<ArrayList<Integer>> solutions = new HashSet<ArrayList<Integer>>();
+        num = numbers;
         Arrays.sort(num);
         Map<Integer, List<List<Integer>>> twoSums = new HashMap<Integer, List<List<Integer>>>();
         for(int i = 0; i < num.length; i++) {
@@ -20,7 +25,7 @@ public class Solution {
                 if(!twoSums.containsKey(twoSum)) {
                     twoSums.put(twoSum, new LinkedList<List<Integer>>());                    
                 }
-                twoSums.get(twoSum).add(Arrays.asList(num[i], num[j]));
+                twoSums.get(twoSum).add(Arrays.asList(i, j));
             }
         }        
 
@@ -37,46 +42,35 @@ public class Solution {
             }    
             iter.remove();
         }
-        return solutions;
+        return new ArrayList<ArrayList<Integer>>(solutions);
     }
 
-    private ArrayList<ArrayList<Integer>> twoEqualSums(List<List<Integer>> twoSumList) {
-        ArrayList<ArrayList<Integer>> solutions = new ArrayList<ArrayList<Integer>>();
+    private Set<ArrayList<Integer>> twoEqualSums(List<List<Integer>> twoSumList) {
+        Set<ArrayList<Integer>> solutionSet = new HashSet<ArrayList<Integer>>();
         for(int i = 0; i < twoSumList.size(); i++) {
             for(int j = i + 1; j < twoSumList.size(); j++) {
-                if(isAllDifferent(twoSumList.get(i), twoSumList.get(j))) {    
-                    solutions.add(newSolution(twoSumList.get(i), twoSumList.get(j)));
-                }
+            	solutionSet.add(newSolution(twoSumList.get(i), twoSumList.get(j)));
             }
         }
-        return solutions;
+        return solutionSet;
     }
 
-    private ArrayList<ArrayList<Integer>> twoSums(List<List<Integer>> twoSumList, List<List<Integer>> anotherTwoSumList) {
-        ArrayList<ArrayList<Integer>> solutions = new ArrayList<ArrayList<Integer>>();
+    private Set<ArrayList<Integer>> twoSums(List<List<Integer>> twoSumList, List<List<Integer>> anotherTwoSumList) {
+        Set<ArrayList<Integer>> solutionSet = new HashSet<ArrayList<Integer>>();
         for(List<Integer> twoSum : twoSumList) {
             for(List<Integer> anotherTwoSum : anotherTwoSumList) {
-                if(isAllDifferent(twoSum, anotherTwoSum)) {
-                    solutions.add(newSolution(twoSum, anotherTwoSum));   
-                }
+        		solutionSet.add(newSolution(twoSum, anotherTwoSum));   
             }
         }
-        return solutions;
-    }
-
-    private boolean isAllDifferent(List<Integer> twoSum, List<Integer> anotherTwoSum) {
-        return twoSum.get(0) != anotherTwoSum.get(0) &&
-               twoSum.get(1) != anotherTwoSum.get(1) &&
-               twoSum.get(0) != anotherTwoSum.get(1) &&
-               twoSum.get(1) != anotherTwoSum.get(0);
+        return solutionSet;
     }
 
     private ArrayList<Integer> newSolution(List<Integer> twoSum, List<Integer> anotherTwoSum) {
         ArrayList<Integer> solution = new ArrayList<Integer>();
-        solution.add(twoSum.get(0));   
-        solution.add(twoSum.get(1));
-        solution.add(anotherTwoSum.get(0));
-        solution.add(anotherTwoSum.get(1));
+        solution.add(num[twoSum.get(0)]);   
+        solution.add(num[twoSum.get(1)]);
+        solution.add(num[anotherTwoSum.get(0)]);
+        solution.add(num[anotherTwoSum.get(1)]);
         Collections.sort(solution);    
         return solution;
     }
