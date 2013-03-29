@@ -7,4 +7,8 @@ public final class ListNode {
 	public ListNode(int x) {
 		this.val = x;
 	}
+	@Override
+	public String toString() {
+		return val + "," + next;
+	}
 }
