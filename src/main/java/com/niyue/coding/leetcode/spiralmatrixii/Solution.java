@@ -1,6 +1,6 @@
 package com.niyue.coding.leetcode.spiralmatrixii;
 
-//http://leetcode.com/onlinejudge#question_59
+// http://leetcode.com/onlinejudge#question_59
 public class Solution {
 	public int[][] generateMatrix(int n) {
 		int[][] matrix = new int[n][n];

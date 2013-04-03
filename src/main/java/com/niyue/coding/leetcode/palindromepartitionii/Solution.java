@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-//http://leetcode.com/onlinejudge#question_132
-//pre-process the string to get all palindrome's start and end, O(n^2)
-//use top down approach DP to get the min cut, the recurrance is:
-//minCut(start) = each 'end' for the 'start' Math.min(minCut(end + 1) + 1); if start == last, minCut = 0
+// http://leetcode.com/onlinejudge#question_132
+// pre-process the string to get all palindrome's start and end, O(n^2)
+// use top down approach DP to get the min cut, the recurrance is:
+// minCut(start) = each 'end' for the 'start' Math.min(minCut(end + 1) + 1); if start == last, minCut = 0
 public class Solution {
 
 	private Integer[] minCutCache;
