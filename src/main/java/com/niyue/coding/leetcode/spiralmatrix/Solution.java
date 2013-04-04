@@ -3,7 +3,7 @@ package com.niyue.coding.leetcode.spiralmatrix;
 import java.util.ArrayList;
 import java.util.List;
 
-//http://leetcode.com/onlinejudge#question_54
+// http://leetcode.com/onlinejudge#question_54
 // two loops, the first loop counts the number of levels of spirals, and the second loops counts the number of elements in each spiral
 public class Solution {
 	public ArrayList<Integer> spiralOrder(int[][] matrix) {

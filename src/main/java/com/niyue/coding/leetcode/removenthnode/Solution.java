@@ -2,7 +2,7 @@ package com.niyue.coding.leetcode.removenthnode;
 
 import com.niyue.coding.leetcode.common.ListNode;
 
-//http://leetcode.com/onlinejudge#question_19
+// http://leetcode.com/onlinejudge#question_19
 public class Solution {
 	public ListNode removeNthFromEnd(ListNode head, int n) {
 		ListNode fast = head; // the end node

@@ -3,7 +3,7 @@ package com.niyue.coding.leetcode.trianglesum;
 import java.util.ArrayList;
 import java.util.List;
 
-//http://leetcode.com/onlinejudge#question_120
+// http://leetcode.com/onlinejudge#question_120
 public class Solution {
     public int minimumTotal(ArrayList<ArrayList<Integer>> triangle) {
 		int lastRowIndex = triangle.size() - 1;

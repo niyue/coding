@@ -1,6 +1,6 @@
 package com.niyue.coding.leetcode.climbingstairs;
 
-//http://leetcode.com/onlinejudge#question_70
+// http://leetcode.com/onlinejudge#question_70
 // implement computing nth number in fibonacci sequence
 public class Solution {
 	public int climbStairs(int n) {
