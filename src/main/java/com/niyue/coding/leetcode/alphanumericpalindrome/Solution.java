@@ -1,6 +1,6 @@
 package com.niyue.coding.leetcode.alphanumericpalindrome;
 
-// http://leetcode.com/onlinejudge#question_124
+// http://leetcode.com/onlinejudge#question_125
 public class Solution {
 	public boolean isPalindrome(String s) {
 		String string = s.toLowerCase();
