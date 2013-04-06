@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+// http://leetcode.com/onlinejudge#question_79
 public class Solution {
 	private boolean[][] visited;
 	
