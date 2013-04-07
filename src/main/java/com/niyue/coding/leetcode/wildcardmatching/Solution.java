@@ -1,10 +1,14 @@
 package com.niyue.coding.leetcode.wildcardmatching;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // http://leetcode.com/onlinejudge#question_44
 // wildcard matching using recursion and back tracking, but is too slow to pass the large data set
 public class Solution {
     public boolean isMatch(String s, String p) {
-        return isMatch(s.toCharArray(), 0, p.toCharArray(), 0);
+    	char[] pattern = removeContinousStars(p.toCharArray());
+        return isMatch(s.toCharArray(), 0, pattern, 0);
     }
     
     private boolean isMatch(char[] s, int si, char[] p, int pi) {
@@ -28,5 +32,19 @@ public class Solution {
             }
         }
         return isMatch;
+    }
+    
+    private char[] removeContinousStars(char[] p) {
+    	List<Character> pattern = new ArrayList<Character>();
+    	for(int i = 0; i < p.length; i++) {
+			if(p[i] != '*' || pattern.isEmpty() || pattern.get(pattern.size() - 1) != '*') {
+				pattern.add(p[i]);
+			}
+    	}
+    	char[] pp = new char[pattern.size()];
+    	for(int i = 0; i < pp.length; i++) {
+    		pp[i] = pattern.get(i);
+    	}
+    	return pp;
     }
 }
