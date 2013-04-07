@@ -10,9 +10,9 @@ public class Solution {
         } else if(l1 == null) {
             return l2;
         } else {
+            ListNode head = l1.val <= l2.val ? l1 : l2;
             ListNode p1 = l1;
             ListNode p2 = l2;
-            ListNode head = null;
             ListNode prev = null;
             while(p1 != null && p2 != null) {
                 ListNode current = p1.val <= p2.val ? p1 : p2;
@@ -26,10 +26,6 @@ public class Solution {
                     p1 = current;
                 } else {
                     p2 = current;   
-                }
-
-                if(head == null) {
-                    head = prev;
                 }
             }
 
