@@ -15,6 +15,7 @@ public class MaximalRectangleTest {
 	}
 	
 	@Test
+	// did not understand the problem and solved a wrong problem
 	public void test111101() {
 		Solution sl = new Solution();
 		int maxArea = sl.maximalRectangle(new char[][] {{'1', '1'}, {'1', '1'}, {'0', '1'}});
@@ -22,6 +23,7 @@ public class MaximalRectangleTest {
 	}
 	
 	@Test
+	// continuous count should start from zero once a zero is found
 	public void testSixInARow() {
 		Solution sl = new Solution();
 		int maxArea = sl.maximalRectangle(new char[][] {{'0', '1', '1', '1', '1', '1', '1', '0', '1'}});
