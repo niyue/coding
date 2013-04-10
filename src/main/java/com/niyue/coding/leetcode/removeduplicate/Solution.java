@@ -4,13 +4,13 @@ package com.niyue.coding.leetcode.removeduplicate;
 // Given a sorted array, remove the duplicates in place such that each element appear only once and return the new length.
 public class Solution {
     public int removeDuplicates(int[] A) {
-        int s = 0;
+        int s = -1;
 		for(int i = 0; i < A.length; i++) {
-			if(A[i] != A[s]) {
+			if(i == 0 || A[i] != A[s]) {
 				s++;
 				A[s] = A[i];
 			}
 		}
-		return A.length == 0 ? 0 : s + 1;
+		return s + 1;
     }
 }
