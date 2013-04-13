@@ -1,4 +1,4 @@
-package com.niyue.coding.interviewstreet.removeduplicatesfromsortedlist;
+package com.niyue.coding.leetcode.removeduplicatesfromsortedlist;
 
 import com.niyue.coding.leetcode.common.ListNode;
 
