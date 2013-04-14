@@ -5,6 +5,7 @@ import java.util.List;
 
 // http://leetcode.com/onlinejudge#question_44
 // wildcard matching using memoization to cache the results, but ran into memory limit exceed issue
+// try Map<Integer, Map<Integer, Boolean>> matched but got time limit exceeded issue
 public class Solution {
 	private Boolean[][] matched; 
     public boolean isMatch(String s, String p) {
