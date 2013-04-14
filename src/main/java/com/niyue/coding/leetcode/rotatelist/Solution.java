@@ -11,11 +11,20 @@ public class Solution {
         if(length > 0) {
             n %= length;
             if(n > 0) {
-                ListNode tail = findRotationNode(head, n);
-                headNode = tail.next;
-                tail.next = null;
-                ListNode oldTail = findLastNode(headNode);
-                oldTail.next = head;
+            	ListNode fast = head;
+                while(n > 0) {
+                    fast = fast.next;
+                    n--;
+                }
+                ListNode slow = head;
+                while(fast.next != null) {
+                    fast = fast.next;
+                    slow = slow.next;
+                }
+                
+                headNode = slow.next;
+                slow.next = null;
+                fast.next = head;
             }
         }
         return headNode;        
@@ -28,26 +37,5 @@ public class Solution {
             length++;
         }
         return length;
-    }
-
-    private ListNode findRotationNode(ListNode head, int n) {
-        ListNode fast = head;
-        while(n > 0) {
-            fast = fast.next;
-            n--;
-        }
-        ListNode slow = head;
-        while(fast.next != null) {
-            fast = fast.next;
-            slow = slow.next;
-        }
-        return slow;
-    }
-
-    private ListNode findLastNode(ListNode head) {
-        while(head.next != null) {
-            head = head.next;
-        }    
-        return head;
     }
 }
