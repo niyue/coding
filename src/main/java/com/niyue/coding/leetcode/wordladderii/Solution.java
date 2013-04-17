@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,16 +16,16 @@ public class Solution {
     @SuppressWarnings("serial")
     // leetcode's online judge method signature forces me to use ArrayList<ArrayList<String>>
 	public ArrayList<ArrayList<String>> findLadders(final String start, final String end, HashSet<String> dict) {
-    	Set<String> startTransformableWords =  new HashSet<String>(transformableWords(start, dict, false));
-    	Set<String> startWords = new HashSet<String>(transformableWords(start, dict, true));
-    	Set<String> endWords = new HashSet<String>(transformableWords(end, dict, true));
+    	Set<String> startTransformableWords =  transformableWords(start, dict, false);
+    	Set<String> startWords = transformableWords(start, dict, true);
+    	Set<String> endWords = transformableWords(end, dict, true);
     	
     	ArrayList<ArrayList<String>> ladders = new ArrayList<ArrayList<String>>();
     	
     	if(startTransformableWords.contains(end)) {
     		ladders.add(new ArrayList<String>() {{add(start); add(end);}});
     	} else {
-    		Map<String, List<String>> dictGraph = makeGraph(dict);
+    		Map<String, Set<String>> dictGraph = makeGraph(dict);
     		List<WordNode> solutions = bfs(startWords, endWords, dictGraph);
     		ladders = ladders(solutions, start, end);
     	}
@@ -60,13 +59,13 @@ public class Solution {
     private static class WordNode {
     	public final String word;
     	public final WordNode from;
-    	private Set<String> path = new LinkedHashSet<String>();
+    	private int path = 0;
     	public WordNode(String word, WordNode from) {
     		this.word = word;
     		this.from = from;
-    		path.add(word);
+    		this.path = 1;
     		if(from != null) {
-    			path.addAll(from.path);
+    			this.path += from.path;
     		}
     	}
 		
@@ -74,30 +73,26 @@ public class Solution {
 		public String toString() {
 			return word + " <= " + from;
 		}
-    	
-    	public boolean isInPath(String target) {
-    		return path.contains(target);
-    	}
     }
     
-    private Set<WordNode> wordNodes(java.util.Collection<String> startWords, WordNode from) {
+    private Set<WordNode> wordNodes(java.util.Collection<String> startWords, WordNode from, Map<String, Integer> pathMap) {
     	Set<WordNode> wordNodes = new HashSet<WordNode>();
     	for(String word : startWords) {
-    		if(from == null || !from.isInPath(word)) {
+    		if(from == null || (!pathMap.containsKey(word) || from.path + 1 <= pathMap.get(word))) {
     			wordNodes.add(new WordNode(word, from));
     		}
     	}
     	return wordNodes;
     }
     
-    private List<WordNode> bfs(Set<String> startWords, Set<String> endWords, Map<String, List<String>> dictGraph) {
+    private List<WordNode> bfs(Set<String> startWords, Set<String> endWords, Map<String, Set<String>> dictGraph) {
     	List<WordNode> solutions = new ArrayList<WordNode>();
         Queue<WordNode> wordQueue = new LinkedList<WordNode>();
-        Set<WordNode> startWordNodes = wordNodes(startWords, null);
+        Map<String, Integer> pathMap = new HashMap<String, Integer>();
+        Set<WordNode> startWordNodes = wordNodes(startWords, null, pathMap);
         wordQueue.addAll(startWordNodes);
         wordQueue.offer(null);
         boolean found = false;
-        Integer minHops = Integer.MAX_VALUE;
         while(!(wordQueue.size() == 1 && wordQueue.peek() == null)) {
             WordNode wordNode = wordQueue.poll();
             if(wordNode == null) {
@@ -108,13 +103,13 @@ public class Solution {
             } else {
             	if(endWords.contains(wordNode.word)) {
             		found = true;
-            		minHops = wordNode.path.size();
             		solutions.add(wordNode);
             	} else {
-            		if(dictGraph.containsKey(wordNode.word) && wordNode.path.size() < minHops) {
-            			List<String> connectedWords = dictGraph.get(wordNode.word);
-            			Set<WordNode> childWordNodes = wordNodes(connectedWords, wordNode);
+            		if(dictGraph.containsKey(wordNode.word) && (!pathMap.containsKey(wordNode.word) || wordNode.path <= pathMap.get(wordNode.word))) {
+            			Set<String> connectedWords = dictGraph.get(wordNode.word);
+            			Set<WordNode> childWordNodes = wordNodes(connectedWords, wordNode, pathMap);
             			wordQueue.addAll(childWordNodes);    
+            			pathMap.put(wordNode.word, wordNode.path);
             		}
             	}      
             }
@@ -122,17 +117,17 @@ public class Solution {
         return solutions;
     }
     
-    Map<String, List<String>> makeGraph(Set<String> dict) {
-        Map<String, List<String>> graph = new HashMap<String, List<String>>();
+    Map<String, Set<String>> makeGraph(Set<String> dict) {
+        Map<String, Set<String>> graph = new HashMap<String, Set<String>>();
         for(String word : dict) {
-            List<String> connectedWords = transformableWords(word, dict, true);   
+            Set<String> connectedWords = transformableWords(word, dict, true);   
             graph.put(word, connectedWords);
         }
         return graph;
     }
     
-    private List<String> transformableWords(String word, Set<String> dict, boolean checkDict) {
-        List<String> words = new LinkedList<String>();
+    private Set<String> transformableWords(String word, Set<String> dict, boolean checkDict) {
+        Set<String> words = new HashSet<String>();
         char[] chars = word.toCharArray();
         for(int i = 0;i < chars.length;i++) {
             char ch = chars[i];
