@@ -1,7 +1,7 @@
 package com.niyue.coding.leetcode.maximalrectangle;
 
 // http://leetcode.com/onlinejudge#question_85
-// An O(n^3) solution to this problem, which is too slow to pass the large data set
+// An O(n*m*m) solution to this problem, which is too slow to pass the large data set
 public class Solution {
     private int[][] count;
     public int maximalRectangle(char[][] matrix) {
@@ -11,15 +11,25 @@ public class Solution {
         	
         	for(int i = 0; i < matrix.length; i++) {
         		for(int j = 0; j < matrix[i].length; j++) {
-        			int maxAreaForCell = maxArea(matrix, j, i);
-        			if(maxAreaForCell > max) {
-        				max = maxAreaForCell;
+        			if(isMaxPossible(count, j, i)) {
+        				int maxAreaForCell = maxArea(matrix, j, i);
+        				if(maxAreaForCell > max) {
+        					max = maxAreaForCell;
+        				}
         			}
         		}
         	}        
         	
         }
         return max;
+    }
+    
+    private boolean isMaxPossible(int[][] count, int x, int y) {
+    	boolean isPossible = true;
+    	if(y - 1 >= 0 && count[y - 1][x] >= count[y][x]) {
+    		isPossible = false;
+    	}
+    	return isPossible;
     }
 
     private int maxArea(char[][] matrix, int x, int y) {
