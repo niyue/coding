@@ -91,7 +91,7 @@ public class Solution {
         				List<Ladder> childWordNodes = transformableWords(ladder, dict);
         				wordQueue.addAll(childWordNodes);
         			}
-        		// if we find another minimum path to the word
+        		// if we find another minimum path to the word, we don't need to compute all one-letter-differ words for it which will save a lot of time
         		} else if(ladder.length == minLadderMap.get(ladder.word).get(0).length) {
         			minLadderMap.get(ladder.word).add(ladder);
         		}
