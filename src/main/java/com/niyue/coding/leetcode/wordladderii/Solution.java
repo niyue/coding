@@ -68,8 +68,8 @@ public class Solution {
 		}
     }
     
-    private Set<WordNode> wordNodes(java.util.Collection<String> startWords, WordNode from, Map<String, Integer> pathMap) {
-    	Set<WordNode> wordNodes = new HashSet<WordNode>();
+    private List<WordNode> wordNodes(java.util.Collection<String> startWords, WordNode from, Map<String, Integer> pathMap) {
+    	List<WordNode> wordNodes = new LinkedList<WordNode>();
     	for(String word : startWords) {
     		if(from == null || (!pathMap.containsKey(word) || from.path + 1 <= pathMap.get(word))) {
     			wordNodes.add(new WordNode(word, from));
@@ -82,7 +82,7 @@ public class Solution {
     	List<WordNode> solutions = new ArrayList<WordNode>();
         Queue<WordNode> wordQueue = new LinkedList<WordNode>();
         Map<String, Integer> pathMap = new HashMap<String, Integer>();
-        Set<WordNode> startWordNodes = wordNodes(startWords, null, pathMap);
+        List<WordNode> startWordNodes = wordNodes(startWords, null, pathMap);
         wordQueue.addAll(startWordNodes);
         wordQueue.offer(null);
         boolean found = false;
@@ -98,9 +98,9 @@ public class Solution {
             		found = true;
             		solutions.add(wordNode);
             	} else {
-            		if(dict.contains(wordNode.word) && (!pathMap.containsKey(wordNode.word) || wordNode.path <= pathMap.get(wordNode.word))) {
+            		if(!pathMap.containsKey(wordNode.word) || wordNode.path <= pathMap.get(wordNode.word)) {
             			Set<String> connectedWords = transformableWords(wordNode.word, dict, true);
-            			Set<WordNode> childWordNodes = wordNodes(connectedWords, wordNode, pathMap);
+            			List<WordNode> childWordNodes = wordNodes(connectedWords, wordNode, pathMap);
             			wordQueue.addAll(childWordNodes);    
             			pathMap.put(wordNode.word, wordNode.path);
             		}
