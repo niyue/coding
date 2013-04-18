@@ -17,13 +17,10 @@ public class Solution {
 	public ArrayList<ArrayList<String>> findLadders(final String start, final String end, HashSet<String> dict) {
     	ArrayList<ArrayList<String>> ladders = new ArrayList<ArrayList<String>>();
     	
-    	Set<String> startTransformableWords =  transformableWords(start, dict, false);
-    	if(startTransformableWords.contains(end)) {
+    	if(isOneDiff(start, end)) {
     		ladders.add(new ArrayList<String>(Arrays.asList(start, end)));
     	} else {
-    		Set<String> startWords = transformableWords(start, dict, true);
-    		Set<String> endWords = transformableWords(end, dict, true);
-    		List<WordNode> solutions = bfs(startWords, endWords, dict);
+    		List<WordNode> solutions = bfs(start, end, dict);
     		ladders = ladders(solutions, start, end);
     	}
         return ladders;
@@ -33,11 +30,7 @@ public class Solution {
     	ArrayList<ArrayList<String>> ladders = new ArrayList<ArrayList<String>>();
     	for(WordNode solution : solutions) {
 			Deque<String> words = words(solution);
-			ArrayList<String> ladder = new ArrayList<String>();
-			ladder.add(start);
-			ladder.addAll(words);
-			ladder.add(end);
-			ladders.add(ladder);
+			ladders.add(new ArrayList<String>(words));
 		}
     	return ladders;
     }
@@ -71,19 +64,19 @@ public class Solution {
     private List<WordNode> wordNodes(java.util.Collection<String> startWords, WordNode from, Map<String, Integer> pathMap) {
     	List<WordNode> wordNodes = new LinkedList<WordNode>();
     	for(String word : startWords) {
-    		if(from == null || (!pathMap.containsKey(word) || from.path + 1 <= pathMap.get(word))) {
+    		if(!pathMap.containsKey(word) || from.path + 1 <= pathMap.get(word)) {
     			wordNodes.add(new WordNode(word, from));
     		}
     	}
     	return wordNodes;
     }
     
-    private List<WordNode> bfs(Set<String> startWords, Set<String> endWords, Set<String> dict) {
+    private List<WordNode> bfs(String start, String end, Set<String> dict) {
+    	dict.add(end);
     	List<WordNode> solutions = new ArrayList<WordNode>();
         Queue<WordNode> wordQueue = new LinkedList<WordNode>();
         Map<String, Integer> pathMap = new HashMap<String, Integer>();
-        List<WordNode> startWordNodes = wordNodes(startWords, null, pathMap);
-        wordQueue.addAll(startWordNodes);
+        wordQueue.add(new WordNode(start, null));
         wordQueue.offer(null);
         boolean found = false;
         while(!(wordQueue.size() == 1 && wordQueue.peek() == null)) {
@@ -94,15 +87,15 @@ public class Solution {
             	}
                 wordQueue.offer(null);
             } else {
-            	if(endWords.contains(wordNode.word)) {
+            	if(end.equals(wordNode.word)) {
             		found = true;
             		solutions.add(wordNode);
             	} else {
             		if(!pathMap.containsKey(wordNode.word) || wordNode.path <= pathMap.get(wordNode.word)) {
-            			Set<String> connectedWords = transformableWords(wordNode.word, dict, true);
+            			pathMap.put(wordNode.word, wordNode.path);
+            			List<String> connectedWords = transformableWords(wordNode.word, dict);
             			List<WordNode> childWordNodes = wordNodes(connectedWords, wordNode, pathMap);
             			wordQueue.addAll(childWordNodes);    
-            			pathMap.put(wordNode.word, wordNode.path);
             		}
             	}      
             }
@@ -110,8 +103,8 @@ public class Solution {
         return solutions;
     }
     
-    private Set<String> transformableWords(String word, Set<String> dict, boolean checkDict) {
-        Set<String> words = new HashSet<String>();
+    private List<String> transformableWords(String word, Set<String> dict) {
+        List<String> words = new LinkedList<String>();
         char[] chars = word.toCharArray();
         for(int i = 0;i < chars.length;i++) {
             char ch = chars[i];
@@ -119,7 +112,7 @@ public class Solution {
                 if(letter != ch) {
                     chars[i] = letter;
                     String newWord = new String(chars);
-                	if(!checkDict || dict.contains(newWord)) {
+                	if(dict.contains(newWord)) {
                 		words.add(newWord);    
                 	}
                     chars[i] = ch;
@@ -127,6 +120,22 @@ public class Solution {
             }    
         }
         return words;
+    }
+    
+    // determine if start and end only differ with one character
+    private boolean isOneDiff(String start, String end) {
+    	int count = 0;
+    	boolean isOneDiff = true;
+    	for(int i = 0; i < start.length(); i++) {
+    		if(start.charAt(i) != end.charAt(i)) {
+    			count++;
+    			if(count > 1) {
+    				isOneDiff = false;
+    				break;
+    			}
+    		}
+    	}
+    	return isOneDiff;
     }
     
     private static final char[] alphabet = new char[] {
