@@ -1,7 +1,8 @@
 package com.niyue.coding.leetcode.wordladderii;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,20 +14,16 @@ import java.util.Set;
 // http://leetcode.com/onlinejudge#question_127
 public class Solution {
 	
-    @SuppressWarnings("serial")
-    // leetcode's online judge method signature forces me to use ArrayList<ArrayList<String>>
 	public ArrayList<ArrayList<String>> findLadders(final String start, final String end, HashSet<String> dict) {
-    	Set<String> startTransformableWords =  transformableWords(start, dict, false);
-    	Set<String> startWords = transformableWords(start, dict, true);
-    	Set<String> endWords = transformableWords(end, dict, true);
-    	
     	ArrayList<ArrayList<String>> ladders = new ArrayList<ArrayList<String>>();
     	
+    	Set<String> startTransformableWords =  transformableWords(start, dict, false);
     	if(startTransformableWords.contains(end)) {
-    		ladders.add(new ArrayList<String>() {{add(start); add(end);}});
+    		ladders.add(new ArrayList<String>(Arrays.asList(start, end)));
     	} else {
-    		Map<String, Set<String>> dictGraph = makeGraph(dict);
-    		List<WordNode> solutions = bfs(startWords, endWords, dictGraph);
+    		Set<String> startWords = transformableWords(start, dict, true);
+    		Set<String> endWords = transformableWords(end, dict, true);
+    		List<WordNode> solutions = bfs(startWords, endWords, dict);
     		ladders = ladders(solutions, start, end);
     	}
         return ladders;
@@ -35,7 +32,7 @@ public class Solution {
     private ArrayList<ArrayList<String>> ladders(List<WordNode> solutions, String start, String end) {
     	ArrayList<ArrayList<String>> ladders = new ArrayList<ArrayList<String>>();
     	for(WordNode solution : solutions) {
-			List<String> words = words(solution);
+			Deque<String> words = words(solution);
 			ArrayList<String> ladder = new ArrayList<String>();
 			ladder.add(start);
 			ladder.addAll(words);
@@ -45,14 +42,13 @@ public class Solution {
     	return ladders;
     }
     
-    private List<String> words(WordNode wordNode) {
-    	List<String> words = new ArrayList<String>();
+    private Deque<String> words(WordNode wordNode) {
+    	Deque<String> words = new LinkedList<String>();
     	WordNode current = wordNode;
     	while(current != null) {
-    		words.add(current.word);
+    		words.addFirst(current.word);
     		current = current.from;
     	}
-    	Collections.reverse(words);
     	return words;
     }
     
@@ -63,10 +59,7 @@ public class Solution {
     	public WordNode(String word, WordNode from) {
     		this.word = word;
     		this.from = from;
-    		this.path = 1;
-    		if(from != null) {
-    			this.path += from.path;
-    		}
+    		this.path = from == null ? 1 : 1 + from.path;
     	}
 		
     	@Override
@@ -85,7 +78,7 @@ public class Solution {
     	return wordNodes;
     }
     
-    private List<WordNode> bfs(Set<String> startWords, Set<String> endWords, Map<String, Set<String>> dictGraph) {
+    private List<WordNode> bfs(Set<String> startWords, Set<String> endWords, Set<String> dict) {
     	List<WordNode> solutions = new ArrayList<WordNode>();
         Queue<WordNode> wordQueue = new LinkedList<WordNode>();
         Map<String, Integer> pathMap = new HashMap<String, Integer>();
@@ -105,8 +98,8 @@ public class Solution {
             		found = true;
             		solutions.add(wordNode);
             	} else {
-            		if(dictGraph.containsKey(wordNode.word) && (!pathMap.containsKey(wordNode.word) || wordNode.path <= pathMap.get(wordNode.word))) {
-            			Set<String> connectedWords = dictGraph.get(wordNode.word);
+            		if(dict.contains(wordNode.word) && (!pathMap.containsKey(wordNode.word) || wordNode.path <= pathMap.get(wordNode.word))) {
+            			Set<String> connectedWords = transformableWords(wordNode.word, dict, true);
             			Set<WordNode> childWordNodes = wordNodes(connectedWords, wordNode, pathMap);
             			wordQueue.addAll(childWordNodes);    
             			pathMap.put(wordNode.word, wordNode.path);
@@ -115,15 +108,6 @@ public class Solution {
             }
         }
         return solutions;
-    }
-    
-    Map<String, Set<String>> makeGraph(Set<String> dict) {
-        Map<String, Set<String>> graph = new HashMap<String, Set<String>>();
-        for(String word : dict) {
-            Set<String> connectedWords = transformableWords(word, dict, true);   
-            graph.put(word, connectedWords);
-        }
-        return graph;
     }
     
     private Set<String> transformableWords(String word, Set<String> dict, boolean checkDict) {
