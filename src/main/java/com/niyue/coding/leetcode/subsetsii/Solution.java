@@ -1,7 +1,6 @@
 package com.niyue.coding.leetcode.subsetsii;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 
 // http://leetcode.com/onlinejudge#question_90
@@ -9,12 +8,12 @@ import java.util.Map;
 // this solution can be used to solve problem #78 (generate subsets for distinct integers) without modification since this is a more general solution
 public class Solution {
     public ArrayList<ArrayList<Integer>> subsetsWithDup(int[] num) {
-        Map<Integer, Integer> count = count(num);        
+        java.util.SortedMap<Integer, Integer> count = count(num);        
         return subset(count);
     }
 
-	private Map<Integer, Integer> count(int[] num) {
-		Map<Integer, Integer> count = new java.util.TreeMap<Integer, Integer>();
+	private java.util.SortedMap<Integer, Integer> count(int[] num) {
+		java.util.SortedMap<Integer, Integer> count = new java.util.TreeMap<Integer, Integer>();
         for(int n : num) {
             if(!count.containsKey(n)) {
                 count.put(n, 1);
@@ -25,12 +24,12 @@ public class Solution {
 		return count;
 	}
 
-    private ArrayList<ArrayList<Integer>> subset(Map<Integer, Integer> count) {
+    private ArrayList<ArrayList<Integer>> subset(java.util.SortedMap<Integer, Integer> count) {
         ArrayList<ArrayList<Integer>> subSets = new ArrayList<ArrayList<Integer>>();
         if(count.isEmpty()) {
         	subSets.add(new ArrayList<Integer>());
         } else {
-            int n = count.keySet().iterator().next(); // first key, smallest key since TreeMap is used
+            int n = count.firstKey();
             int numberCount = count.remove(n);
             ArrayList<ArrayList<Integer>> subSubSets = subset(count);
             // add all subSubSets
