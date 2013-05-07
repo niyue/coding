@@ -59,4 +59,17 @@ public class StringSerializationTest {
 		List<String> strings = ss.deserialize("['1, b', '2']");
 		assertThat(strings, equalTo(Arrays.asList("1, b", "2")));
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void testDeserializationWithContinuousComma() {
+		StringSerialization ss = new StringSerialization();
+		ss.deserialize("['1, b',, '2']");
+	}
+	
+	@Test
+	public void testDeserializationWithMultipleSpace() {
+		StringSerialization ss = new StringSerialization();
+		List<String> strings = ss.deserialize("['1, b' ,   '2']");
+		assertThat(strings, equalTo(Arrays.asList("1, b", "2")));
+	}
 }
