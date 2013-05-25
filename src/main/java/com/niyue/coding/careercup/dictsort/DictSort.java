@@ -1,22 +1,28 @@
 package com.niyue.coding.careercup.dictsort;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
-import java.util.SortedSet;
 
 // sort all chars in a string according to a ordered dictionary given
 // http://www.careercup.com/question?id=1555570
 public class DictSort {
-    public String sort(String string, SortedSet<String> dict) {
-        Map<Character, Set<Character>> orders = order(dict);
+    public String sort(String string, List<String> dict) {
+        List<Map<Character, Set<Character>>> orders = orders(dict);
+        List<Character> sortedChars = topologicalSort(orders);
+        Map<Character, Integer> order = numericalOrder(sortedChars);
+        
         List<Character> chars = toCharList(string);
-        Collections.sort(chars, new DictComparator(orders));
+        Collections.sort(chars, new DictComparator(order));
         return toString(chars);
     }
     
@@ -36,8 +42,10 @@ public class DictSort {
         return s.toString();
     }
     
-    private Map<Character, Set<Character>> order(SortedSet<String> dict) {
-        Map<Character, Set<Character>> orders = new HashMap<Character, Set<Character>>();
+    @SuppressWarnings("unchecked")
+	private List<Map<Character, Set<Character>>> orders(List<String> dict) {
+        Map<Character, Set<Character>> order = new HashMap<Character, Set<Character>>();
+    	Map<Character, Set<Character>> reversedOrder = new HashMap<Character, Set<Character>>();
         String prev = null;
         for(String current : dict) {
             if(prev != null) {
@@ -45,34 +53,81 @@ public class DictSort {
                 char[] currentChars = current.toCharArray();
                 for(int i = 0; i < prevChars.length && i < currentChars.length; i++) {
                     if(prevChars[i] != currentChars[i]) {
-                        if(!orders.containsKey(currentChars[i])) {
-                            orders.put(currentChars[i], new HashSet<Character>());
+                        if(!order.containsKey(currentChars[i])) {
+                            order.put(currentChars[i], new HashSet<Character>());
                         }
-                        orders.get(currentChars[i]).add(prevChars[i]);
+                        order.get(currentChars[i]).add(prevChars[i]);
+                        
+                        if(!reversedOrder.containsKey(prevChars[i])) {
+                        	reversedOrder.put(prevChars[i], new HashSet<Character>());
+                        }
+                        reversedOrder.get(prevChars[i]).add(currentChars[i]);
                         break;
                     }
                 }
             }
             prev = current;
         }
-        return orders;
+        return Arrays.asList(order, reversedOrder);
+    }
+    
+    private List<Character> topologicalSort(List<Map<Character, Set<Character>>> orders) {
+    	Set<Character> chars = new HashSet<Character>();
+    	Map<Character, Set<Character>> order = orders.get(0);
+    	for(Entry<Character, Set<Character>> entry : order.entrySet()) {
+    		chars.add(entry.getKey());
+    		chars.addAll(entry.getValue());
+    	}
+    	
+    	Map<Character, Set<Character>> reversedOrder = orders.get(1);
+    	Set<Character> startChars = new HashSet<Character>(chars);
+    	for(Entry<Character, Set<Character>> entry : reversedOrder.entrySet()) {
+    		for(Character c : entry.getValue()) {
+    			startChars.remove(c);
+    		}
+    	}
+    	
+    	List<Character> sort = new ArrayList<Character>();
+    	Queue<Character> startQueue = new LinkedList<Character>(startChars);
+    	while(!startQueue.isEmpty()) {
+    		Character c = startQueue.poll();
+    		
+    		sort.add(c);
+    		if(reversedOrder.containsKey(c)) {
+    			Set<Character> children = reversedOrder.get(c);
+    			for(Character child : children) {
+    				if(order.containsKey(child)) {
+    					order.get(child).remove(c);
+    					if(order.get(child).isEmpty()) {
+    						order.remove(child);
+    						startQueue.offer(child);
+    					}
+    				}
+    			}
+    		}
+    	}
+    	
+    	return sort;
+    }
+    
+    private Map<Character, Integer> numericalOrder(List<Character> sortedChars) {
+    	Map<Character, Integer> numericalOrder = new HashMap<Character, Integer>();
+    	for(int i = 0; i < sortedChars.size(); i++) {
+    		Character c = sortedChars.get(i);
+    		numericalOrder.put(c, i);
+    	}
+    	return numericalOrder;
     }
 
     private static class DictComparator implements Comparator<Character> {
-        private Map<Character, Set<Character>> orders;
+        private Map<Character, Integer> orders;
         
-        public DictComparator(Map<Character, Set<Character>> dictOrder) {
+        public DictComparator(Map<Character, Integer> dictOrder) {
             this.orders = dictOrder;
         }
 
         public int compare(Character c1, Character c2) {
-            if(c1.equals(c2)) {
-                return 0;
-            } else if(orders.containsKey(c1) && orders.get(c1).contains(c2)) {
-                return 1;
-            } else {
-                return -1;
-            }
+        	return orders.get(c1).compareTo(orders.get(c2));
         }
     }
 }
