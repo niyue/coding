@@ -72,20 +72,9 @@ public class DictSort {
     }
     
     private List<Character> topologicalSort(List<Map<Character, Set<Character>>> orders) {
-    	Set<Character> chars = new HashSet<Character>();
     	Map<Character, Set<Character>> order = orders.get(0);
-    	for(Entry<Character, Set<Character>> entry : order.entrySet()) {
-    		chars.add(entry.getKey());
-    		chars.addAll(entry.getValue());
-    	}
-    	
-    	Map<Character, Set<Character>> reversedOrder = orders.get(1);
-    	Set<Character> startChars = new HashSet<Character>(chars);
-    	for(Entry<Character, Set<Character>> entry : reversedOrder.entrySet()) {
-    		for(Character c : entry.getValue()) {
-    			startChars.remove(c);
-    		}
-    	}
+    	Map<Character, Set<Character>> reversedOrder = orders.get(1); 
+    	Set<Character> startChars = startChars(order, reversedOrder);
     	
     	List<Character> sort = new ArrayList<Character>();
     	Queue<Character> startQueue = new LinkedList<Character>(startChars);
@@ -108,6 +97,27 @@ public class DictSort {
     	}
     	
     	return sort;
+    }
+    
+    // characters without dependencies
+    private Set<Character> startChars(Map<Character, Set<Character>> order, Map<Character, Set<Character>> reversedOrder) {
+    	Set<Character> allChars = allChars(order);
+    	Set<Character> startChars = new HashSet<Character>(allChars);
+    	for(Entry<Character, Set<Character>> entry : reversedOrder.entrySet()) {
+    		for(Character c : entry.getValue()) {
+    			startChars.remove(c);
+    		}
+    	}
+    	return startChars;
+    }
+    
+    private Set<Character> allChars(Map<Character, Set<Character>> order) {
+    	Set<Character> chars = new HashSet<Character>();
+    	for(Entry<Character, Set<Character>> entry : order.entrySet()) {
+    		chars.add(entry.getKey());
+    		chars.addAll(entry.getValue());
+    	}
+    	return chars;
     }
     
     private Map<Character, Integer> numericalOrder(List<Character> sortedChars) {

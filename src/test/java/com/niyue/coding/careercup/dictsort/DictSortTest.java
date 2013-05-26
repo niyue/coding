@@ -49,4 +49,16 @@ public class DictSortTest {
 		String sort = dictSort.sort("bcca", dict);
 		assertThat(sort, anyOf(is("accb"), is("ccab")));
 	}
+	
+	@Test
+	// a < b
+	public void testALBDict() {
+		List<String> dict = Arrays.asList(
+			"a",
+			"b"
+		);
+		DictSort dictSort = new DictSort();
+		String sort = dictSort.sort("bba", dict);
+		assertThat(sort, is("abb"));
+	}
 }
