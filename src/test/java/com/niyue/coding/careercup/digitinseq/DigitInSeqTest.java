@@ -71,4 +71,10 @@ public class DigitInSeqTest {
 		DigitInSeq sl = new DigitInSeq();
 		assertEquals(9, sl.get(109));
 	}
+	
+	@Test
+	public void test1000() {
+		DigitInSeq sl = new DigitInSeq();
+		assertEquals(3, sl.get(1000));
+	}
 }

@@ -15,7 +15,7 @@ public class DigitInSeq {
         int total = 10;
         int length = 10;
         while(n > total) {
-            n -= length;
+            n -= total;
 
             start = end + 1;
             end = end * 10 + 9;
@@ -23,7 +23,7 @@ public class DigitInSeq {
             digits++;
             total = digits * length;
         }
-        digit = Integer.toString(start + (n / digits)).charAt(n % digits) - '0';
+        digit = Long.toString(start + (n / digits)).charAt(n % digits) - '0';
         return digit;
     }
 }
