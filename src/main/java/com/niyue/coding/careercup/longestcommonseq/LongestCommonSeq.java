@@ -1,30 +1,30 @@
 package com.niyue.coding.careercup.longestcommonseq;
 
 
+// longest common subsequence problem
+// bottom up approach DP to cacluate the length of LCS
 public class LongestCommonSeq {
 	public int lcs(String s1, String s2) {
-		char[] chars1 = s1.toCharArray();
-		char[] chars2 = s2.toCharArray();
-		Integer[][] result = new Integer[chars1.length][chars2.length];
-		return lcs(chars1, chars2, chars1.length - 1, chars2.length - 1, result);
+		return lcs(s1.toCharArray(), s2.toCharArray());
 	}
 	
-	private int lcs(char[] s1, char[] s2, int end1, int end2, Integer[][] result) {
-		int lcs = 0;
-		if(end1 >= 0 && end2 >= 0) {
-			if(result[end1][end2] == null) {
-				if(s1[end1] == s2[end2]) {
-					lcs = lcs(s1, s2, end1 - 1, end2 - 1, result) + 1;
+	private int lcs(char[] s1, char[] s2) {
+		int[][] lcs = new int[s1.length][s2.length];
+		for(int i = 0; i < s1.length; i++) {
+			for(int j = 0; j < s2.length; j++) {
+				if(i == 0 && j == 0) {
+					lcs[i][j] = s1[i] == s2[j] ? 1 : 0;
+				} else if(i == 0 || j == 0) { 
+					lcs[i][j] = s1[i] == s2[j] 
+							? 1 
+							: i == 0 ? lcs[i][j - 1] : lcs[i - 1][j];
 				} else {
-					int lcs1 = lcs(s1, s2, end1 - 1, end2, result);
-					int lcs2 = lcs(s1, s2, end1, end2 - 1, result);
-					lcs = Math.max(lcs1, lcs2);
+					lcs[i][j] = s1[i] == s2[j] 
+							? lcs[i - 1][j - 1] + 1
+							: Math.max(lcs[i - 1][j], lcs[i][j - 1]); 
 				}
-				result[end1][end2] = lcs;
-			} else {
-				lcs = result[end1][end2];
 			}
 		}
-		return lcs;
+		return lcs[s1.length - 1][s2.length - 1];
 	}
 }
