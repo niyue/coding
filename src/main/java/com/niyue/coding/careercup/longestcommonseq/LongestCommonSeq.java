@@ -14,7 +14,7 @@ public class LongestCommonSeq {
 		if(end1 >= 0 && end2 >= 0) {
 			if(result[end1][end2] == null) {
 				if(s1[end1] == s2[end2]) {
-					lcs = lcs(s1, s2, end1 - 1, end2 - 1, result);
+					lcs = lcs(s1, s2, end1 - 1, end2 - 1, result) + 1;
 				} else {
 					int lcs1 = lcs(s1, s2, end1 - 1, end2, result);
 					int lcs2 = lcs(s1, s2, end1, end2 - 1, result);
