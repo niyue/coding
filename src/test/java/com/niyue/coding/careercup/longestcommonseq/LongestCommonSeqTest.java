@@ -9,42 +9,42 @@ public class LongestCommonSeqTest {
 	@Test
 	public void testZeroLength() {
 		LongestCommonSeq lcs = new LongestCommonSeq();
-		int length = lcs.lcs("a", "b");
-		assertThat(length, is(0));
+		String seq = lcs.lcs("a", "b");
+		assertThat(seq, is(""));
 	}
 	
 	@Test
 	public void testOneLength() {
 		LongestCommonSeq lcs = new LongestCommonSeq();
-		int length = lcs.lcs("a", "ab");
-		assertThat(length, is(1));
+		String seq = lcs.lcs("a", "ab");
+		assertThat(seq, is("a"));
 	}
 	
 	@Test
 	public void testTwoLength() {
 		LongestCommonSeq lcs = new LongestCommonSeq();
-		int length = lcs.lcs("ab", "ab");
-		assertThat(length, is(2));
+		String seq = lcs.lcs("ab", "ab");
+		assertThat(seq, is("ab"));
 	}
 	
 	@Test
 	public void testTwoLengthForDifferentStrings() {
 		LongestCommonSeq lcs = new LongestCommonSeq();
-		int length = lcs.lcs("cab", "ab");
-		assertThat(length, is(2));
+		String seq = lcs.lcs("cab", "ab");
+		assertThat(seq, is("ab"));
 	}
 	
 	@Test
 	public void testSubSequence() {
 		LongestCommonSeq lcs = new LongestCommonSeq();
-		int length = lcs.lcs("cba", "ca");
-		assertThat(length, is(2));
+		String seq = lcs.lcs("cba", "ca");
+		assertThat(seq, is("ca"));
 	}
 	
 	@Test
 	public void testLongSubSequence() {
 		LongestCommonSeq lcs = new LongestCommonSeq();
-		int length = lcs.lcs("thisisatest", "testing123testing");
-		assertThat(length, is(7));
+		String seq = lcs.lcs("thisisatest", "testing123testing");
+		assertThat(seq, is("tsitest"));
 	}
 }
