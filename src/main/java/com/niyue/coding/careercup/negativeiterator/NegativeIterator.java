@@ -26,6 +26,7 @@ public class NegativeIterator implements Iterator<Integer> {
 			next = last; 
 			last = null;
 		} else {
+			next = nextNegative();
 		}
 		if(next == null) {
 			throw new NoSuchElementException();

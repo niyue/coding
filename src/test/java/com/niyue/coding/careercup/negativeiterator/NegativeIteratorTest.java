@@ -25,6 +25,13 @@ public class NegativeIteratorTest {
 	}
 	
 	@Test(expected = NoSuchElementException.class)
+	public void testAllPositiveNoSuchElement() {
+		NegativeIterator iter = new NegativeIterator(
+				Arrays.asList(1, 2, 3).iterator());
+		iter.next();
+	}
+	
+	@Test(expected = NoSuchElementException.class)
 	public void testNoSuchElement() {
 		NegativeIterator iter = new NegativeIterator(
 				Arrays.asList(-1).iterator());
@@ -71,5 +78,14 @@ public class NegativeIteratorTest {
 		assertEquals(Integer.valueOf(-2), iter.next());
 		assertTrue(iter.hasNext());
 		assertEquals(Integer.valueOf(-1), iter.next());
+	}
+	
+	@Test
+	public void testCallNextWithoutCallingHasNextBefore() {
+		NegativeIterator iter = new NegativeIterator(
+				Arrays.asList(-1, 1, -2, 2, -3).iterator());
+		assertEquals(Integer.valueOf(-1), iter.next());
+		assertEquals(Integer.valueOf(-2), iter.next());
+		assertEquals(Integer.valueOf(-3), iter.next());
 	}
 }
