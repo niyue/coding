@@ -1,66 +1,44 @@
 package com.niyue.coding.careercup.bsttwosum;
 
 import java.util.Arrays;
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeSet;
 
+import com.niyue.coding.leetcode.common.TreeNode;
+
+// Find two sum in BST in O(n)
+// http://www.careercup.com/question?id=15320677
+// Implement an InorderIterator for BST and an ReverseInorderIterator for BST,
+// so that a BST can be iterated sequentially like a list,
+// and the two sum problem in BST can be converted into the two sum problem for a sorted linked list,
+// which can be solved in O(n) by searching from both ends
 public class BstTwoSum {
-	public List<List<Integer>> twoSum(TreeSet<Integer> bst, int target) {
-		Iterator<Integer> head = bst.iterator();
-		Iterator<Integer> tail = new ReverseInorderIterator<Integer>(bst);
-		List<List<Integer>> result = new LinkedList<List<Integer>>();
-		if(head.hasNext() && tail.hasNext()) {
-			Integer headValue = head.next();
-			Integer tailValue = tail.next();
-			while(headValue < tailValue) {
-				if(headValue + tailValue == target) {
-					result.add(Arrays.asList(headValue, tailValue));
-					if(head.hasNext() && tail.hasNext()) {
-						headValue = head.next();
-						tailValue = tail.next();
-					} else {
-						break;
-					}
-				} else if(headValue + tailValue < target && head.hasNext()) {
-					headValue = head.next();
-				} else if(headValue + tailValue > target && tail.hasNext()) {
-					tailValue = tail.next();
-				} else {
-					break;
-				}
-			}
-		}
-		return result;
-	}
-	
-	// TODO: check out TreeSet.Iterator for comparison
-	private static class ReverseInorderIterator<T> implements Iterator<T> {
-		private TreeSet<T> bst;
-		private Deque<T> stack = new LinkedList<T>();
-		private int current = 0;
-		
-		public ReverseInorderIterator(TreeSet<T> bst) {
-			this.bst = bst;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return current < bst.size();
-		}
-
-		@Override
-		public T next() {
-			
-			current++;
-			return null;
-		}
-
-		@Override
-		public void remove() {
-			throw new UnsupportedOperationException();
-		}
-	}
+    public List<List<Integer>> twoSum(TreeNode root, int target) {
+        Iterator<TreeNode> head = new InorderIterator(root);
+        Iterator<TreeNode> tail = new ReverseInorderIterator(root);
+        List<List<Integer>> result = new LinkedList<List<Integer>>();
+        if(head.hasNext() && tail.hasNext()) {
+            int headValue = head.next().val;
+            int tailValue = tail.next().val;
+            while(headValue < tailValue) {
+                if(headValue + tailValue == target) {
+                    result.add(Arrays.asList(headValue, tailValue));
+                    if(head.hasNext() && tail.hasNext()) {
+                        headValue = head.next().val;
+                        tailValue = tail.next().val;
+                    } else {
+                        break;
+                    }
+                } else if(headValue + tailValue < target && head.hasNext()) {
+                    headValue = head.next().val;
+                } else if(headValue + tailValue > target && tail.hasNext()) {
+                    tailValue = tail.next().val;
+                } else {
+                    break;
+                }
+            }
+        }
+        return result;
+    }
 }
