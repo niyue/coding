@@ -3,7 +3,6 @@ package com.niyue.coding.careercup.triplestack;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TripleStackTest {
@@ -64,7 +63,15 @@ public class TripleStackTest {
 	}
 	
 	@Test
-	@Ignore("unresolved yet")
+	public void testInBetweenPushPopTwoStacks() {
+		TripleStack<Integer> stack = new TripleStack<Integer>(5);
+		stack.push(0, 1);
+		assertThat(stack.pop(0), is(1));
+		stack.push(1, 4);
+		stack.push(0, 2);
+	}
+	
+	@Test
 	public void testComplexNodesThreeStacks() {
 		TripleStack<Integer> stack = new TripleStack<Integer>(5);
 		stack.push(0, 1);
@@ -76,7 +83,7 @@ public class TripleStackTest {
 		assertThat(stack.pop(1), is(4));
 		stack.push(2, 2);
 		
-		assertThat(stack.pop(0), is(1));
+		assertThat(stack.pop(0), is(2));
 		assertThat(stack.pop(2), is(2));
 	}
 }

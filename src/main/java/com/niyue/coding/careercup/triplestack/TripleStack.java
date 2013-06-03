@@ -3,8 +3,11 @@ package com.niyue.coding.careercup.triplestack;
 /**
  * How can you efficiently implement three stacks in a single array
  * such that no stack overflows until there is no space left in the entire array space.
+ * http://www.careercup.com/question?id=15024669
+ * Basically, use a structure (the Node class below) containing both the value and next (may be free node or stack node) to manage the stack and free nodes
+ * free nodes are linked together by the 'next', and each stack has its stack nodes linked together by 'next' too,
+ * and use an nodesInStack to track if the stack is full
  */
-// http://www.careercup.com/question?id=15024669
 public class TripleStack<T> {
 	private static final int STACK_NO = 3;
 	private int stackSize;
@@ -25,12 +28,15 @@ public class TripleStack<T> {
 	
 	public void push(int i, T value) {
 		if(!isFull()) {
-			Node<T> freeNode = nodes[free];
-			freeNode.value = value;
-			int nextFree = freeNode.next;
-			freeNode.next = tops[i];
+			Integer prevTop = tops[i];
 			tops[i] = free;
-			free = nextFree;
+			
+			Node<T> freeNode = nodes[free];
+			free = freeNode.next;
+			
+			freeNode.value = value;
+			freeNode.next = prevTop;
+			
 			nodesInStack++;
 		} else {
 			throw new IllegalStateException("Stack is full");
@@ -43,12 +49,15 @@ public class TripleStack<T> {
 	
 	public T pop(int i) {
 		if(tops[i] != null) {
-			Node<T> poppedNode = nodes[tops[i]];
+			int prevTop = tops[i];
+
+			Node<T> poppedNode = nodes[prevTop];
+			tops[i] = poppedNode.next;
 			T value = poppedNode.value;
 			poppedNode.value = null;
-			free = tops[i];
-			tops[i] = poppedNode.next;
 			poppedNode.next = free;
+			free = prevTop;
+			
 			nodesInStack--;
 			return value;
 		} else {
