@@ -38,10 +38,8 @@ public class InversionCount {
 	private List<Node> sort(List<Node> numbers) {
 		if(numbers.size() > 1) {
 			int mid = (numbers.size() - 1) / 2;
-			List<Node> leftNumbers = numbers.subList(0, mid + 1);
-			List<Node> rightNumbers = numbers.subList(mid + 1, numbers.size());
-			List<Node> leftNodes = sort(leftNumbers);
-			List<Node> rightNodes = sort(rightNumbers);
+			List<Node> leftNodes = sort(numbers.subList(0, mid + 1));
+			List<Node> rightNodes = sort(numbers.subList(mid + 1, numbers.size()));
 			numbers = merge(leftNodes, rightNodes);
 		}
 		return numbers;
@@ -94,6 +92,5 @@ public class InversionCount {
 		public String toString() {
 			return "(" + index + ", " + value + ")";
 		}
-
 	}
 }
