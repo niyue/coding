@@ -9,6 +9,7 @@ import java.util.List;
  * o/p [3,5,3,3,0,2,1,0]
  * http://www.careercup.com/question?id=12814662
  * Count inversion using modified merge sort
+ * a slightly more efficient implementation, http://www.cs.colorado.edu/~main/applications/Mergesort.java
  */
 public class InversionCount {
 	private int[] counts;
