@@ -9,16 +9,20 @@ import java.util.Random;
  * http://www.careercup.com/question?id=14582824
  */
 public class PropotionalRandomness {
+	
 	public int select(int[] populations) {
 		long[] sums = sum(populations);
-		long random = randomLong(sums[sums.length - 1]);
+		// pick 1 in range [1,maxSum]
+		long random = randomLong(sums[sums.length - 1]) + 1;
+		// binary search the one picked to map it to a country
 		int index = Arrays.binarySearch(sums, random);
-		int country = index > 0 
+		int country = index >= 0 
 				? index
 				: (index * -1) - 1;
 		return country;
 	}
 	
+	// generate a random in the range [0, max - 1]
 	private long randomLong(long max) {
 		Random ran = new Random();
 		return (long) (ran.nextDouble() * max);
