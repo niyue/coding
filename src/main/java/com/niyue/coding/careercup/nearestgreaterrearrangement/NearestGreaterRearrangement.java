@@ -62,7 +62,7 @@ public class NearestGreaterRearrangement {
 	private void addRemainingDigits(List<Integer> rearrangement, int[] digits) {
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < digits[i]; j++) {
-				rearrangement.add(digits[i]);
+				rearrangement.add(i);
 			}
 		}
 	}
