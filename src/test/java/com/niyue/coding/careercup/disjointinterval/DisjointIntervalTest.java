@@ -72,6 +72,22 @@ public class DisjointIntervalTest {
 	}
 	
 	@Test
+	public void testMultipleJointIntervalsWithSameStartAndSmallerEnd() {
+		DisjointInterval di = new DisjointInterval();
+		List<Interval> intervals = di.merge(
+				new Interval(1, 5),
+				new Interval(10, 14),
+				new Interval(10, 11),
+				new Interval(15, 27)
+		);
+		assertThat(intervals.size(), equalTo(3));
+		assertThat(intervals, equalTo(Arrays.asList(
+				new Interval(1, 5),
+				new Interval(10, 14),
+				new Interval(15, 27))));
+	}
+	
+	@Test
 	public void testIntervalWithMaxInteger() {
 		DisjointInterval di = new DisjointInterval();
 		List<Interval> intervals = di.merge(
