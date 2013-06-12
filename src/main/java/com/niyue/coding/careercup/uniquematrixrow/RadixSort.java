@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Queue;
 
 public class RadixSort {
+	private final static int RADIX = 2;
 	public List<Row> sort(Row[] rows) {
 		List<Queue<Row>> queues = new ArrayList<Queue<Row>>();
-		int base = 2;
-		for(int i = 0; i < base; i++) {
+		for(int i = 0; i < RADIX; i++) {
 			queues.add(new LinkedList<Row>());
 		}
 		int length = rows[0].values.length;
@@ -20,7 +20,7 @@ public class RadixSort {
 				queues.get(r.values[length - 1 - i]).offer(r);
 			}
 			sortedRows = new ArrayList<Row>();
-			for(int b = 0; b < base; b++) {
+			for(int b = 0; b < RADIX; b++) {
 				sortedRows.addAll(queues.get(b));
 				queues.get(b).clear();
 			}

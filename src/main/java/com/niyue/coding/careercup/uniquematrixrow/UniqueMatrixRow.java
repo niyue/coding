@@ -18,6 +18,7 @@ public class UniqueMatrixRow {
 			if(!row.equals(prev)) {
 				uniqueRows.add(row);
 			}
+			prev = row;
 		}
 		Map<Integer, int[]> uniqueRowMap = uniqueRowMap(uniqueRows);
 		int[][] uniqueMatrix = new int[uniqueRows.size()][matrix[0].length];
