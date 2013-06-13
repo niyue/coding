@@ -11,7 +11,7 @@ public class UniqueMatrixRow {
 	public int[][] findUnique(int[][] matrix) {
 		Row[] rows = convert(matrix);
 		RadixSort sort = new RadixSort();
-		List<Row> sortedRows = sort.sort(rows);
+		Row[] sortedRows = sort.sort(rows);
 		Row prev = null;
 		List<Row> uniqueRows = new ArrayList<Row>();
 		for(Row row : sortedRows) {
