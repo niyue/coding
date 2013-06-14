@@ -6,14 +6,17 @@ public class CountingSort {
 		for(int n : numbers) {
 			count[n - min]++;
 		}
-		int j = numbers.length - 1;
-		for(int i = count.length - 1; i >= 0; i--) {
-			while(count[i] > 0) {
-				numbers[j] = i + min;
-				count[i]--;
-				j--;
-			}
+		int sum = 0;
+		for(int i = min; i <= max; i++) {
+			sum += count[i - min];
+			count[i - min] = sum;
 		}
-		return numbers;
+		int[] sortedNumbers = new int[numbers.length];
+		for(int i = numbers.length - 1; i >= 0; i--) {
+			int sortedIndex = count[numbers[i] - min] - 1;
+			sortedNumbers[sortedIndex] = numbers[i];
+			count[numbers[i] - min]--;
+		}
+		return sortedNumbers;
 	}
 }
