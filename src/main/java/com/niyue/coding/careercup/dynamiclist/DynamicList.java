@@ -21,12 +21,14 @@ public class DynamicList<E> implements List<E> {
 	}
 	
 	private void ensureCapacity() {
-		if(size == values.length - 1) {
+		ensureCapacity(size + 1);
+	}
+	
+	private void ensureCapacity(int minCapacity) {
+		if(minCapacity > values.length) {
 			Object[] originalValues = values;
-			values = new Object[values.length * 2];
-			for(int i = 0; i < originalValues.length; i++) {
-				values[i] = originalValues[i];
-			}
+			int newCapacity = Math.max(values.length * 2, minCapacity);
+			values = Arrays.copyOf(originalValues, newCapacity);
 		}
 	}
 
@@ -40,12 +42,22 @@ public class DynamicList<E> implements List<E> {
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
-		throw new UnsupportedOperationException();
+		for(E e : c) {
+			add(e);
+		}
+		return true;
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
-		throw new UnsupportedOperationException();
+		ensureCapacity(size + c.size());
+		System.arraycopy(values, index, values, index + c.size(), size - index);
+		Iterator<? extends E> iter = c.iterator();
+		for(int i = index; i < c.size(); i++) {
+			values[i] = iter.next();
+		}
+		size += c.size();
+		return true;
 	}
 
 	@Override

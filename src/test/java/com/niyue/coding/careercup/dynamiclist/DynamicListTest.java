@@ -3,6 +3,8 @@ package com.niyue.coding.careercup.dynamiclist;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 
 public class DynamicListTest {
@@ -39,5 +41,29 @@ public class DynamicListTest {
 		assertThat(list.get(1), is(0));
 		assertThat(list.get(2), is(1));
 		assertThat(list.get(3), is(2));
+	}
+	
+	@Test
+	public void testAddAll() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.addAll(Arrays.asList(3, 4));
+		assertThat(list.size(), is(3));
+		assertThat(list.get(0), is(2));
+		assertThat(list.get(1), is(3));
+		assertThat(list.get(2), is(4));
+	}
+	
+	@Test
+	public void testAddAllWithIndex() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(0);
+		list.add(1);
+		list.addAll(0, Arrays.asList(3, 4));
+		assertThat(list.size(), is(4));
+		assertThat(list.get(0), is(3));
+		assertThat(list.get(1), is(4));
+		assertThat(list.get(2), is(0));
+		assertThat(list.get(3), is(1));
 	}
 }
