@@ -4,6 +4,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import org.junit.Test;
 
@@ -65,5 +66,106 @@ public class DynamicListTest {
 		assertThat(list.get(1), is(4));
 		assertThat(list.get(2), is(0));
 		assertThat(list.get(3), is(1));
+	}
+	
+	@Test
+	public void testGetViaIndex() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		assertThat(list.size(), is(2));
+		assertThat(list.get(0), is(2));
+		assertThat(list.get(1), is(3));
+	}
+	
+	@Test(expected = IndexOutOfBoundsException.class)
+	public void testGetOutOfBoundIndex() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		assertThat(list.size(), is(2));
+		list.get(4);
+	}
+	
+	@Test
+	public void testIndexOf() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		assertThat(list.indexOf(3), is(1));
+		assertThat(list.indexOf(2), is(0));
+	}
+	
+	@Test
+	// null should be handled carefully
+	public void testIndexOfNull() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		assertThat(list.indexOf(null), is(-1));
+	}
+	
+	@Test
+	public void testIsEmpty() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		assertThat(list.isEmpty(), is(true));
+		list.add(2);
+		assertThat(list.isEmpty(), is(false));
+	}
+	
+	@Test
+	public void testClear() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		assertThat(list.isEmpty(), is(true));
+		list.add(2);
+		list.add(3);
+		assertThat(list.size(), is(2));
+		assertThat(list.isEmpty(), is(false));
+		list.clear();
+		assertThat(list.size(), is(0));
+		assertThat(list.isEmpty(), is(true));
+	}
+	
+	@Test
+	public void testSetIndex() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		list.set(0, 1);
+		assertThat(list.size(), is(2));
+		assertThat(list.get(0), is(1));
+		assertThat(list.get(1), is(3));
+	}
+	
+	@Test
+	public void testIterator() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(0);
+		list.add(1);
+		list.add(2);
+		assertThat(list.size(), is(3));
+		Iterator<Integer> iter = list.iterator();
+		int i = 0;
+		while(iter.hasNext()) {
+			int v = iter.next();
+			assertThat(v, is(list.get(i)));
+			i++;
+		}
+		assertThat(i, is(3));
+	}
+	
+	@Test
+	public void testIteratorRemove() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(0);
+		list.add(1);
+		list.add(2);
+		assertThat(list.size(), is(3));
+		Iterator<Integer> iter = list.iterator();
+		iter.next();
+		iter.remove();
+		assertThat(list.size(), is(2));
+		assertThat(list.get(0), is(1));
+		assertThat(list.get(1), is(2));
 	}
 }

@@ -62,7 +62,10 @@ public class DynamicList<E> implements List<E> {
 
 	@Override
 	public void clear() {
-		throw new UnsupportedOperationException();
+		for(int i = 0; i < size; i++) {
+			values[i] = null;
+		}
+		size = 0;
 	}
 
 	@Override
@@ -78,22 +81,32 @@ public class DynamicList<E> implements List<E> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public E get(int index) {
-		return (E) values[index];
+		if(index < size) {
+			return (E) values[index];
+		} else {
+			throw new IndexOutOfBoundsException();
+		}
 	}
 
 	@Override
 	public int indexOf(Object o) {
-		throw new UnsupportedOperationException();
+		for(int i = 0; i < size; i++) {
+			// null should be treated differently
+			if(o == null && values[i] == null || o != null && o.equals(values[i])) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		throw new UnsupportedOperationException();
+		return size == 0;
 	}
 
 	@Override
 	public Iterator<E> iterator() {
-		throw new UnsupportedOperationException();
+		return new DynamicListIterator();
 	}
 
 	@Override
@@ -133,7 +146,14 @@ public class DynamicList<E> implements List<E> {
 
 	@Override
 	public E set(int index, E element) {
-		throw new UnsupportedOperationException();
+		if(index < size) {
+			@SuppressWarnings("unchecked")
+			E oldValue = (E) values[index];
+			values[index] = element;
+			return oldValue;
+		} else {
+			throw new IndexOutOfBoundsException();
+		}
 	}
 
 	@Override
@@ -155,5 +175,29 @@ public class DynamicList<E> implements List<E> {
 	@Override
 	public <T> T[] toArray(T[] a) {
 		return (T[]) Arrays.copyOf(values, size);
+	}
+	
+	private class DynamicListIterator implements Iterator<E> {
+		private int nextCursor = 0;
+		
+		@Override
+		public boolean hasNext() {
+			return nextCursor < size;
+		}
+
+		@Override
+		public E next() {
+			// TODO: modification check
+			E v = get(nextCursor);
+			nextCursor++;
+			return v;
+		}
+
+		@Override
+		public void remove() {
+			values[nextCursor - 1] = null; // for GC
+			System.arraycopy(values, nextCursor, values, nextCursor - 1, size - nextCursor);
+			size--;
+		}
 	}
 }
