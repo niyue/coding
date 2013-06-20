@@ -28,19 +28,81 @@ public class Solution {
             	}
             } else if(A[midA] < B[midB]) {
             	int firstHalfLengthA = (lengthA - 1) / 2;
-            	int secondHalfLengthB = (lengthB + 1) / 2;
-        		if(firstHalfLengthA < secondHalfLengthB) {
-        			median = findMedian(A, midA, endA, B, startB, endB - firstHalfLengthA);    
-        		} else {
-        			median = findMedian(A, startA + secondHalfLengthB, endA, B, startB, midB);
-        		}
+            	int secondHalfLengthB = lengthB / 2;
+            	boolean isEven = (lengthA + lengthB) % 2 == 0;
+            	if(lengthA == 1) {
+            		if(isEven) {
+            			median = (Math.max(B[midB - 1], A[midA]) + B[midB]) / 2.0;
+            		} else {
+            			median = B[midB];
+            		}
+            	} else if(lengthA == 2) {
+            		if(isEven) {
+            			if(A[midA + 1] <= B[midB]) {
+            				median = (Math.max(B[midB - 1], A[midA + 1]) + B[midB]) / 2.0;
+            			} else {
+            				median = (Math.min(B[midB + 1], A[midA + 1]) + B[midB]) / 2.0;
+            			}
+            		} else {
+            			if(A[midA + 1] <= B[midB]) {
+            				if(midB == 0) {
+            					median = A[midA + 1];
+            				} else {
+            					median = Math.max(A[midA + 1], B[midB - 1]);
+            				}
+            			}
+            		}
+            	} else if(lengthB == 1) {
+            		if(isEven) {
+            			median = (Math.min(B[midB], A[midA + 1]) + A[midA]) / 2.0;
+            		} else {
+            			median = B[midB];
+            		}
+            	} else {
+            		if(firstHalfLengthA < secondHalfLengthB) {
+            			median = findMedian(A, midA, endA, B, startB, endB - firstHalfLengthA);    
+            		} else {
+            			median = findMedian(A, startA + secondHalfLengthB, endA, B, startB, midB);
+            		}
+            	}
             } else {
             	int firstHalfLengthB = (lengthB - 1) / 2;
-            	int secondHalfLengthA = (lengthA + 1) / 2;
-            	if(firstHalfLengthB < secondHalfLengthA) {
-            		median = findMedian(A, startA, endA - firstHalfLengthB, B, midB, endB);    
+            	int secondHalfLengthA = lengthA / 2;
+            	boolean isEven = (lengthA + lengthB) % 2 == 0;
+            	if(lengthB == 1) {
+            		if(isEven) {
+            			median = (Math.max(A[midA - 1], B[midB]) + A[midA]) / 2.0;
+            		} else {
+            			median = A[midA];
+            		}
+            	} else if(lengthB == 2) {
+            		if(isEven) {
+            			if(B[midB + 1] <= A[midA]) {
+            				median = (Math.max(A[midA - 1], B[midB + 1]) + A[midA]) / 2.0;
+            			} else {
+            				median = (Math.min(A[midA + 1], B[midB + 1]) + A[midA]) / 2.0;
+            			}
+            		} else {
+            			if(B[midB + 1] <= A[midA]) {
+            				if(midA == 0) {
+            					median = B[midB + 1];
+            				} else {
+            					median = Math.max(B[midB + 1], A[midA - 1]);
+            				}
+            			}
+            		}
+            	} else if(lengthA == 1) {
+            		if(isEven) {
+            			median = (Math.min(A[midA], B[midB + 1]) + B[midB]) / 2.0;
+            		} else {
+            			median = A[midA];
+            		}
             	} else {
-            		median = findMedian(A, startA, midA, B, startB + secondHalfLengthA, endB);
+            		if(firstHalfLengthB < secondHalfLengthA) {
+            			median = findMedian(A, startA, endA - firstHalfLengthB, B, midB, endB);    
+            		} else {
+            			median = findMedian(A, startA, midA, B, startB + secondHalfLengthA, endB);
+            		}
             	}
             }    
         }
