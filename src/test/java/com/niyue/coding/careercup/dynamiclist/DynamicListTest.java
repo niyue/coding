@@ -1,13 +1,14 @@
 package com.niyue.coding.careercup.dynamiclist;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.Test;
-
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 public class DynamicListTest {
 
 	@Test
@@ -167,5 +168,25 @@ public class DynamicListTest {
 		assertThat(list.size(), is(2));
 		assertThat(list.get(0), is(1));
 		assertThat(list.get(1), is(2));
+	}
+	
+	@Test
+	public void testContains() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		assertThat(list.size(), is(2));
+		assertThat(list, hasItem(3));
+		assertThat(list, not(hasItem(4)));
+	}
+	
+	@Test
+	public void testContainsAll() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		assertThat(list.size(), is(3));
+		assertThat(list.containsAll(Arrays.asList(2, 4)), is(true));
 	}
 }

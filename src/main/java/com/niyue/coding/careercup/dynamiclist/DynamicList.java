@@ -70,12 +70,26 @@ public class DynamicList<E> implements List<E> {
 
 	@Override
 	public boolean contains(Object o) {
-		throw new UnsupportedOperationException();
+		boolean contains = false;
+		for(Object v : values) {
+			if(o == null && v == null || v.equals(o)) {
+				contains = true;
+				break;
+			}
+		}
+		return contains;
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
+		boolean containsAll = true;
+		for(Object co : c) {
+			if(!contains(co)) {
+				containsAll = false;
+				break;
+			}
+		}
+		return containsAll;
 	}
 
 	@SuppressWarnings("unchecked")
