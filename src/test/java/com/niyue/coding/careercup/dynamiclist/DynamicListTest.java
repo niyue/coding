@@ -189,4 +189,78 @@ public class DynamicListTest {
 		assertThat(list.size(), is(3));
 		assertThat(list.containsAll(Arrays.asList(2, 4)), is(true));
 	}
+	
+	@Test
+	public void testLastIndexOf() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		list.add(3);
+		list.add(4);
+		assertThat(list.size(), is(4));
+		assertThat(list.lastIndexOf(3), is(2));
+	}
+	
+	@Test
+	public void testRemove() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		assertThat(list.size(), is(5));
+		assertThat(list.remove((Integer) 4), is(true));
+		assertThat(list.size(), is(4));
+		assertThat(list.remove((Integer) 10), is(false));
+		assertThat(list.size(), is(4));
+	}
+	
+	@Test
+	public void testRemoveByIndex() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		assertThat(list.size(), is(5));
+		assertThat(list.remove(0), is(2));
+		assertThat(list.size(), is(4));
+		assertThat(list.remove(1), is(3));
+		assertThat(list.size(), is(3));
+	}
+	
+	@Test
+	public void testRemoveAll() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		list.add(3);
+		list.add(4);
+		list.add(5);
+		assertThat(list.size(), is(5));
+		assertThat(list.removeAll(Arrays.asList(4, 2)), is(true));
+		assertThat(list.size(), is(3));
+		assertThat(list.contains(2), is(false));
+		assertThat(list.contains(4), is(false));
+	}
+	
+	@Test
+	public void testToArray() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		assertThat(list.toArray(new Integer[] {}), is(new Integer[] {2, 3, 4}));
+	}
+	
+	@Test
+	public void testToLargeArray() {
+		DynamicList<Integer> list = new DynamicList<Integer>();
+		list.add(2);
+		list.add(3);
+		list.add(4);
+		assertThat(list.toArray(new Integer[4]), is(new Integer[] {2, 3, 4, null}));
+	}
 }

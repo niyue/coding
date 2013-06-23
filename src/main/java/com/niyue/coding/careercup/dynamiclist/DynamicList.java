@@ -72,7 +72,7 @@ public class DynamicList<E> implements List<E> {
 	public boolean contains(Object o) {
 		boolean contains = false;
 		for(Object v : values) {
-			if(o == null && v == null || v.equals(o)) {
+			if(o == null && v == null || v != null && v.equals(o)) {
 				contains = true;
 				break;
 			}
@@ -125,7 +125,13 @@ public class DynamicList<E> implements List<E> {
 
 	@Override
 	public int lastIndexOf(Object o) {
-		throw new UnsupportedOperationException();
+		for(int i = size - 1; i >= 0; i--) {
+			Object v = get(i);
+			if(o == null && v == null || v != null && v.equals(o)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	@Override
@@ -140,20 +146,56 @@ public class DynamicList<E> implements List<E> {
 
 	@Override
 	public boolean remove(Object o) {
-		throw new UnsupportedOperationException();
+		boolean found = false;
+		for(int i = 0; i < size; i++) {
+			Object v = values[i];
+			if(v == null && o == null || v != null && v.equals(o)) {
+				values[i] = null;
+				System.arraycopy(values, i + 1, values, i, size - i - 1);
+				size--;
+				found = true;
+				break;
+			}
+		}
+		return found;
 	}
 
 	@Override
 	public E remove(int index) {
-		throw new UnsupportedOperationException();
+		if(index >= 0 && index < size) {
+			@SuppressWarnings("unchecked")
+			E v = (E) values[index];
+			values[index] = null;
+			System.arraycopy(values, index + 1, values, index, size - index - 1);
+			size--;
+			return v;
+		} else {
+			throw new IndexOutOfBoundsException();
+		}
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
+		int removed = 0;
+		int dest = 0;
+		for(int current = 0; current < size; current++) {
+			Object v = values[current];
+			if(!c.contains(v)) {
+				values[dest] = values[current];
+				dest++;
+			} else {
+				removed++;
+			}
+		}
+		size -= removed;
+		for(int i = size; i < size + removed; i++) {
+			values[i] = null;
+		}
+		return removed > 0;
 	}
 
 	@Override
+	// this can be implemented similarly with removeAll method
 	public boolean retainAll(Collection<?> c) {
 		throw new UnsupportedOperationException();
 	}
@@ -176,6 +218,7 @@ public class DynamicList<E> implements List<E> {
 	}
 
 	@Override
+	// subList is another beast in the dynamic list implementation
 	public List<E> subList(int fromIndex, int toIndex) {
 		throw new UnsupportedOperationException();
 	}
@@ -188,7 +231,16 @@ public class DynamicList<E> implements List<E> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T[] toArray(T[] a) {
-		return (T[]) Arrays.copyOf(values, size);
+		if(a.length < size) {
+			return (T[]) Arrays.copyOf(values, size, a.getClass());
+		} else {
+			System.arraycopy(values, 0, a, 0, size);
+			// ?
+			if(a.length > size) {
+				a[size] = null; 
+			}
+			return a;
+		}
 	}
 	
 	private class DynamicListIterator implements Iterator<E> {
