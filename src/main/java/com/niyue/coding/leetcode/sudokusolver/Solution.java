@@ -4,11 +4,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Deque;
-import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
 
 // http://leetcode.com/onlinejudge#question_37
 // Solve a sukodu puzzle using back tracking
@@ -115,7 +113,7 @@ public class Solution {
         }
         return affectedCells;    
     }
-
+    
     private void updateDisallows(Cell[][] grids, Cell c) {
         List<Cell> affectedCells = affectedCells(grids, c.x, c.y, false);
 
@@ -132,7 +130,7 @@ public class Solution {
         public Integer value = null;
         public Integer step = null;
         public int lastTry = 0;
-        public Set<Cell> lastUpdatedCells = new HashSet<Cell>();
+        public List<Cell> lastUpdatedCells = new ArrayList<Cell>(24);
         public int[] disallows = new int[11];
         public int disallowSize = 0;
         public Cell(int x, int y) {
