@@ -4,10 +4,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
@@ -72,7 +70,7 @@ public class Solution {
 
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
-                if(!grids[i][j].isPreDefined()) {
+                if(grids[i][j].needsFilling()) {
                     List<Cell> affectedCells = affectedCells(grids, i, j, true);
                     grids[i][j].disallow(affectedCells);
                 }
@@ -81,7 +79,7 @@ public class Solution {
 
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
-                if(!grids[i][j].isPreDefined()) {
+                if(grids[i][j].needsFilling()) {
                     queue.offer(grids[i][j]);
                 }
             }
@@ -92,13 +90,13 @@ public class Solution {
     private List<Cell> affectedCells(Cell[][] grids, int i, int j, boolean includePredefined) {
         List<Cell> affectedCells = new ArrayList<Cell>(27);
         for(int x = 0; x < grids.length; x++) {
-            if((includePredefined || !grids[x][j].isPreDefined()) && x != i) {
+            if((includePredefined || grids[x][j].needsFilling()) && x != i) {
                 affectedCells.add(grids[x][j]);
             }
         }
         
         for(int y = 0; y < grids[0].length; y++) {
-            if((includePredefined || !grids[i][y].isPreDefined()) && y != j) {
+            if((includePredefined || grids[i][y].needsFilling()) && y != j) {
                 affectedCells.add(grids[i][y]);
             }
         }
@@ -109,7 +107,7 @@ public class Solution {
             for(int y = 0; y < 3; y++) {
                 if(x != xShift && y != yShift) {
                     Cell c = grids[i + x - xShift][j + y - yShift];
-                    if(includePredefined || !c.isPreDefined()) {
+                    if(includePredefined || c.needsFilling()) {
                         affectedCells.add(c);
                     }
                 }
@@ -135,7 +133,8 @@ public class Solution {
         public Integer step = null;
         public int lastTry = 0;
         public Set<Cell> lastUpdatedCells = new HashSet<Cell>();
-        public Map<Integer, Integer> disallows = new HashMap<Integer, Integer>();
+        public int[] disallows = new int[11];
+        public int disallowSize = 0;
         public Cell(int x, int y) {
             this.x = x;
             this.y = y;
@@ -147,14 +146,14 @@ public class Solution {
             this.step = PREDEFINED;
         }
 
-        public boolean isPreDefined() {
-            return step == PREDEFINED;
+        public boolean needsFilling() {
+            return step != PREDEFINED;
         }
 
         public int nextAllow() {
             while(lastTry < 10) {
                 lastTry++;
-                if(!disallows.containsKey(lastTry)) {
+                if(disallows[lastTry] == 0) {
                     break;
                 }
             }
@@ -166,10 +165,10 @@ public class Solution {
         }
 
         public void disallow(int v) {
-            if(!disallows.containsKey(v)) {
-                disallows.put(v, 0);
-            }
-            disallows.put(v, disallows.get(v) + 1);
+        	if(disallows[v] == 0) {
+        		disallowSize++;
+        	}
+        	disallows[v]++;
         }
 
         public void disallow(List<Cell> affectedCells) {
@@ -181,12 +180,7 @@ public class Solution {
         }
 
         public void allow(int v) {
-            int count = disallows.get(v);
-            if(count == 1) {
-                disallows.remove(v);
-            } else {
-                disallows.put(v, count - 1);
-            }
+        	disallows[v]--;
         }
 
         public void reset() {
@@ -206,7 +200,7 @@ public class Solution {
        
         @Override
         public int compare(Cell c1, Cell c2) {
-        	return c2.disallows.size() - c1.disallows.size();
+        	return c2.disallowSize - c1.disallowSize;
         }
     }
 }
