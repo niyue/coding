@@ -3,6 +3,7 @@ package com.niyue.coding.careercup.knuthshuffle;
 import java.util.Random;
 
 // http://www.careercup.com/question?id=291796
+// An in-place version of knuth shuffle
 public class KnuthShuffle {
 	public int[] shuffle(int[] numbers) {
 		Random rand = new Random();
