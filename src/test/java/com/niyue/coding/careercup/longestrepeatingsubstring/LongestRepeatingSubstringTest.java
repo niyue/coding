@@ -18,15 +18,20 @@ public class LongestRepeatingSubstringTest {
 	public void testEntireStringRepeating() {
 		LongestRepeatingSubstring lrs = new LongestRepeatingSubstring();
 		String substring = lrs.search("abab");
-		assertThat(substring, is("abab"));
+		assertThat(substring, is("ab"));
+	}
+	
+	@Test
+	public void testStartingFromMiddle() {
+		LongestRepeatingSubstring lrs = new LongestRepeatingSubstring();
+		String substring = lrs.search("zabab");
+		assertThat(substring, is("ab"));
 	}
 	
 	@Test
 	public void testSingleCharRepeating() {
 		LongestRepeatingSubstring lrs = new LongestRepeatingSubstring();
 		String substring = lrs.search("aa");
-		assertThat(substring, is("aa"));
+		assertThat(substring, is("a"));
 	}
-	
-	
 }

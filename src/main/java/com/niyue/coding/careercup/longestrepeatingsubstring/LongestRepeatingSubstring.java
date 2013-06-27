@@ -1,17 +1,29 @@
 package com.niyue.coding.careercup.longestrepeatingsubstring;
 
 // http://www.careercup.com/question?id=13227715
+// O(n^2) solution to find the longest repeating substring using partial match function in KMP
+// basically, for each starting index possible, compute the partial match array for string[startIndex, end]
+// for each partial match array, find the max length width border
 public class LongestRepeatingSubstring {
 	public String search(String s) {
-		int[] b = partialMatch(s.toCharArray());
-		int longest = 0;
-		for(int i = b.length - 1; i > 0; i--) {
-			if(i % 2 == 0 && b[i] >= i / 2) {
-				longest = i;
+		int longestStart = 0;
+		int longestEnd = -1;
+		int maxLen = 0;
+		for(int j = 0; j < s.length(); j++) {
+			if(maxLen < s.length() - j) {
+				int[] b = partialMatch(s.substring(j).toCharArray());
+				for(int i = b.length - 1; i > 0; i--) {
+					if(b[i] > maxLen) {
+						longestStart = j;
+						longestEnd = j + b[i];
+						maxLen = b[i];
+					}
+				}
+			} else {
 				break;
 			}
 		}
-		return s.substring(0, longest);
+		return s.substring(longestStart, longestEnd);
 	}
 	
 	private int[] partialMatch(char[] chars) {
