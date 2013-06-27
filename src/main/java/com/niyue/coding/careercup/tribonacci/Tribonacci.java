@@ -2,6 +2,7 @@ package com.niyue.coding.careercup.tribonacci;
 
 // http://www.careercup.com/question?id=15072768
 // An O(n) solution to the tribonacci problem
+// http://nayuki.eigenstate.org/page/fast-fibonacci-algorithms
 public class Tribonacci {
 	public long get(int n) {
 		long[] prev = new long[] {1, 1, 2};
