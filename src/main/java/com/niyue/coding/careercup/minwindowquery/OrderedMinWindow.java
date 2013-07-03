@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 // http://www.careercup.com/question?id=3655770
+// An O(n x m) solution, where n is the length of numbers, and m is the length of the query
 public class OrderedMinWindow {
 	private int[] minWindow = new int[] {-1, -1};
 	
