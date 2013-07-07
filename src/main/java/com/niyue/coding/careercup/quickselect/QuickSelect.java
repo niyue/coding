@@ -1,7 +1,12 @@
 package com.niyue.coding.careercup.quickselect;
 
+import java.util.Random;
+
 // http://www.careercup.com/question?id=4356905
+// http://en.wikipedia.org/wiki/Selection_algorithm
 public class QuickSelect {
+	private Random rand = new Random();
+	
 	public int select(int[] numbers, int k) {
 		int kth = quickSelect(numbers, k, 0, numbers.length - 1);
 		return kth;
@@ -24,7 +29,7 @@ public class QuickSelect {
 	}
 	
 	private int choosePivot(int[] numbers, int start, int end) {
-		return start;
+		return rand.nextInt(end - start + 1) + start;
 	}
 	
 	private int partition(int[] numbers, int start, int end, int pivot) {

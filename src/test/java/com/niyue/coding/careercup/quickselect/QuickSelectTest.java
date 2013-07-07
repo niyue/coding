@@ -36,6 +36,13 @@ public class QuickSelectTest {
 	}
 	
 	@Test
+	public void testSelectNonExistK() {
+		QuickSelect qs = new QuickSelect();
+		int kth = qs.select(new int[] {3, 1, 2}, 4);
+		assertThat(kth, is(-1));
+	}
+	
+	@Test
 	public void testComplex() {
 		QuickSelect qs = new QuickSelect();
 		int kth = qs.select(new int[] {3, 1, 2, 5, 5, 6}, 4);
