@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 // http://www.careercup.com/question?id=7184083
+// TODO: DP solution without too many base cases and assumptions
 public class CtrlcCtrlv {
 	public PressingResult press(int n) {
 		PressingResult result = press(n, 0, 0);
@@ -13,17 +14,12 @@ public class CtrlcCtrlv {
 		return result;
 	}
 	
-	private PressingResult press(int n, int clipboard, int notepad) {
+	private PressingResult press(int n, long clipboard, long notepad) {
 		PressingResult result = null;
-		if(n == 0) {
+		if(n < 0) {
+			result = new PressingResult(new ArrayList<String>(), -1);
+		} else if(n == 0) {
 			result = new PressingResult(new ArrayList<String>(), notepad);
-		} else if(n <= 3) {
-			PressingResult pressAResult = press(n - 1, clipboard, notepad + 1);
-			press(pressAResult, "A");
-			PressingResult pressCtrlVResult = press(n - 1, clipboard, notepad + clipboard);
-			press(pressCtrlVResult, "CtrlV");
-			
-			result = max(pressAResult, pressCtrlVResult);
 		} else {
 			PressingResult pressAResult = press(n - 1, clipboard, notepad + 1);
 			press(pressAResult, "A");
@@ -45,8 +41,8 @@ public class CtrlcCtrlv {
 	
 	public static class PressingResult {
 		public List<String> keystrokes;
-		public int max;
-		public PressingResult(List<String> keystrokes, int max) {
+		public long max;
+		public PressingResult(List<String> keystrokes, long max) {
 			this.keystrokes = keystrokes;
 			this.max = max;
 		}
