@@ -7,6 +7,8 @@ import java.util.List;
 
 // http://www.careercup.com/question?id=7184083
 // TODO: DP solution without too many base cases and assumptions
+// http://stackoverflow.com/questions/4606984/maximum-number-of-characters-using-keystrokes-a-ctrla-ctrlc-and-ctrlv
+// http://leetcode.com/2011/01/ctrla-ctrlc-ctrlv.html
 public class CtrlcCtrlv {
 	public PressingResult press(int n) {
 		PressingResult result = press(n, 0, 0);
