@@ -1,4 +1,4 @@
-package com.niyue.coding.misc.arrayshuffle.log2;
+package com.niyue.coding.misc.log2;
 
 // http://www.mitbbs.com/article_t/JobHunting/32207861.html
 // Write a function that computes log2() using sqrt()
