@@ -12,47 +12,19 @@ public class Solution {
     
     private int[] maxPathAndSum(TreeNode node) {
         int[] pathAndSum = new int[2];
-        int leftPath = 0, leftSum = 0, rightPath = 0, rightSum = 0;
-        
-        if(node.left != null) {
-            int[] left = maxPathAndSum(node.left);
-            leftPath = left[0];
-            leftSum = left[1];
-        }
-        if(node.right != null) {
-            int[] right = maxPathAndSum(node.right);
-            rightPath = right[0];
-            rightSum = right[1];
-        }
-        
-        if(node.left != null && node.right != null) {
-            pathAndSum[0] = leftPath > 0 || rightPath > 0 ? Math.max(leftPath, rightPath) + node.val : node.val;
-            int maxPath = maxPathSum(node.val, leftPath, rightPath);
-            pathAndSum[1] = Math.max(Math.max(maxPath, leftSum), rightSum);    
-        } else if(node.left != null && node.right == null) {
-            pathAndSum[0] = leftPath > 0 ? leftPath + node.val : node.val;
-            int maxPath = maxPathSum(node.val, leftPath, null);
-            pathAndSum[1] = Math.max(maxPath, leftSum);    
-        } else if(node.left == null && node.right != null) {
-            pathAndSum[0] = rightPath > 0 ? rightPath + node.val : node.val;
-            int maxPath = maxPathSum(node.val, null, rightPath);
-            pathAndSum[1] = Math.max(maxPath, rightSum);    
+        if(node == null) {
+        	pathAndSum[0] = 0;
+            pathAndSum[1] = Integer.MIN_VALUE;
         } else {
-            pathAndSum[0] = node.val;
-            pathAndSum[1] = node.val;
+    		int[] left = maxPathAndSum(node.left);
+    		int[] right = maxPathAndSum(node.right);
+        	
+    		pathAndSum[0] = Math.max(node.val, node.val + Math.max(left[0], right[0]));
+    		int maxPath = Math.max(node.val + left[0] + right[0], pathAndSum[0]);
+    		
+    		pathAndSum[1] = Math.max(Math.max(maxPath, left[1]), right[1]);    
         }
         
         return pathAndSum;
-    }
-    
-    private int maxPathSum(int nodeVal, Integer leftPath, Integer rightPath) {
-        int maxPath = nodeVal;
-        if(leftPath != null && leftPath > 0) {
-            maxPath += leftPath;
-        }
-        if(rightPath != null && rightPath > 0) {
-            maxPath += rightPath;
-        }    
-        return maxPath;
     }
 }
