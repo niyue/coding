@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 
 // http://www.mitbbs.com/article_t/JobHunting/32324613.html
@@ -13,26 +14,20 @@ public class MinLargerNumber {
 		Deque<Integer> result = new ArrayDeque<Integer>();
 		List<Integer> targetDigits = targetDigits(target);
 		boolean[] visited = new boolean[targetDigits.size()];
-		for(int i = 0; i < targetDigits.size();) {
+		for(int i = 0; i < targetDigits.size() && i >= 0;) {
 			int current = i;
 			int digit = targetDigits.get(i);
-			if(visited[i]) {
-				Integer d = findLargerDigit(digits, digit);
-				if(d != null) {
-					result.addFirst(d);
-					i++;
-					// find smallest digits and break
-					result.addAll(Collections.nCopies(digits[0], targetDigits.size() - result.size()));
-				} else {
-					i--;
-					result.removeFirst();
-				}
-			} else {
+			if(!visited[i]) {
 				if(i == targetDigits.size() - 1) {
 					Integer d = findLargerDigit(digits, digit);
 					if(d == null) {
 						i--;
-						result.removeFirst();
+						if(!result.isEmpty()) {
+							result.removeFirst();
+						}
+					} else {
+						result.addFirst(d);
+						break;
 					}
 				} else {
 					Integer d = findEqualDigit(digits, digit);
@@ -41,28 +36,54 @@ public class MinLargerNumber {
 						if(d != null) {
 							result.addFirst(d);
 							i++;
-							result.addAll(Collections.nCopies(digits[0], targetDigits.size() - result.size()));
+							addSmallestDigit(result, digits[0], targetDigits.size() - result.size());
+							break;
 						} else {
 							i--;
-							result.removeFirst();
+							if(!result.isEmpty()) {
+								result.removeFirst();
+							}
 						}
 					} else {
 						result.addFirst(d);
 						i++;
 					}
 				}
+			} else {
+				Integer d = findLargerDigit(digits, digit);
+				if(d != null) {
+					result.addFirst(d);
+					i++;
+					addSmallestDigit(result, digits[0], targetDigits.size() - result.size());
+					break;
+				} else {
+					i--;
+					if(!result.isEmpty()) {
+						result.removeFirst();
+					}
+				}
 			}
 			visited[current] = true;
+		}
+		if(result.isEmpty()) {
+			addSmallestDigit(result, digits[0], targetDigits.size() + 1 - result.size());
 		}
 		int integer = toInteger(result);
 		return integer;
 	}
 	
+	private void addSmallestDigit(Deque<Integer> result, int digit, int times) {
+		for(int i = 0; i < times; i++) {
+			result.addFirst(digit);
+		}
+	}
+	
 	private int toInteger(Deque<Integer> result) {
 		int integer = 0;
-		for(int i = 0; i < result.size(); i++) {
+		Iterator<Integer> iter = result.descendingIterator();
+		while(iter.hasNext()) {
 			integer *= 10;
-			integer += result.removeLast();
+			integer += iter.next();
 		}
 		return integer;
 	}
