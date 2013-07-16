@@ -23,10 +23,10 @@ public class MinLargerNumber {
 					if(d == null) {
 						i--;
 						if(!result.isEmpty()) {
-							result.removeFirst();
+							result.pollFirst();
 						}
 					} else {
-						result.addFirst(d);
+						result.offerFirst(d);
 						break;
 					}
 				} else {
@@ -34,32 +34,32 @@ public class MinLargerNumber {
 					if(d == null) {
 						d = findLargerDigit(digits, digit);
 						if(d != null) {
-							result.addFirst(d);
+							result.offerFirst(d);
 							i++;
 							addSmallestDigit(result, digits[0], targetDigits.size() - result.size());
 							break;
 						} else {
 							i--;
 							if(!result.isEmpty()) {
-								result.removeFirst();
+								result.pollFirst();
 							}
 						}
 					} else {
-						result.addFirst(d);
+						result.offerFirst(d);
 						i++;
 					}
 				}
 			} else {
 				Integer d = findLargerDigit(digits, digit);
 				if(d != null) {
-					result.addFirst(d);
+					result.offerFirst(d);
 					i++;
 					addSmallestDigit(result, digits[0], targetDigits.size() - result.size());
 					break;
 				} else {
 					i--;
 					if(!result.isEmpty()) {
-						result.removeFirst();
+						result.pollFirst();
 					}
 				}
 			}
@@ -74,7 +74,7 @@ public class MinLargerNumber {
 	
 	private void addSmallestDigit(Deque<Integer> result, int digit, int times) {
 		for(int i = 0; i < times; i++) {
-			result.addFirst(digit);
+			result.offerFirst(digit);
 		}
 	}
 	
@@ -114,8 +114,7 @@ public class MinLargerNumber {
 		assert target > 0;
 		List<Integer> digits = new ArrayList<Integer>();
 		while(target > 0) {
-			int lastDigit = target % 10;
-			digits.add(lastDigit);
+			digits.add(target % 10);
 			target /= 10;
 		}
 		Collections.reverse(digits);
