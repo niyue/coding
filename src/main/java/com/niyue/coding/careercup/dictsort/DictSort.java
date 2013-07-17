@@ -42,7 +42,6 @@ public class DictSort {
         return s.toString();
     }
     
-    @SuppressWarnings("unchecked")
 	private List<Map<Character, Set<Character>>> orders(List<String> dict) {
         Map<Character, Set<Character>> order = new HashMap<Character, Set<Character>>();
     	Map<Character, Set<Character>> reversedOrder = new HashMap<Character, Set<Character>>();

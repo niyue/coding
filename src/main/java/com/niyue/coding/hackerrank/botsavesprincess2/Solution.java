@@ -37,7 +37,7 @@ public class Solution {
 				p[1] = py;
 			}
 		}
-
+		in.close();
 		nextMove(n, x, y, board);
 	}
 }

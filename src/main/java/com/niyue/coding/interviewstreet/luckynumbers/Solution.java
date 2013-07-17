@@ -202,6 +202,7 @@ public class Solution {
             startNumbers[i] = scanner.nextLong();
             endNumbers[i] = scanner.nextLong();
         }
+        scanner.close();
     }
 
     public static final class FingerPrint {

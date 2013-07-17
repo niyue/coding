@@ -72,6 +72,7 @@ class Solution {
         for (int i = 0; i < T; i++) {
             strings.add(scanner.next());
         }
+        scanner.close();
         return strings;
     }
 }

@@ -27,6 +27,7 @@ public class Solution {
             size = size * (2 * xi + 1);
             size = size % 1000007;
         }
+        scanner.close();
         System.out.println(size);
     }
 

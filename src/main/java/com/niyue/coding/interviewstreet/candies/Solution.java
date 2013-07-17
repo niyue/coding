@@ -86,6 +86,7 @@ class Solution {
         for(int i=1;i<=N;i++) {
         	ratings[i] = scanner.nextInt();
         }
+        scanner.close();
         return ratings;
     }
 }

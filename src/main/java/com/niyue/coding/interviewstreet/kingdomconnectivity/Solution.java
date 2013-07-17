@@ -96,7 +96,7 @@ class Solution {
                 sourceToTargetMap.put(dest, sourceToTargetMap.get(dest) + 1);
             }
         }
-
+        scanner.close();
         return connections;
     }
 }

@@ -13,7 +13,6 @@ public class NWayMergeTest {
 	@Test
 	public void testTwoWaysMerge() {
 		NWayMerge merge = new NWayMerge();
-		@SuppressWarnings("unchecked")
 		List<Integer> numbers = merge.merge(Arrays.asList(
 				Arrays.asList(1, 2), 
 				Arrays.asList(2, 3) 
@@ -24,7 +23,6 @@ public class NWayMergeTest {
 	@Test
 	public void testThreeWaysMerge() {
 		NWayMerge merge = new NWayMerge();
-		@SuppressWarnings("unchecked")
 		List<Integer> numbers = merge.merge(Arrays.asList(
 				Arrays.asList(1, 2), 
 				Arrays.asList(2, 3),
@@ -36,7 +34,6 @@ public class NWayMergeTest {
 	@Test
 	public void testOneWaysMerge() {
 		NWayMerge merge = new NWayMerge();
-		@SuppressWarnings("unchecked")
 		List<Integer> numbers = merge.merge(Arrays.asList(
 				Arrays.asList(1, 2) 
 		));

@@ -26,6 +26,7 @@ class Solution {
             boolean isFirstLose = isFirstLose(N, numbers);
             print(isFirstLose);
         }
+        scanner.close();
     }
     
     private boolean isFirstLose(int n, List<Integer> numbers) {

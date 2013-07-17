@@ -37,6 +37,7 @@ class Solution {
         for (int i = 0; i < N; i++) {
             inputNumbers.add(scanner.nextInt());
         }
+        scanner.close();
         return inputNumbers;
     }
 }

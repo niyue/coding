@@ -83,5 +83,6 @@ class Solution {
         for(int i=0;i<n;i++) {
         	two[i] = scanner.nextInt();
         }
+        scanner.close();
     }
 }

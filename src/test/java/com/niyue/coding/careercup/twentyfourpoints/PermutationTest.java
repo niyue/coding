@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.Test;
 public class PermutationTest {
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testOneNumber() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -19,7 +18,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testTwoNumbers() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -30,7 +28,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testTwoDuplicatedNumbers() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -41,7 +38,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testThreeNumbers() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -56,7 +52,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testPermute10() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -66,7 +61,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testPermute11() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -76,7 +70,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testPermute21() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -87,7 +80,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testPermute22() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -98,7 +90,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testPermute30() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -108,7 +99,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testPermute31() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -120,7 +110,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testPermute32() {
 		Permutation<Integer> p = new Permutation<Integer>();
@@ -135,7 +124,6 @@ public class PermutationTest {
 		)));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testPermute33() {
 		Permutation<Integer> p = new Permutation<Integer>();

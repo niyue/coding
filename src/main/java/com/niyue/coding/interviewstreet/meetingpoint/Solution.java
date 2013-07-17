@@ -95,5 +95,6 @@ class Solution {
         	x[i] = xi + yi;
         	y[i] = yi - xi;
         }
+        scanner.close();
     }
 }

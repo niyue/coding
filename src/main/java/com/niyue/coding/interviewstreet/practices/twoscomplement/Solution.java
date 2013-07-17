@@ -60,5 +60,6 @@ class Solution {
         	A[i] = scanner.nextInt();
         	B[i] = scanner.nextInt();
         }
+        scanner.close();
     }
 }

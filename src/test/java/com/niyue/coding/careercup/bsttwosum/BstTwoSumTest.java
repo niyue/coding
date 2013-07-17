@@ -33,7 +33,6 @@ public class BstTwoSumTest {
 		assertTrue(sums.isEmpty());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testTwoPair() {
 		BstTwoSum sum = new BstTwoSum();
@@ -48,7 +47,6 @@ public class BstTwoSumTest {
 				Arrays.asList(2, 4))));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testTwoPairWithHalfValue() {
 		BstTwoSum sum = new BstTwoSum();
@@ -64,7 +62,6 @@ public class BstTwoSumTest {
 				Arrays.asList(2, 4))));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testAnotherTwoPair() {
 		BstTwoSum sum = new BstTwoSum();
@@ -80,7 +77,6 @@ public class BstTwoSumTest {
 				Arrays.asList(3, 4))));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testSixNodes() {
 		TreeNode root = new TreeNode(4);

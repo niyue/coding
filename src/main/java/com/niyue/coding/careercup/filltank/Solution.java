@@ -74,6 +74,7 @@ class Solution {
         for(int i=0;i<M;i++) {
         	capacities[i] = scanner.nextInt();
         }
+        scanner.close();
         return capacities;
     }
 }

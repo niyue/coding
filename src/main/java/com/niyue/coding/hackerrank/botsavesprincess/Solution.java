@@ -47,7 +47,7 @@ public class Solution {
                 m[1] = mx;
             }
         }
-
+        in.close();
         displayPathtoPrincess(n,grid);
     }
 }

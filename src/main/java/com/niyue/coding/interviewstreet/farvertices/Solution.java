@@ -136,7 +136,7 @@ class Solution {
             int edgeVertextTwo = scanner.nextInt();
             edges.add(new Connection(edgeVertextOne, edgeVertextTwo));
         }
-
+        scanner.close();
         return edges;
     }
        

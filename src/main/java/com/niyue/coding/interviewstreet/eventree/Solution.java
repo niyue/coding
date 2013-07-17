@@ -54,6 +54,7 @@ class Solution {
         	int v2 = scanner.nextInt();
         	edges.add(new Edge(v1, v2));
         }
+        scanner.close();
         return edges;
     }
     
