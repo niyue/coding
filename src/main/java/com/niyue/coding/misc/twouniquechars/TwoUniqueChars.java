@@ -16,19 +16,13 @@ public class TwoUniqueChars {
 		int start = 0, end = -1;
 		for(int i = 0; i < s.length(); i++) {
 			Character c = s.charAt(i);
-			if(recentPositions.size() < 2) {
-				recentPositions.put(c, i);
-			} else {
-				if(recentPositions.containsKey(c)) {
-					recentPositions.put(c, i);
-				} else {
-					Iterator<Entry<Character, Integer>> positionIterator = recentPositions.entrySet().iterator();
-					int firstCharLastPosition = positionIterator.next().getValue();
-					start = firstCharLastPosition + 1;
-					positionIterator.remove();
-					recentPositions.put(c, i);
-				}
+			if(recentPositions.size() == 2 && !recentPositions.containsKey(c)) {
+				Iterator<Entry<Character, Integer>> positionIterator = recentPositions.entrySet().iterator();
+				int firstCharLastPosition = positionIterator.next().getValue();
+				start = firstCharLastPosition + 1;
+				positionIterator.remove();
 			}
+			recentPositions.put(c, i);
 			end = i;
 			if(end - start > maxEnd - maxStart) {
 				maxStart = start;
