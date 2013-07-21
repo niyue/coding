@@ -1,5 +1,6 @@
 package com.niyue.coding.leetcode.plusone;
 
+
 // http://leetcode.com/onlinejudge#question_66
 public class Solution {
     public int[] plusOne(int[] digits) {
@@ -18,11 +19,9 @@ public class Solution {
     }
 
     private int[] oneMoreDigit(int[] digits) {
-        int[] result = new int[digits.length + 1];
+    	int[] result = new int[digits.length + 1];
+    	System.arraycopy(digits, 0, result, 1, digits.length);
         result[0] = 1;
-        for(int i = 0; i < digits.length; i++) {
-            result[i + 1] = digits[i];
-        }
         return result;
     }
 }
