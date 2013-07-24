@@ -1,4 +1,4 @@
-package com.niyue.coding.misc.RobotWalk;
+package com.niyue.coding.misc.robotwalk;
 
 // http://www.mitbbs.com/article_t/JobHunting/32279127.html
 // A robot walks from origin point, and it can move to either left or right one step each time, what is the possibility it will return to the origin point if it moves n steps? 

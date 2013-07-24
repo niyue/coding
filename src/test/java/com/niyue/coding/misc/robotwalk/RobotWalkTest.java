@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.niyue.coding.misc.RobotWalk.RobotWalk;
+import com.niyue.coding.misc.robotwalk.RobotWalk;
 
 public class RobotWalkTest {
 
