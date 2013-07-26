@@ -10,28 +10,52 @@ public class RecentUniqueCharTest {
 	@Test
 	public void testAllUniqueChars() {
 		RecentUniqueChar ruc = new RecentUniqueChar();
-		char c = ruc.find('a', 'b', 'c');
-		assertThat(c, is('c'));
+		ruc.add('a');
+		assertThat(ruc.getMostRecent(), is('a'));
+		ruc.add('b');
+		assertThat(ruc.getMostRecent(), is('b'));
+		ruc.add('c');
+		assertThat(ruc.getMostRecent(), is('c'));
 	}
 	
 	@Test
 	public void testDuplicatedAtLast() {
 		RecentUniqueChar ruc = new RecentUniqueChar();
-		char c = ruc.find('a', 'b', 'c', 'c');
-		assertThat(c, is('b'));
+		ruc.add('a');
+		assertThat(ruc.getMostRecent(), is('a'));
+		ruc.add('b');
+		assertThat(ruc.getMostRecent(), is('b'));
+		ruc.add('c');
+		assertThat(ruc.getMostRecent(), is('c'));
+		ruc.add('c');
+		assertThat(ruc.getMostRecent(), is('b'));
 	}
 	
 	@Test
 	public void testDuplicatedInMiddle() {
 		RecentUniqueChar ruc = new RecentUniqueChar();
-		char c = ruc.find('a', 'c', 'c', 'b');
-		assertThat(c, is('b'));
+		ruc.add('a');
+		assertThat(ruc.getMostRecent(), is('a'));
+		ruc.add('c');
+		assertThat(ruc.getMostRecent(), is('c'));
+		ruc.add('c');
+		assertThat(ruc.getMostRecent(), is('a'));
+		ruc.add('b');
+		assertThat(ruc.getMostRecent(), is('b'));
 	}
 	
 	@Test
 	public void testDuplicatedInBetween() {
 		RecentUniqueChar ruc = new RecentUniqueChar();
-		char c = ruc.find('a', 'c', 'b', 'c', 'b');
-		assertThat(c, is('a'));
+		ruc.add('a');
+		assertThat(ruc.getMostRecent(), is('a'));
+		ruc.add('c');
+		assertThat(ruc.getMostRecent(), is('c'));
+		ruc.add('b');
+		assertThat(ruc.getMostRecent(), is('b'));
+		ruc.add('c');
+		assertThat(ruc.getMostRecent(), is('b'));
+		ruc.add('b');
+		assertThat(ruc.getMostRecent(), is('a'));
 	}
 }

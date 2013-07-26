@@ -11,19 +11,22 @@ import java.util.Set;
  * Once we have such a data structure to use, it is very easy to solve this problem
  */
 public class RecentUniqueChar {
-	public char find(char... chars) {
-		Set<Character> unique = new ReversedIteratingLinkedHashSet<>();
-		Set<Character> duplicated = new HashSet<>();
-		for(char c : chars) {
-			if(!duplicated.contains(c)) {
-				if(unique.contains(c)) {
-					unique.remove(c);
-					duplicated.add(c);
-				} else {
-					unique.add(c);
-				}
+	private Set<Character> unique = new ReversedIteratingLinkedHashSet<>();
+	private Set<Character> duplicated = new HashSet<>();
+	// add a new character when reading from the stream of characters
+	public void add(char c) {
+		if(!duplicated.contains(c)) {
+			if(unique.contains(c)) {
+				unique.remove(c);
+				duplicated.add(c);
+			} else {
+				unique.add(c);
 			}
 		}
+	}
+	
+	// return the most recent unique character
+	public char getMostRecent() {
 		return unique.isEmpty() ? Character.MIN_VALUE : unique.iterator().next();
 	}
 }
