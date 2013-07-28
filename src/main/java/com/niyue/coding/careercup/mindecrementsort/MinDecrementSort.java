@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 // http://www.careercup.com/question?id=373367
+// http://www.careercup.com/question?id=9333968
 // http://stackoverflow.com/questions/8928061/convert-array-to-a-sorted-one-using-only-two-operations
 // TODO: could be turned to a top down O(n^2) DP solution using memoization
 public class MinDecrementSort {
