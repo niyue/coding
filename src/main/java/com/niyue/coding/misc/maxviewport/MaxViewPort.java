@@ -2,6 +2,7 @@ package com.niyue.coding.misc.maxviewport;
 
 import java.util.Arrays;
 
+// http://www.mitbbs.com/article_t/JobHunting/32335553.html
 // Given a set of points in coordinate system, and a view port, for example, 30 degrees, whose source is in origin point, 
 // figure out the maximum number of points can be seen in the view port
 // An O(n) solution using line sweeping
