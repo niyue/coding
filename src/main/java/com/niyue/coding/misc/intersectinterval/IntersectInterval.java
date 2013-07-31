@@ -28,7 +28,10 @@ public class IntersectInterval {
 		while(start <= end) {
 			int mid = start + (end - start) / 2;
 			int endPoint = intervals.get(mid).end;
-			if(point < endPoint) {
+			if(point == endPoint) {
+				start = mid;
+				break;
+			} else if(point < endPoint) {
 				end = mid - 1;
 			} else {
 				start = mid + 1;
