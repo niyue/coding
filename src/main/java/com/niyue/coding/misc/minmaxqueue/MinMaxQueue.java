@@ -3,6 +3,7 @@ package com.niyue.coding.misc.minmaxqueue;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 
 /*
  *  Design a queue, which has four operations:
@@ -13,12 +14,12 @@ import java.util.NoSuchElementException;
  *  All operations can be implemented with amortized O(1) time complexity
  */ 
 public class MinMaxQueue<T extends Comparable<T>> {
-	private Deque<T> queue = new ArrayDeque<T>();
+	private Queue<T> queue = new ArrayDeque<T>();
 	private Deque<T> minQueue = new ArrayDeque<T>();
 	private Deque<T> maxQueue = new ArrayDeque<T>();
 	
 	public void push(T e) {
-		queue.offerLast(e);
+		queue.offer(e);
 		while(!minQueue.isEmpty() && minQueue.peekLast().compareTo(e) > 0) {
 			minQueue.pollLast();
 		}
@@ -31,7 +32,7 @@ public class MinMaxQueue<T extends Comparable<T>> {
 	
 	public T pop() {
 		if(!queue.isEmpty()) {
-			T e = queue.pollFirst();
+			T e = queue.poll();
 			if(minQueue.peekFirst().compareTo(e) == 0) {
 				minQueue.pollFirst();
 			}
