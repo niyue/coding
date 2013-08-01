@@ -11,17 +11,20 @@ import com.niyue.coding.careercup.disjointinterval.DisjointInterval.Interval;
  * Given a list of time intervals (meeting start time/end time) for meetings, 
  * only one meeting room is available,
  * how can you schedule the meetings so that maximum number of meetings can be held? 
+ * O(n^2) solution using DP
  */
 
 public class MeetingScheduler {
 	private Integer[][] maxes;
+	private boolean[][] solution;
 	public List<Interval> schedule(List<Interval> meetings) {
 		meetings = new ArrayList<Interval>(meetings);
 		meetings.add(new Interval(-1, -1));
 		Collections.sort(meetings);
 		maxes = new Integer[meetings.size()][meetings.size()];
+		solution = new boolean[meetings.size()][meetings.size()];
 		maxScheduling(meetings, 1, 0);
-		List<Interval> schedule = schedule(maxes, meetings);
+		List<Interval> schedule = schedule(solution, meetings);
 		return schedule;
 	}
 	
@@ -34,25 +37,22 @@ public class MeetingScheduler {
 				Interval current = meetings.get(start);
 				Interval last = meetings.get(lastMeeting);
 				int maxWithoutCurrent = maxScheduling(meetings, start + 1, lastMeeting);
-				int maxWithCurrent = 0;
+				int maxWithCurrent = -1;
 				if(current.start >= last.end) {
 					maxWithCurrent = 1 + maxScheduling(meetings, start + 1, start);
 				}
-				max = Math.max(maxWithoutCurrent, maxWithCurrent);
+				max = Math.max(maxWithCurrent, maxWithoutCurrent);
+				solution[start][lastMeeting] = maxWithCurrent >= maxWithoutCurrent;
 				maxes[start][lastMeeting] = max;
 			}
 		}
 		return max;
 	}
 	
-	private List<Interval> schedule(Integer[][] maxes, List<Interval> meetings) {
+	private List<Interval> schedule(boolean[][] solution, List<Interval> meetings) {
 		List<Interval> intervals = new ArrayList<Interval>();
-		int last = 0;
-		for(int i = 1; i < maxes.length; i++) {
-			int maxWithCurrent = 1 + (i == maxes.length - 1 ? 0 : maxes[i + 1][i]);
-			int maxWithoutCurrent = (i == maxes.length - 1 ? 0 : maxes[i + 1][last]);
-			
-			if(maxWithCurrent >= maxWithoutCurrent) {
+		for(int i = 1, last = 0; i < solution.length; i++) {
+			if(solution[i][last]) {
 				intervals.add(meetings.get(i));
 				last = i;
 			}

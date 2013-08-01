@@ -96,6 +96,6 @@ public class MeetingSchedulerTest {
 		));
 		assertThat(meetings.size(), is(2));
 		assertThat(meetings.get(0), is(new Interval(0, 2)));
-		// assertThat(meetings.get(1), is(new Interval(1, 12)));
+		assertThat(meetings.get(1), is(new Interval(5, 9)));
 	}
 }
