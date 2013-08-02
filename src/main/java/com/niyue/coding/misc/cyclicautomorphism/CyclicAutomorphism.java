@@ -1,6 +1,9 @@
 package com.niyue.coding.misc.cyclicautomorphism;
 
 /*
+ * http://blog.sina.com.cn/s/blog_b9285de20101ipa9.html
+ * http://www.mitbbs.com/article_t1/JobHunting/32339031_0_2.html
+ * 
  * For a string with length n, it has n different shifted strings.
  * A cyclic automorphism is a shifted string which is the same as the original string.
  * Given a string, count how many cyclic automorphism strings it has.
