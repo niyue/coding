@@ -35,4 +35,11 @@ public class MinWindowQueryTest {
 		String window = query.minWindow("hello your world from my hello java", ImmutableSet.of("world", "hello"));
 		assertThat(window, is("hello your world"));
 	}
+	
+	@Test
+	public void testComplexy() throws Exception {
+		MinWindowQuery query = new MinWindowQuery();
+		String window = query.minWindow("A C D D A B D C B C C D C A B D B", ImmutableSet.of("A", "C", "B"));
+		assertThat(window, is("A B D C"));
+	}
 }

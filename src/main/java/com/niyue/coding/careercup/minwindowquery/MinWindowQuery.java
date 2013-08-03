@@ -10,6 +10,8 @@ import java.util.Set;
 // use a HashMap to keep track of the latest position for each word and update the min length if the latest word is the last word in the window
 // the understanding for this question is not very accurate, the minimum window is implemented to 
 // contain the least words instead of having least length, but this issue can be overcome with some simple modification 
+// this implementation takes O(n) time (length of document), but the keywords cannot have duplicated (that is why they are stored in a Set)
+// if we need to handle the duplicated keywords and find only exact number of times matched in the document, we need to take a different approach
 public class MinWindowQuery {
 	public String minWindow(String document, Set<String> keywords) {
 		List<String> words = Arrays.asList(document.split(" "));
