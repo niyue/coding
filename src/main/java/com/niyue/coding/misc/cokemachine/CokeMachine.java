@@ -2,6 +2,7 @@ package com.niyue.coding.misc.cokemachine;
 
 /*
  * http://www.careercup.com/question?id=15299689
+ * http://www.mitbbs.com/article_t/JobHunting/32498481.html
  * Three coke machines. 
  * Each one has two values min & max, which means if you get coke from this machine it will load you a random volume in the range [min, max]. 
  * Given a cup size n and minimum soda volume m, 
