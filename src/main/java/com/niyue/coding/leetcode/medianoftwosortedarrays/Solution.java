@@ -2,7 +2,9 @@ package com.niyue.coding.leetcode.medianoftwosortedarrays;
 
 // A very ugly solution that contains too many branches to solve different edge cases and more important, it has some edge cases unsolved yet, 2026/2058 tests passed
 // A solution in MIT handout should be used, which seems more clean
-// http://www2.myoops.org/course_material/mit/NR/rdonlyres/Electrical-Engineering-and-Computer-Science/6-046JFall-2005/30C68118-E436-4FE3-8C79-6BAFBB07D935/0/ps9sol.pdf 
+// http://www2.myoops.org/course_material/mit/NR/rdonlyres/Electrical-Engineering-and-Computer-Science/6-046JFall-2005/30C68118-E436-4FE3-8C79-6BAFBB07D935/0/ps9sol.pdf
+// http://stackoverflow.com/questions/4607945/how-to-find-the-kth-smallest-element-in-the-union-of-two-sorted-arrays
+// http://stackoverflow.com/questions/4686823/given-2-sorted-arrays-of-integers-find-the-nth-largest-number-in-sublinear-time
 public class Solution {
     public double findMedianSortedArrays(int A[], int B[]) {
         return findMedian(A, 0, A.length - 1, B, 0, B.length - 1);
