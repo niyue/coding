@@ -1,32 +1,68 @@
 package com.niyue.coding.misc.balancedpartition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /*
  * http://people.csail.mit.edu/bdean/6.046/dp/
+ * http://www.careercup.com/question?id=8872057
  * You have a set of n integers each in the range 0 ... K. 
  * Partition these integers into two subsets such that you minimize |S1 - S2|, 
  * where S1 and S2 denote the sums of the elements in each of the two subsets.
- * A naive O(2^N) solution
+ * A O(N^2 * K) solution
  */
 public class BalancedPartition {
-	public int partition(List<Integer> numbers) {
-		@SuppressWarnings("unchecked")
-		List<Integer>[] sums = new List[numbers.size()];
-		sums[0] = Arrays.asList(0, numbers.get(0));
-		for(int i = 1; i < numbers.size(); i++) {
-			List<Integer> previousSums = sums[i - 1];
-			List<Integer> ithSums = new ArrayList<Integer>();
-			ithSums.addAll(previousSums);
-			for(int sum : previousSums) {
-				ithSums.add(sum + numbers.get(i));
+	public List<Integer> partition(List<Integer> numbers) {
+		int K = Collections.max(numbers);
+		int N = numbers.size();
+		boolean[][] sums = new boolean[N][N * K + 1];
+		sums[0][0] = true;
+		sums[0][numbers.get(0)] = true;
+		for(int i = 1; i < N; i++) {
+			for(int s = 0; s <= N * K; s++) {
+				sums[i][s] = 
+						sums[i - 1][s] || 
+						(s - numbers.get(i) >= 0 && sums[i - 1][s - numbers.get(i)]);
 			}
-			sums[i] = ithSums;
 		}
-		int closestSum = closestSum(sums, numbers);
+		int sum = sum(numbers);
+		int closestSum = findClosestSum(sums, N, K, sum);
+		List<Integer> partition = findPartition(sums, closestSum, numbers);
+		return partition;
+	}
+	
+	private int findClosestSum(boolean[][] sums, int N, int K, int sum) {
+		int diff = Integer.MAX_VALUE;
+		int closestSum = 0;
+		for(int s = 0; s <= N * K; s++) {
+			if(sums[N - 1][s]) {
+				int currentDiff = Math.abs(sum - 2 * s);
+				if(currentDiff < diff) {
+					closestSum = s;
+					diff = currentDiff;
+				}
+			}
+		}
 		return closestSum;
+	}
+	
+	private List<Integer> findPartition(boolean[][] sums, int closestSum, List<Integer> numbers) {
+		List<Integer> partition = new ArrayList<Integer>();
+		int i = numbers.size() - 1;
+		int s = closestSum;
+		while(i > 0) {
+			if(!sums[i - 1][s]) {
+				s -= numbers.get(i);
+				partition.add(i);
+			}
+			i--;
+		}
+		if(s != 0) {
+			partition.add(0);
+		}
+		Collections.reverse(partition);
+		return partition;
 	}
 	
 	private int sum(List<Integer> numbers) {
@@ -37,18 +73,4 @@ public class BalancedPartition {
 		return sum;
 	}
 	
-	private int closestSum(List<Integer>[] sums, List<Integer> numbers) {
-		int sum = sum(numbers);
-		int halfSum = sum / 2;
-		List<Integer> lastSums = sums[numbers.size() - 1];
-		int closest = Integer.MAX_VALUE;
-		int closestSum = Integer.MAX_VALUE;
-		for(int s : lastSums) {
-			if(Math.abs(s - halfSum) < closest) {
-				closest = Math.abs(s - halfSum);
-				closestSum = halfSum;
-			}
-		}
-		return closestSum;
-	}
 }
