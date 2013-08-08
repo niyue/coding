@@ -23,36 +23,19 @@ public class Solution {
                         }
                     }
                 } else {
-                    int maxMatch = count(s, si, p[pi]);
-                    for(int i = 0; i <= maxMatch; i++) {
-                        if(isMatch(s, si + i, p, pi + 2)) {
+                    for(; si < s.length && s[si] == p[pi]; si++) {
+                        if(isMatch(s, si, p, pi + 2)) {
                             isMatch = true;
                             break;
                         }
                     }
+                    isMatch = isMatch(s, si, p, pi + 2);
                 }
-            } else if(p[pi] == '.') {
+            } else if(p[pi] == '.' || si < s.length && s[si] == p[pi]) {
                 isMatch = isMatch(s, si + 1, p, pi + 1);
-            } else {
-            	// text reaches its end and the remaining pattern is not wildcard
-            	if(si < s.length) {
-            		isMatch = s[si] == p[pi] ? isMatch(s, si + 1, p, pi + 1) : false;
-            	}
             }
+            // text reaches its end and the remaining pattern is not wildcard
         }
         return isMatch;
-    }
-    
-    // count how many times pchar appears in s from si, namely, the maximum possible matched characters for pattern x*
-    private int count(char[] s, int si, char pchar) {
-    	int maxMatch = 0;
-        for(int i = si; i < s.length; i++) {
-            if(s[i] == pchar) {
-                maxMatch++;
-            } else {
-                break;
-            }
-        }
-        return maxMatch;
     }
 }
