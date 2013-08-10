@@ -7,6 +7,8 @@ import java.util.Map;
  * Given a billion of URLs, find the longest common prefix for these URLs. 
  * The prefix should appear in at least 75% of URLs.
  * Implement using a Trie. Insert all URLs into a Trie, and traverse trie to get the longest common prefix satisfying the percentage.
+ * Build the Trie, time complexity: O(N * M) where N the number of strings, and M is the average length of given strings
+ * Search the longest common prefix, time complexity: Time complexity: O(L) where L is the length of longest common prefix
  */
 public class LongestCommonPrefix {
 	public String find(String[] strings, double percentage) {
@@ -15,8 +17,9 @@ public class LongestCommonPrefix {
 		for(String s : strings) {
 			root.insert(s, 0);
 		}
-		String prefix = root.longestCommonPrefix(strings.length, percentage);
-		return prefix;
+		StringBuilder prefix = new StringBuilder();
+		root.longestCommonPrefix(strings.length, percentage, prefix);
+		return prefix.toString();
 	}
 	
 	private static class TrieNode {
@@ -39,14 +42,11 @@ public class LongestCommonPrefix {
 			}
 		}
 		
-		public String longestCommonPrefix(int total, double percentage) {
-			StringBuffer string = new StringBuffer();
+		public void longestCommonPrefix(int total, double percentage, StringBuilder prefix) {
 			if(maxCountChar != null && children.get(maxCountChar).count / (total * 1.0) >= percentage) {
-				string.append(maxCountChar);
-				String childString = children.get(maxCountChar).longestCommonPrefix(total, percentage);
-				string.append(childString);
+				prefix.append(maxCountChar);
+				children.get(maxCountChar).longestCommonPrefix(total, percentage, prefix);
 			}
-			return string.toString();
 		}
 	}
 }
