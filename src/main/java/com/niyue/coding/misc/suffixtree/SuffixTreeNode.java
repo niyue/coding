@@ -9,31 +9,29 @@ public class SuffixTreeNode {
 	private Map<Character, SuffixTreeNode> children = new HashMap<Character, SuffixTreeNode>();
 	private List<Integer> indexes = new ArrayList<Integer>();
 	
-	public void insert(String s, int index) {
+	public void insert(String s, int current, int index) {
 		indexes.add(index);
-		if(s != null && s.length() > 0) {
-			Character firstChar = s.charAt(0);
+		if(current < s.length()) {
+			Character currentChar = s.charAt(current);
 			SuffixTreeNode child = null;
-			if(children.containsKey(firstChar)) {
-				child = children.get(firstChar);
+			if(children.containsKey(currentChar)) {
+				child = children.get(currentChar);
 			} else {
 				child = new SuffixTreeNode();
-				children.put(firstChar, child);
+				children.put(currentChar, child);
 			}
-			String remainder = s.substring(1);
-			child.insert(remainder, index);
+			child.insert(s, current + 1, index);
 		}
 	}
 	
-	public List<Integer> getIndexes(String s) {
+	public List<Integer> getIndexes(String s, int current) {
 		List<Integer> allIndexes = null;
-		if(s == null || s.isEmpty()) {
+		if(current == s.length()) {
 			allIndexes = indexes;
 		} else {
-			Character firstChar = s.charAt(0);
-			if(children.containsKey(firstChar)) {
-				String remainder = s.substring(1);
-				allIndexes = children.get(firstChar).getIndexes(remainder);
+			Character currentChar = s.charAt(current);
+			if(children.containsKey(currentChar)) {
+				allIndexes = children.get(currentChar).getIndexes(s, current + 1);
 			}
 		}
 		return allIndexes;

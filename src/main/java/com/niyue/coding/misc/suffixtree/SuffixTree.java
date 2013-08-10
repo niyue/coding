@@ -13,8 +13,7 @@ public class SuffixTree {
 	 */
 	public SuffixTree(String s) {
 		for(int i = 0; i < s.length(); i++) {
-			String suffix = s.substring(i);
-			root.insert(suffix, i);
+			root.insert(s, i, i);
 		}
 	}
 	
@@ -24,6 +23,6 @@ public class SuffixTree {
 	 * @return a list of indexes that the pattern appears in the string
 	 */
 	public List<Integer> getIndexes(String pattern) {
-		return root.getIndexes(pattern);
+		return root.getIndexes(pattern, 0);
 	}
 }
