@@ -7,6 +7,10 @@ import java.util.Map;
 
 public class SuffixTreeNode {
 	private Map<Character, SuffixTreeNode> children = new HashMap<Character, SuffixTreeNode>();
+	/*
+	 * The indexes field stores all substring indexes going through this node.
+	 * So when search a substring, a substring ending at this node will return all the indexes it has
+	 */
 	private List<Integer> indexes = new ArrayList<Integer>();
 	
 	public void insert(String s, int current, int index) {
