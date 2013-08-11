@@ -6,29 +6,24 @@ import java.util.Set;
 // http://leetcode.com/onlinejudge#question_128
 // Put all numbers into a hash set, and check a continuous number sequence from two directions and use a Set to memorize the visited numbers
 public class Solution {
-    private Set<Integer> visitedNumbers;
     
     public int longestConsecutive(int[] num) {
-        visitedNumbers = new HashSet<Integer>();
-        
         Set<Integer> numbers = new HashSet<Integer>();
-        for(int i = 0; i < num.length; i++) {
-        	numbers.add(num[i]);
-        }
+        for(int i : num) numbers.add(i);
         
         int maxLength = 0;
         for(int number : num) {
-            if(isUnvisited(number)) {
-                visit(number);
+            if(numbers.contains(number)) {
+            	numbers.remove(number);
                 int length = 1;
                 for(int n = number - 1; numbers.contains(n); n--) {
                     length++;
-                    visit(n);
+                    numbers.remove(n);
                 }
                 
                 for(int n = number + 1; numbers.contains(n); n++) {
                     length++;
-                    visit(n);
+                    numbers.remove(n);
                 } 
                 if(length > maxLength) {
                     maxLength = length;
@@ -36,13 +31,5 @@ public class Solution {
             }
         }
         return maxLength;
-    }
-    
-    private boolean isUnvisited(int number) {
-        return !visitedNumbers.contains(number);
-    }
-    
-    private void visit(int number) {
-        visitedNumbers.add(number);
     }
 }
