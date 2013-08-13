@@ -8,13 +8,11 @@ public class Solution {
 
 		recordZeroColumnsAndRows(matrix);
 
-		setZero(matrix);
+		setZeroForMatrix(matrix);
 
-		restoreFirstRow(matrix, firstRow);
+		setZeroForFirstRow(matrix, firstRow);
 
-		restoreFirstColumn(matrix, firstColumn);
-		
-		restoreOrigin(matrix, firstColumn, firstRow);
+		setZeroForFirstColumn(matrix, firstColumn);
     }
     
     private boolean isFirstColumnAllNonZero(int[][] matrix) {
@@ -50,7 +48,7 @@ public class Solution {
 		}
     }
     
-    private void setZero(int[][] matrix) {
+    private void setZeroForMatrix(int[][] matrix) {
     	for(int i = 1; i < matrix.length; i++) {
 			for(int j = 1; j < matrix[i].length; j++) {
 				matrix[i][j] = matrix[i][0] != 0 && matrix[0][j] != 0 ? matrix[i][j] : 0;
@@ -58,23 +56,19 @@ public class Solution {
 		}
     }
     
-    private void restoreFirstRow(int[][] matrix, boolean firstRow) {
+    private void setZeroForFirstRow(int[][] matrix, boolean firstRow) {
     	if(!firstRow) {
-    		for(int i = 1; i < matrix[0].length; i++) {
+    		for(int i = 0; i < matrix[0].length; i++) {
     			matrix[0][i] = 0;
     		}	
     	}
     }
     
-    private void restoreFirstColumn(int[][] matrix, boolean firstColumn) {
+    private void setZeroForFirstColumn(int[][] matrix, boolean firstColumn) {
     	if(!firstColumn) {
     		for(int i = 0; i < matrix.length; i++) {
     			matrix[i][0] = 0;
     		}	
     	}
-    }
-    
-    private void restoreOrigin(int[][] matrix, boolean firstColumn, boolean firstRow) {
-    	matrix[0][0] = firstRow && firstColumn ? matrix[0][0] : 0;
     }
 }

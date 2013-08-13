@@ -25,6 +25,15 @@ public class SetMatrixZeroesTest {
 		assertEquals(0, matrix[0][1]);
 	}
 	
+	@Test
+	public void test1x2Zero() {
+		Solution sl = new Solution();
+		int[][] matrix = new int[][] {{1, 0}}; 
+		sl.setZeroes(matrix);
+		assertEquals(0, matrix[0][0]);
+		assertEquals(0, matrix[0][1]);
+	}
+	
 	// Notes: two issues found when running the tests
 	// 1) problem is not understood firstly, numbers should be categorized into zero/non zero instead of 0/1
 	// 2) a key condition is not checked correctly, it should be "matrix[i][0] != 0 && matrix[0][j] != 0" instead of "matrix[i][0] & matrix[0][j] != 0"
