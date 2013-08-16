@@ -14,7 +14,7 @@ public class ValidateBinarySearchTreeTest {
 	public void testInOrderTraversalSolution() {
 		TreeNode root = new TreeNode(0);
 		root.right = new TreeNode(1);
-		InOrderTraversalSolution sl = new InOrderTraversalSolution();
+		SimpleIterativeSolution sl = new SimpleIterativeSolution();
 		boolean isBst = sl.isValidBST(root);
 		assertTrue(isBst);
 	}
@@ -27,7 +27,7 @@ public class ValidateBinarySearchTreeTest {
 		root.right = new TreeNode(15);
 		root.right.left = new TreeNode(6);
 		root.right.right = new TreeNode(20);
-		InOrderTraversalSolution sl = new InOrderTraversalSolution();
+		SimpleIterativeSolution sl = new SimpleIterativeSolution();
 		boolean isBst = sl.isValidBST(root);
 		assertFalse(isBst);
 	}
@@ -37,7 +37,7 @@ public class ValidateBinarySearchTreeTest {
 	public void testIterativeSolution() {
 		TreeNode root = new TreeNode(1);
 		root.left = new TreeNode(1);
-		IterativeSolution sl = new IterativeSolution();
+		SimpleIterativeSolution sl = new SimpleIterativeSolution();
 		boolean isBst = sl.isValidBST(root);
 		assertFalse(isBst);
 	}
