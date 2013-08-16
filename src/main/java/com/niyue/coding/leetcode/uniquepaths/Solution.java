@@ -1,7 +1,7 @@
 package com.niyue.coding.leetcode.uniquepaths;
 
 // http://leetcode.com/onlinejudge#question_62
-// count unique path, a typical DP problem
+// count unique path, a typical DP problem, O(m*n) space solution
 public class Solution {
     public int uniquePaths(int m, int n) {
         int[][] count = new int[m][n];
