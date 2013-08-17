@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /*
+ * http://www.mitbbs.com/article_t/JobHunting/32295631.html
  * Given a list of strings, find the longest shared prefix for all these strings.
  * The shared prefix only needs to be shared by at least two strings.
  * Insert all strings into a Trie. Keep a count in each Trie node to indicate if this Trie node is a branch node or not (count > 1).
