@@ -3,6 +3,9 @@ package com.niyue.coding.careercup.twentyfourpoints;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+/*
+ * See ArithemeticExpressionValidation for a more complete solution
+ */
 public class ExpressionEvaluator {
 	public int evaluate(String[] exp) {
 		Deque<String> operatorStack = new ArrayDeque<String>();
