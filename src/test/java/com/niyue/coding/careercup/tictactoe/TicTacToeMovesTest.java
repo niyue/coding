@@ -16,4 +16,12 @@ public class TicTacToeMovesTest {
 		List<List<int[]>> allMoves = ttt.allMoves();
 		assertThat(allMoves.size(), is(255168));
 	}
+	
+	@Test
+	// http://www.jesperjuul.net/ludologist/255168-ways-of-playing-tic-tac-toe
+	public void testGetAllMovesSimplified() {
+		TicTacToe ttt = new TicTacToe();
+		List<List<Integer>> allMoves = ttt.allMoves();
+		assertThat(allMoves.size(), is(255168));
+	}
 }
