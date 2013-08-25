@@ -14,6 +14,9 @@ import java.util.Set;
  * For instance, "a" -> "at" -> "cat" -> "chat" -> "chart".
  * http://www.careercup.com/question?id=1446667
  * A O(max-word-length ^2 * dict-size) solution
+ * 
+ * Another similar but different problem:
+ * http://www.careercup.com/question?id=24423662
  */
 public class LongestWordPath {
 	
