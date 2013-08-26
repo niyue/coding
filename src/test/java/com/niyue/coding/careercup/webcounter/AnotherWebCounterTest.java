@@ -12,7 +12,21 @@ public class AnotherWebCounterTest {
 		AnotherWebCounter counter = new AnotherWebCounter();
 		counter.increament();
 		counter.increament();
-		assertThat(counter.hitsInLastFiveSeconds(), is(2L));
+		assertThat(counter.hitsInLastTwoSeconds(), is(2L));
+		assertThat(counter.hitsInLastMinute(), is(2L));
+		assertThat(counter.hitsInLastHour(), is(2L));
+	}
+	
+	@Test
+	public void testFiveSeconds() throws InterruptedException {
+		AnotherWebCounter counter = new AnotherWebCounter();
+		counter.increament();
+		counter.increament();
+		counter.increament();
+		Thread.sleep(2000);
+		counter.increament();
+		counter.increament();
+		assertThat(counter.hitsInLastTwoSeconds(), is(2L));
 		assertThat(counter.hitsInLastMinute(), is(2L));
 		assertThat(counter.hitsInLastHour(), is(2L));
 	}
