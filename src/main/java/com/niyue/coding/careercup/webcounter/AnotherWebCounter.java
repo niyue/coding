@@ -8,8 +8,12 @@ import java.util.List;
  * Use a resizable array list to keep the number of hits
  * Each hit contains the timestamp (round to a second) and the number of hits in this second
  * There are several pointers pointing to lastTwoSeconds/lastMinute/lastHour
- * And there is a timestamp keeping the latest time
- * When increament is called, if current time is the 
+ * When increament is called, if current time is the same as the time of last hit, increase the last hit count
+ * otherwise
+ * 		create a new hit for current time and set its count to (previous hit count + 1)
+ * 		update lastTwoSeconds/lastMinute/lastHour pointers to 
+ * 		resize/decrease the array size to 3600 if it is over 2 times needed so that the amortized time complexity is still O(1)
+ * Even the count sum may overflow, if the diff between two counts doesn't overflow, the result is still correct
  */
 public class AnotherWebCounter {
 	private static final int SECONDS_IN_AN_HOUR = 60 * 60;
@@ -18,21 +22,18 @@ public class AnotherWebCounter {
 	private int twoSeconds = 0;
 	private int minute = 0;
 	private int hour = 0;
-	private long latestTime;
 	
 	public AnotherWebCounter() {
-		hits.add(new Hit(now(), 0));
+		hits.add(new Hit(now() - 1, 0));
 	}
 	
 	public synchronized void increament() {
 		long now = now();
 		Hit lastHit = lastHit();
-		if(latestTime == now) {
+		if(lastHit.time == now) {
 			lastHit.hit();
-			System.out.println("last hits " + lastHit().count);
 		} else {
-			hits.add(new Hit(now, 1));
-			latestTime = now;
+			hits.add(new Hit(now, lastHit.count + 1));
 			update(now);
 			resize();
 		}
@@ -61,7 +62,7 @@ public class AnotherWebCounter {
 	}
 	
 	private int movePointer(int hourOrMinute, int range, long now) {
-		while(hourOrMinute < hits.size() - 1 && now - hits.get(hourOrMinute).time >= 60) {
+		while(hourOrMinute < hits.size() && now - hits.get(hourOrMinute).time > range) {
 			hourOrMinute++;
 		}
 		return hourOrMinute;
@@ -94,6 +95,8 @@ public class AnotherWebCounter {
 	private long hitsInRange(int minuteOrHour) {
 		long now = System.nanoTime() / NANOTH;
 		update(now);
+//		System.out.println(lastHit().count);
+//		System.out.println(hits.get(minuteOrHour).count);
 		return lastHit().count - hits.get(minuteOrHour).count;
 	}
 	

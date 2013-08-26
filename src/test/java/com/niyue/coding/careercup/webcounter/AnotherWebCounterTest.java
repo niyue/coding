@@ -18,7 +18,7 @@ public class AnotherWebCounterTest {
 	}
 	
 	@Test
-	public void testFiveSeconds() throws InterruptedException {
+	public void testTwoSeconds() throws InterruptedException {
 		AnotherWebCounter counter = new AnotherWebCounter();
 		counter.increament();
 		counter.increament();
@@ -27,8 +27,14 @@ public class AnotherWebCounterTest {
 		counter.increament();
 		counter.increament();
 		assertThat(counter.hitsInLastTwoSeconds(), is(2L));
-		assertThat(counter.hitsInLastMinute(), is(2L));
-		assertThat(counter.hitsInLastHour(), is(2L));
+		assertThat(counter.hitsInLastMinute(), is(5L));
+		assertThat(counter.hitsInLastHour(), is(5L));
+	}
+	
+	@Test
+	public void testOverflow() throws Exception {
+		assertThat(Integer.MAX_VALUE + 1, is(Integer.MIN_VALUE));
+		assertThat(Integer.MAX_VALUE + 1 - Integer.MAX_VALUE, is(1));
 	}
 
 }
