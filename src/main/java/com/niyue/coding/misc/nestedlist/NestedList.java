@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 // http://www.mitbbs.com/article_t1/JobHunting/32281037_0_1.html
+// http://www.careercup.com/question?id=17727664
+/*
+ * Flatten a List<List<Integer>> in Java and implement the hasNext() and next() methods. e.g. [[6,8],4] should return true when at 6, 8 and false at 4.
+ */
 public class NestedList implements Iterator<Integer> {
 	private List<Object> values;
 	private Iterator<Object> first;
