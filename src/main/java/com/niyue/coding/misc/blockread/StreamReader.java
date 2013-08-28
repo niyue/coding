@@ -13,29 +13,35 @@ public class StreamReader {
 		this.blockReader = blockReader;
 	}
 	
-	public int read(char[] buf, int size) {
+	public int read(char[] dest, int size) {
+		int length = readRemainingBuffer(dest, size);
+		
+		while(length < size) {
+			buffer = new char[BlockReader.BLOCK_SIZE];
+			bufferCursor = 0;
+			bufferLength = blockReader.blockRead(buffer);
+			if(bufferLength == 0) {
+				break;
+			}
+			while(length < size && bufferCursor < bufferLength) {
+				dest[length] = buffer[bufferCursor];
+				length++;
+				bufferCursor++;
+			}
+		}
+		return length;
+	}
+	
+	private int readRemainingBuffer(char[] dest, int size) {
 		int length = 0;
 		if(buffer != null) {
 			while(length < size && bufferCursor < bufferLength) {
-				buf[length] = buffer[bufferCursor];
+				dest[length] = buffer[bufferCursor];
 				length++;
 				bufferCursor++;
 			}
 			if(bufferCursor == bufferLength) {
 				buffer = null;
-			}
-		}
-		while(length < size) {
-			buffer = new char[BlockReader.BLOCK_SIZE];
-			bufferCursor = 0;
-			int blockLength = blockReader.blockRead(buffer);
-			if(blockLength == 0) {
-				break;
-			}
-			while(length < size && bufferCursor < blockLength) {
-				buf[length] = buffer[bufferCursor];
-				length++;
-				bufferCursor++;
 			}
 		}
 		return length;
