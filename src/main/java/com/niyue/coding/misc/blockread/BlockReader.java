@@ -14,9 +14,7 @@ public class BlockReader {
 	public int blockRead(char[] buffer) {
 		int length = 0;
 		while (cursor < source.length && length < BLOCK_SIZE) {
-			buffer[length] = source[cursor];
-			cursor++;
-			length++;
+			buffer[length++] = source[cursor++];
 		}
 		return length;
 	}

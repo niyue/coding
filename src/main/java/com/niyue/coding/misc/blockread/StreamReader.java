@@ -13,37 +13,33 @@ public class StreamReader {
 		this.blockReader = blockReader;
 	}
 	
-	public int read(char[] dest, int size) {
-		int length = readRemainingBuffer(dest, size);
+	public int read(char[] dest, int totalSize) {
+		int currentLength = readRemainingBuffer(dest, totalSize);
 		
-		while(length < size) {
+		while(currentLength < totalSize) {
 			buffer = new char[BlockReader.BLOCK_SIZE];
 			bufferCursor = 0;
 			bufferLength = blockReader.blockRead(buffer);
 			if(bufferLength == 0) {
 				break;
 			}
-			while(length < size && bufferCursor < bufferLength) {
-				dest[length] = buffer[bufferCursor];
-				length++;
-				bufferCursor++;
-			}
+			currentLength = readBuffer(dest, currentLength, totalSize);
+		}
+		return currentLength;
+	}
+	
+	private int readRemainingBuffer(char[] dest, int totalSize) {
+		int length = readBuffer(dest, 0, totalSize);
+		if(bufferCursor == bufferLength) {
+			buffer = null;
 		}
 		return length;
 	}
 	
-	private int readRemainingBuffer(char[] dest, int size) {
-		int length = 0;
-		if(buffer != null) {
-			while(length < size && bufferCursor < bufferLength) {
-				dest[length] = buffer[bufferCursor];
-				length++;
-				bufferCursor++;
-			}
-			if(bufferCursor == bufferLength) {
-				buffer = null;
-			}
+	private int readBuffer(char[] dest, int currentLength, int totalSize) {
+		while(currentLength < totalSize && bufferCursor < bufferLength) {
+			dest[currentLength++] = buffer[bufferCursor++];
 		}
-		return length;
+		return currentLength;
 	}
 }
