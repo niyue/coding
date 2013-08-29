@@ -21,8 +21,8 @@ public class SkipList<E extends Comparable<E>> implements Set<E> {
 		head = new ListNode<E>();
 	}
 	
-	private boolean higherLevel() {
-		return rand.nextDouble() > P;
+	private boolean higherLevel(double p) {
+		return rand.nextDouble() <= p;
 	}
 	
 	private static class ListNode<E> {
@@ -56,19 +56,14 @@ public class SkipList<E extends Comparable<E>> implements Set<E> {
 		ListNode<E> targetNode = null;
 		while(current != null) {
 			current = searchAtSameLevel(current, v);
-			if(current.value.compareTo(v) == 0) {
-				targetNode = current;
-				break;
-			}
 			current = current.down;
 		}
 		return targetNode;
 	}
 	
 	private ListNode<E> searchAtSameLevel(ListNode<E> node, E v) {
-		while(node.next != null && 
-			  (node.value == null || node.value.compareTo(v) < 0) && 
-			  node.next.value.compareTo(v) < 0) {
+		while((node.value == null || node.value.compareTo(v) <= 0) &&
+			   node.next != null && node.next.value.compareTo(v) <= 0) {
 			node = node.next;
 		}
 		return node;
@@ -91,10 +86,39 @@ public class SkipList<E extends Comparable<E>> implements Set<E> {
 
 	@Override
 	public boolean add(E e) {
-		// ListNode<E> targetNode = search(e);
-		// TODO Auto-generated method stub
-		return false;
+		assert e != null;
+		ListNode<E> targetNode = search(e);
+		boolean added = false;
+		if(targetNode.value == null || targetNode.value.compareTo(e) != 0) {
+			ListNode<E> newNode = new ListNode<E>();
+			newNode.value = e;
+			insert(targetNode, newNode);
+			added = true;
+			
+			double p = P;
+			ListNode<E> levelHead = head;
+			while(higherLevel(p)) {
+				if(levelHead.up == null) {
+					levelHead.up = new ListNode<E>();
+				}
+				newNode = new ListNode<E>();
+				newNode.value = e;
+				insert(targetNode, newNode);
+				p *= P;
+			}
+		} 
+		return added;
 	}
+	
+	private void insert(ListNode<E> targetNode, ListNode<E> newNode) {
+		newNode.next = targetNode.next;
+		targetNode.next = newNode;
+		newNode.prev = targetNode;
+		if(newNode.next != null) {
+			newNode.next.prev = newNode;
+		}
+	}
+	
 
 	@Override
 	public boolean remove(Object o) {
