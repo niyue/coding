@@ -1,5 +1,6 @@
 package com.niyue.coding.leetcode.nextrightpointerii;
 
+
 // http://leetcode.com/onlinejudge#question_117
 public class Solution {
     public void connect(TreeLinkNode node) {
@@ -21,20 +22,19 @@ public class Solution {
     }
     
     private TreeLinkNode siblingChild(TreeLinkNode node) {
-        TreeLinkNode sibling = null;
         TreeLinkNode next = node.next;
-        while(next != null) {
-            if(next.left != null) {
-                sibling = next.left;
-                break;
-            } else if(next.right != null) {
-                sibling = next.right;
-                break;
-            } else {
-                next = next.next;
-            }
-        }        
+        while(!isNodeWithAtLeastOneChild(next)) {
+            next = next.next;
+        }
+        TreeLinkNode sibling = null;
+        if(next != null) {
+        	sibling = next.left != null ? next.left : next.right;
+        }
         return sibling;
+    }
+    
+    private boolean isNodeWithAtLeastOneChild(TreeLinkNode node) {
+    	return node == null || node.left != null || node.right != null;
     }
     
     private boolean isLeaf(TreeLinkNode node) {
