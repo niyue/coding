@@ -11,25 +11,24 @@ public class MaxViewPort {
 	// the radius is irrelevant in this problem and is ignored
 	public int count(double[] points, double viewPort) {
 		assert viewPort >= 0 && viewPort < 2 * Math.PI;
-		points = sortedContinuousPoints(points);
+		points = sortDoubleContinuousPoints(points);
 		
 		int max = 0;
 		int count = 0; 
-		for(int i = 0, j = 0; i < points.length && j < points.length;) {
-			while(j < points.length && points[j] - points[i] < viewPort) {
-				j++;
+		for(int start = 0, end = 0; start < points.length && end < points.length; start++, count--) {
+			while(end < points.length && points[end] - points[start] < viewPort) {
+				end++;
 				count++;
 			}
 			if(count > max) {
 				max = count;
 			}
-			i++;
-			count--;
 		}
 		return max;
 	}
 	
-	private double[] sortedContinuousPoints(double[] points) {
+	// to cover the case [2PI - x, 2PI - x + view port], concatenate the same set of points after 2PI
+	private double[] sortDoubleContinuousPoints(double[] points) {
 		Arrays.sort(points);
 		double[] allPoints = Arrays.copyOf(points, points.length * 2);
 		for(int i = points.length; i < allPoints.length; i++) {
