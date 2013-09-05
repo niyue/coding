@@ -33,7 +33,7 @@ public class IntegerQueue {
 		for(long f=0xf000000000000000L;f != 0;f >>>= 4, length++) {
 			if((queue & f) != 0) {
 				top = valueForBitSet(f, length);
-				queue = queue & (~f);
+				queue &= ~f;
 				break;
 			}
 		}
