@@ -1,37 +1,24 @@
 package com.niyue.coding.leetcode.alphanumericpalindrome;
 
 // http://leetcode.com/onlinejudge#question_125
+/*
+ * Given a string, determine if it is a palindrome, 
+ * considering only alphanumeric characters and ignoring cases.
+ */
 public class Solution {
 	public boolean isPalindrome(String s) {
 		String string = s.toLowerCase();
 		string = alphaNumerize(string);
 		int length = string.length();
-		if (length < 2) {
-			return true;
-		}
-		int left = 0;
-		int right = 0;
-		if (isOdd(length)) {
-			left = length / 2 - 1;
-			right = (length + 1) / 2;
-		} else {
-			left = length / 2 - 1;
-			right = length / 2;
-		}
-		while (left >= 0) {
-			char leftChar = string.charAt(left);
-			char rightChar = string.charAt(right);
+		
+		for(int i = 0; i < length / 2; i++) {
+			char leftChar = string.charAt(i);
+			char rightChar = string.charAt(length - 1 - i);
 			if (leftChar != rightChar) {
 				return false;
 			}
-			left--;
-			right++;
 		}
 		return true;
-	}
-
-	private boolean isOdd(int length) {
-		return length % 2 != 0;
 	}
 
 	private String alphaNumerize(String s) {
