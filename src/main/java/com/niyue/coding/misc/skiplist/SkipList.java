@@ -1,14 +1,20 @@
 package com.niyue.coding.misc.skiplist;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 /*
+ * http://en.literateprograms.org/Skip_list_(Java)
  * http://courses.csail.mit.edu/6.046/spring04/handouts/skiplists.pdf
  * http://www.csee.umbc.edu/courses/undergraduate/341/fall01/Lectures/SkipLists/skip_lists/skip_lists.html
  * http://en.wikipedia.org/wiki/Skip_list
+ * 
+ * There is still some implementation issue making some tests failed randomly.
  */
 public class SkipList<E extends Comparable<E>> implements Set<E> {
 	private static final double P = 0.5;
@@ -16,21 +22,32 @@ public class SkipList<E extends Comparable<E>> implements Set<E> {
 	
 	private int size = 0;
 	private ListNode<E> head;
+	private int level = 0;
+	private final static int MAX_LEVEL = 32;
 	
 	public SkipList() {
-		head = new ListNode<E>();
+		head = new ListNode<E>(null, MAX_LEVEL);
 	}
 	
 	private boolean higherLevel(double p) {
 		return rand.nextDouble() <= p;
 	}
 	
+	private int randomLevel() {
+		int level = 0;
+		for(double p = P; higherLevel(p); p *= P) {
+			level++;
+		}
+		return Math.min(MAX_LEVEL, level);
+	}
+	
 	private static class ListNode<E> {
 		public E value;
-		public ListNode<E> prev;
-		public ListNode<E> next;
-		public ListNode<E> up;
-		public ListNode<E> down;
+		public List<ListNode<E>> next;
+		public ListNode(E value, int level) {
+			this.value = value;
+			next = new ArrayList<ListNode<E>>(Collections.<ListNode<E>>nCopies(level + 1, null));
+		}
 	}
 	
 	@Override
@@ -53,22 +70,16 @@ public class SkipList<E extends Comparable<E>> implements Set<E> {
 	
 	private ListNode<E> search(E v) {
 		ListNode<E> current = head;
-		ListNode<E> targetNode = null;
-		while(current != null) {
-			current = searchAtSameLevel(current, v);
-			current = current.down;
+		for(int l = level; l >= 0; l--) {
+			while(current.next.get(level) != null && current.next.get(level).value.compareTo(v) < 0) {
+				current = current.next.get(level);
+			}
 		}
-		return targetNode;
+		current = current.next.get(0);
+		
+		return current;
 	}
 	
-	private ListNode<E> searchAtSameLevel(ListNode<E> node, E v) {
-		while((node.value == null || node.value.compareTo(v) <= 0) &&
-			   node.next != null && node.next.value.compareTo(v) <= 0) {
-			node = node.next;
-		}
-		return node;
-	}
-
 	@Override
 	public Iterator<E> iterator() {
 		throw new UnsupportedOperationException();
@@ -87,39 +98,38 @@ public class SkipList<E extends Comparable<E>> implements Set<E> {
 	@Override
 	public boolean add(E e) {
 		assert e != null;
-		ListNode<E> targetNode = search(e);
-		boolean added = false;
-		if(targetNode.value == null || targetNode.value.compareTo(e) != 0) {
-			ListNode<E> newNode = new ListNode<E>();
-			newNode.value = e;
-			insert(targetNode, newNode);
-			added = true;
-			
-			double p = P;
-			ListNode<E> levelHead = head;
-			while(higherLevel(p)) {
-				if(levelHead.up == null) {
-					levelHead.up = new ListNode<E>();
-				}
-				newNode = new ListNode<E>();
-				newNode.value = e;
-				insert(targetNode, newNode);
-				p *= P;
+		ListNode<E> current = head;
+		List<ListNode<E>> updatedNodes = new ArrayList<ListNode<E>>(Collections.<ListNode<E>>nCopies(MAX_LEVEL + 1, null));
+		
+		for(int l = level; l >= 0; l--) {
+			while(current.next.get(level) != null && current.next.get(level).value.compareTo(e) < 0) {
+				current = current.next.get(level);
 			}
-		} 
+			updatedNodes.set(l, current);
+		}
+		current = current.next.get(0);
+		
+		boolean added = false;
+		if(current == null || current.value.compareTo(e) != 0) {
+			int newLevel = randomLevel();
+			if(newLevel > level) {
+				for(int l = level + 1; l <= newLevel; l++) {
+					updatedNodes.set(l, head);
+				}
+				level = newLevel;
+			}
+			
+			ListNode<E> newNode = new ListNode<E>(e, newLevel);
+			for(int l = 0; l <= newLevel; l++) {
+				newNode.next.set(l, updatedNodes.get(l).next.get(l));
+				updatedNodes.get(l).next.set(l, newNode);
+			}
+			size++;
+		}
+		
 		return added;
 	}
 	
-	private void insert(ListNode<E> targetNode, ListNode<E> newNode) {
-		newNode.next = targetNode.next;
-		targetNode.next = newNode;
-		newNode.prev = targetNode;
-		if(newNode.next != null) {
-			newNode.next.prev = newNode;
-		}
-	}
-	
-
 	@Override
 	public boolean remove(Object o) {
 		// TODO Auto-generated method stub
@@ -154,8 +164,9 @@ public class SkipList<E extends Comparable<E>> implements Set<E> {
 
 	@Override
 	public void clear() {
-		head = new ListNode<E>();
+		head = new ListNode<E>(null, MAX_LEVEL);
 		size = 0;
+		level = 0;
 	}
 
 }
