@@ -1,6 +1,7 @@
 package com.niyue.coding.misc.subsetsum;
 
 /*
+ * http://www.mitbbs.com/article_t/JobHunting/32227979.html
  * Given n non repeating positive integers and another integer S, 
  * find m integers whose sum <= S and their sum is maximum that is possible
  * For example:
