@@ -19,11 +19,11 @@ public class SolutionTwo {
             trees.add(null);
         } else {
             for(int i = min; i <= max; i++) {
-               TreeNode root = new TreeNode(i);
                ArrayList<TreeNode> leftTrees = generateTrees(min, i - 1);
                ArrayList<TreeNode> rightTrees = generateTrees(i + 1, max);
                for(TreeNode left : leftTrees) {
                    for(TreeNode right: rightTrees) {
+                	   TreeNode root = new TreeNode(i);
                        root.left = left;
                        root.right = right;
                        trees.add(root);
