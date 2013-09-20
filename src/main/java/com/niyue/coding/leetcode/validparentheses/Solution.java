@@ -1,48 +1,42 @@
 package com.niyue.coding.leetcode.validparentheses;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
 
 // Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
 // http://leetcode.com/onlinejudge#question_20
+// http://oj.leetcode.com/problems/valid-parentheses/
 public class Solution {
     public boolean isValid(String s) {
-        char[] chars = s.toCharArray();
-        Deque<Integer> stack = new LinkedList<Integer>();
         boolean isValid = true;
-        for(char c : chars) {
-            if(isOpenChar(c)) {
-                stack.push((int) c);
+        Deque<Character> stack = new ArrayDeque<Character>();
+        for(int i = 0; i < s.length(); i++) {
+            char si = s.charAt(i);
+            if(isOpen(si)) {
+                stack.offerFirst(si);
             } else {
                 if(stack.isEmpty()) {
                     isValid = false;
                     break;
-                }
-                int openChar = stack.pop();
-                char expectedOpenChar = findOpenChar(c);
-                if(openChar != (int) expectedOpenChar) {
-                    isValid = false;
-                    break;
+                } else {
+                    char top = stack.pollFirst();   
+                    if(!isExpectedClose(top, si)) {
+                        isValid = false;
+                        break;
+                    }
                 }
             }
         }
-        if(!stack.isEmpty()) {
-            isValid = false;
-        }
-        return isValid;
+        return isValid && stack.isEmpty();
     }
     
-    private boolean isOpenChar(char c) {
+    private boolean isOpen(char c) {
         return c == '(' || c == '{' || c == '[';
     }
     
-    private char findOpenChar(char c) {
-        if(c == ')') {
-            return '(';
-        } else if(c == ']') {
-            return '[';
-        } else {
-            return '{';
-        }
+    private boolean isExpectedClose(char open, char close) {
+        return open == '(' && close == ')' ||
+               open == '{' && close == '}' ||
+               open == '[' && close == ']';
     }
 }
