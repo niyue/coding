@@ -7,6 +7,13 @@ import org.junit.Test;
 public class LargestHistogramTwoTest {
 
 	@Test
+	public void test0() {
+		SolutionTwo sl = new SolutionTwo();
+		int area = sl.largestRectangleArea(new int[]{});
+		assertEquals(0, area);
+	}
+	
+	@Test
 	public void test2() {
 		SolutionTwo sl = new SolutionTwo();
 		int area = sl.largestRectangleArea(new int[]{2});

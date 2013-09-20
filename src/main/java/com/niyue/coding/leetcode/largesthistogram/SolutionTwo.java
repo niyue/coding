@@ -21,7 +21,7 @@ public class SolutionTwo {
     public int largestRectangleArea(int[] height) {
         List<Integer> heights = convert(height);
         Deque<Integer> stack = new ArrayDeque<Integer>();
-        int max = Integer.MIN_VALUE;
+        int max = 0;
         for(int i = 0; i < heights.size(); i++) {
             int newHeight = heights.get(i);
             while(!stack.isEmpty() && heights.get(stack.peekFirst()) > newHeight) {
