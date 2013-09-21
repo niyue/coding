@@ -2,6 +2,9 @@ package com.niyue.coding.leetcode.nextrightpointerii;
 
 // http://oj.leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/
 // http://leetcode.com/onlinejudge#question_117
+// This solution uses O(lgn) storage in recursion stack. 
+// For a recursion free, constant space solution, check out this solution for a similar problem:
+// http://discuss.leetcode.com/questions/7/populating-next-right-pointers-in-each-node/1226
 public class Solution {
     public void connect(TreeLinkNode root) {
         if(root != null) {
