@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 // http://leetcode.com/onlinejudge#question_87
-// use DP, O(n^3), and add some more checking to ensure at least the child nodes have the same number for each character they have before doing the recursion
+// use DP, O(n^4), and add some more checking to ensure at least the child nodes have the same number for each character they have before doing the recursion
 public class Solution {
     private Map<String, Boolean> result;
 
