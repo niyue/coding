@@ -3,38 +3,38 @@ package com.niyue.coding.leetcode.setmatrixzeroes;
 // http://leetcode.com/onlinejudge#question_73
 public class Solution {
     public void setZeroes(int[][] matrix) {
-		boolean firstColumn = isFirstColumnAllNonZero(matrix);
-		boolean firstRow = isFirstRowAllNonZero(matrix);    
+		boolean firstColumnZero = isFirstColumnZero(matrix);
+		boolean firstRowZero = isFirstRowZero(matrix);    
 
 		recordZeroColumnsAndRows(matrix);
 
 		setZeroForMatrix(matrix);
 
-		setZeroForFirstRow(matrix, firstRow);
+		setZeroForFirstRow(matrix, firstRowZero);
 
-		setZeroForFirstColumn(matrix, firstColumn);
+		setZeroForFirstColumn(matrix, firstColumnZero);
     }
     
-    private boolean isFirstColumnAllNonZero(int[][] matrix) {
-    	boolean firstColumn = true;
+    private boolean isFirstColumnZero(int[][] matrix) {
+    	boolean firstColumnZero = false;
 		for(int i = 0; i < matrix.length; i++) {
 			if(matrix[i][0] == 0) {
-				firstColumn = false;
+				firstColumnZero = true;
 				break;
 			}
 		}
-		return firstColumn;
+		return firstColumnZero;
     }
     
-    private boolean isFirstRowAllNonZero(int[][] matrix) {
-    	boolean firstRow = true;
+    private boolean isFirstRowZero(int[][] matrix) {
+    	boolean firstRowZero = false;
 		for(int i = 0; i < matrix[0].length; i++) {
 			if(matrix[0][i] == 0) {
-				firstRow = false;
+				firstRowZero = true;
 				break;
 			}
 		} 
-		return firstRow;
+		return firstRowZero;
     }
     
     private void recordZeroColumnsAndRows(int[][] matrix) {
@@ -56,16 +56,16 @@ public class Solution {
 		}
     }
     
-    private void setZeroForFirstRow(int[][] matrix, boolean firstRow) {
-    	if(!firstRow) {
+    private void setZeroForFirstRow(int[][] matrix, boolean firstRowZero) {
+    	if(firstRowZero) {
     		for(int i = 0; i < matrix[0].length; i++) {
     			matrix[0][i] = 0;
     		}	
     	}
     }
     
-    private void setZeroForFirstColumn(int[][] matrix, boolean firstColumn) {
-    	if(!firstColumn) {
+    private void setZeroForFirstColumn(int[][] matrix, boolean firstColumnZero) {
+    	if(firstColumnZero) {
     		for(int i = 0; i < matrix.length; i++) {
     			matrix[i][0] = 0;
     		}	
