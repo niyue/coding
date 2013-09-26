@@ -9,11 +9,18 @@ import com.niyue.coding.leetcode.common.TreeNode;
 
 public class Solution {
     public boolean hasPathSum(TreeNode root, int sum) {
-        if(root == null) {
-            return sum == 0;
+        if(isLeaf(root)) {
+            return sum == root.val;
         } else {
-            return hasPathSum(root.left, sum - root.val) || 
-            	   hasPathSum(root.right, sum - root.val);
+            if(root == null) {
+                return false;
+            } else {
+                return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+            }
         }
+    }
+    
+    private boolean isLeaf(TreeNode node) {
+        return node != null && node.left == null && node.right == null;
     }
 }
