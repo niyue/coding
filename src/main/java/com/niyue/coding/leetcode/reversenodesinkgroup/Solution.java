@@ -2,7 +2,15 @@ package com.niyue.coding.leetcode.reversenodesinkgroup;
 
 import com.niyue.coding.leetcode.common.ListNode;
 
-// http://leetcode.com/onlinejudge#question_25
+/*
+ *  http://leetcode.com/onlinejudge#question_25
+ *  http://oj.leetcode.com/problems/reverse-nodes-in-k-group/
+ *  
+ *  http://discuss.leetcode.com/questions/206/reverse-nodes-in-k-group/878
+ *  Count current node index
+ *  If the index % k == 0, reverse the group
+ *  Use a dummy node to save some edge case handling
+ */
 public class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         if(k > 1) {
