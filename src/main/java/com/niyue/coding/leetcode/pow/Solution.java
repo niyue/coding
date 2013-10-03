@@ -1,24 +1,24 @@
 package com.niyue.coding.leetcode.pow;
 
-// http://leetcode.com/onlinejudge#question_50
+/*
+ *  http://leetcode.com/onlinejudge#question_50
+ *  http://oj.leetcode.com/problems/powx-n/
+ */
 public class Solution {
     public double pow(double x, int n) {
-    	double product = 1;
+    	double pow = 1;
     	boolean negativePow = n < 0;
     	n = Math.abs(n);
     	while(n > 0) {
 			if(isOdd(n)) {
-				product *= x;
+				pow *= x;
 				n--;
 			} else {
-				n /= 2;
 				x *= x;
+				n /= 2;
 			}        
     	}
-    	if(negativePow) {
-    		product = 1 / product;
-    	}
-    	return product;
+    	return negativePow ? pow : 1 / pow;
     }
 
     private boolean isOdd(int n) {
