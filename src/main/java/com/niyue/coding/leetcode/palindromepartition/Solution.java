@@ -8,74 +8,70 @@ import java.util.Map;
 
 // http://leetcode.com/onlinejudge#question_131
 // pre-process the string to get all palindromes and store them as (start, end), O(n^2)
-// try all possible partition scheme, and use DP to speed up a bit
+// try all possible partition scheme, and use DP to speed up a bit (back tracking solution without memoization is too slow to pass the online judge)
 public class Solution {
-	private ArrayList<ArrayList<String>>[] partitionCache;
-	
+    private ArrayList<ArrayList<String>>[] solutionsCache;
     @SuppressWarnings("unchecked")
-	public ArrayList<ArrayList<String>> partition(String s) {
-    	partitionCache = new ArrayList[s.length()];
-		Map<Integer, List<Integer>> palindromes = palindromes(s);
-		ArrayList<ArrayList<String>> partitions = partition(s, 0, palindromes);
-		return partitions;
+    public ArrayList<ArrayList<String>> partition(String s) {
+        solutionsCache = new ArrayList[s.length()];
+        Map<Integer, List<Integer>> map = allPalindromes(s);
+        solve(s, 0, map);
+        return solutionsCache[0];
     }
-
-    private ArrayList<ArrayList<String>> partition(String s, int start, Map<Integer, List<Integer>> palindromes) {
-    	ArrayList<ArrayList<String>> partitions = new ArrayList<ArrayList<String>>();
-    	if(partitionCache[start] != null) {
-    		partitions = partitionCache[start];
-    	} else {
-    		if(palindromes.containsKey(start)) {
-    			List<Integer> ends = palindromes.get(start);
-    			for(int end : ends) {
-    				String prefixPalindrome = s.substring(start, end + 1);
-    				if(end + 1 == s.length()) {
-    					ArrayList<String> partition = new ArrayList<String>();
-    					partition.add(prefixPalindrome);
-    					partitions.add(partition);
-    				} else {
-    					ArrayList<ArrayList<String>> subPartitions = partition(s, end + 1, palindromes);
-    					for(ArrayList<String> subPartition : subPartitions) {
-    						ArrayList<String> partition = new ArrayList<String>();
-    						partition.add(prefixPalindrome);
-    						partition.addAll(subPartition);
-    						partitions.add(partition);
-    					}    
-    				}
-    			}
-    		}
-    		partitionCache[start] = partitions;
-    	}
-    	return partitions;
+    
+    private ArrayList<ArrayList<String>> solve(String s, int i, Map<Integer, List<Integer>> map) {
+        ArrayList<ArrayList<String>> solutions = new ArrayList<ArrayList<String>>();
+        if(solutionsCache[i] != null) {
+            solutions = solutionsCache[i];
+        } else {
+            for(int end : map.get(i)) {
+                String p = s.substring(i, end + 1);
+                if(end + 1 == s.length()) {
+                    ArrayList<String> solution = new ArrayList<String>();
+                    solution.add(p);
+                    solutions.add(solution);
+                } else {
+                    ArrayList<ArrayList<String>> subSolutions = solve(s, end + 1, map);
+                    for(ArrayList<String> subSolution : subSolutions) {
+                        ArrayList<String> solution = new ArrayList<String>();
+                        solution.add(p);
+                        solution.addAll(subSolution);
+                        solutions.add(solution);
+                    }    
+                }
+            }
+            solutionsCache[i] = solutions;
+        }    
+        
+        return solutions;
     }
-
-    private Map<Integer, List<Integer>> palindromes(String s) {
-    	Map<Integer, List<Integer>> map = new HashMap<Integer, List<Integer>>();
-    	char[] string = s.toCharArray();
-    	for(int i = 0; i < string.length; i++) {
-    		// odd length palindromes
-    		for(int j = 0; i - j >= 0 && i + j < string.length; j++) {
-    			if(string[i - j] == string[i + j]) {
-    				if(!map.containsKey(i - j)) {
-    					map.put(i - j, new LinkedList<Integer>());
-    				}
-    				map.get(i - j).add(i + j);
-    			} else {
-    				break;
-    			}
+    
+    private Map<Integer, List<Integer>> allPalindromes(String s) {
+        Map<Integer, List<Integer>> palindromes = new HashMap<Integer, List<Integer>>();
+        for(int i = 0; i < s.length(); i++) {
+            for(int start = i, end = i; start >= 0 && end < s.length(); start--, end++) {
+            	if(!isPalindrome(s, start, end, palindromes)) {
+            		break;
+            	}
+            }
+            for(int start = i, end = i + 1; start >= 0 && end < s.length(); start--, end++) {
+            	if(!isPalindrome(s, start, end, palindromes)) {
+            		break;
+            	}
+            }
+        }
+        return palindromes;
+    }
+    
+    private boolean isPalindrome(String s, int start, int end, Map<Integer, List<Integer>> palindromes) {
+    	boolean isPalindrome = false;
+    	if(s.charAt(start) == s.charAt(end)) {
+    		if(!palindromes.containsKey(start)) {
+    			palindromes.put(start, new LinkedList<Integer>());
     		}
-    		// even length palindromes
-    		for(int j = 1; i - j + 1 >= 0 && i + j < string.length; j++) {
-    			if(string[i - j + 1] == string[i + j]) {
-    				if(!map.containsKey(i - j + 1)) {
-    					map.put(i - j + 1, new LinkedList<Integer>());
-    				}
-    				map.get(i - j + 1).add(i + j);
-    			} else {
-    				break;
-    			}
-    		}
+    		palindromes.get(start).add(end);
+    		isPalindrome = true;
     	}
-    	return map;
+    	return isPalindrome;
     }
 }
