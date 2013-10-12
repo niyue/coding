@@ -67,26 +67,17 @@ public class Solution {
      * A recursive solution to this problem
      */
     public static class RecursiveSolution {
-    	public boolean isSymmetric(TreeNode root) {
-    		boolean isSymmetric = true;
-    		if(root != null) {
-    			isSymmetric = isSymmetric(root.left, root.right);
-    		}
-    		return isSymmetric;
-    	}
-    	
-    	private boolean isSymmetric(TreeNode left, TreeNode right) {
-    		boolean isSymmetric = false;
-    		if(left == null && right == null) {
-    			isSymmetric = true;
-    		} else if(left != null && right != null) {
-    			isSymmetric = 
-    					left.val == right.val && 
-    					isSymmetric(left.left, right.right) && 
-    					isSymmetric(left.right, right.left);
-    		}
-    		return isSymmetric;
-    	}
+	    public boolean isSymmetric(TreeNode root) {
+	        return root == null || isSymmetric(root.left, root.right);
+	    }
+	    
+	    private boolean isSymmetric(TreeNode n1, TreeNode n2) {
+	        return n1 == null && n2 == null ||
+	               n1 != null && n2 != null && 
+	               n1.val == n2.val && 
+	               isSymmetric(n1.left, n2.right) && 
+	               isSymmetric(n1.right, n2.left);
+	    }
     }
 }
 
