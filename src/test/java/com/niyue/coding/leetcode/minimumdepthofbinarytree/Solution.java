@@ -2,7 +2,11 @@ package com.niyue.coding.leetcode.minimumdepthofbinarytree;
 
 import com.niyue.coding.leetcode.common.TreeNode;
 
-// http://leetcode.com/onlinejudge#question_111
+/*
+ *  http://leetcode.com/onlinejudge#question_111
+ *  http://oj.leetcode.com/problems/minimum-depth-of-binary-tree/
+ *  http://discuss.leetcode.com/questions/277/minimum-depth-of-binary-tree/722
+ */
 public class Solution {
     public int minDepth(TreeNode root) {
         int minDepth = 0;
