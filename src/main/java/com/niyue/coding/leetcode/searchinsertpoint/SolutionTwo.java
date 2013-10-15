@@ -8,6 +8,7 @@ import java.util.Arrays;
 public class SolutionTwo {
     public int searchInsert(int[] A, int target) {
         int pos = Arrays.binarySearch(A, target);
-        return pos >= 0 ? pos : (pos * -1) - 1;
+        // Arrays.binarySearch returns (- insertion point - 1) when not found
+        return pos >= 0 ? pos : -(pos + 1);
     }
 }
