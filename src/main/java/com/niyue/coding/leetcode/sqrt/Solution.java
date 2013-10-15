@@ -1,7 +1,9 @@
 package com.niyue.coding.leetcode.sqrt;
 
-// http://leetcode.com/onlinejudge#question_69
-// Use binary search to get the square root of a number
+/* http://oj.leetcode.com/problems/sqrtx/
+ * http://leetcode.com/onlinejudge#question_69
+ * Use binary search to get the square root of a number
+ */
 public class Solution {
     public int sqrt(int x) {
         int start = 0;
@@ -18,6 +20,6 @@ public class Solution {
                 end = mid - 1;
             }
         }
-        return start - 1;
+        return end;
     }
 }
