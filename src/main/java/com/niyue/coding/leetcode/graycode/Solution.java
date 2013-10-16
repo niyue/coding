@@ -7,12 +7,11 @@ import java.util.ArrayList;
 // the Nth gray code = N ^ (N >> 1)
 public class Solution {
     public ArrayList<Integer> grayCode(int n) {
-        long total = (long) Math.pow(2, n);
-        ArrayList<Integer> grayCodes = new ArrayList<Integer>();
-        for(long i = 0; i < total; i++) {
-            int code = (int) (i ^ (i >> 1));
-            grayCodes.add(code);
+        ArrayList<Integer> codes = new ArrayList<Integer>();
+        int size = 1 << n;
+        for(int i = 0; i < size; i++) {
+            codes.add(i ^ (i >> 1));
         }
-        return grayCodes;
+        return codes;
     }
 }
