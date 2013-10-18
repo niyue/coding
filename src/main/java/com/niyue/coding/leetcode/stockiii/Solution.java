@@ -4,59 +4,45 @@ package com.niyue.coding.leetcode.stockiii;
 // maxProfitWithAtMostTwoTransactions = assume the first transaction is done in prices[i], Math.max(for i = 0...n-1, [maxProfitFromStart(i) + maxProfitToEnd(i + 1)])
 // maxProfitsFromStart and maxProfitsToEnd can be computed up front 
 public class Solution {
-
     public int maxProfit(int[] prices) {
-        int maxProfit = 0;
-        if(prices.length > 1) {
-            int[] maxProfitsFromStart = maxProfitsFromStart(prices);
-            int[] maxProfitsToEnd = maxProfitsToEnd(prices);
-            
-            for(int i = 0; i < prices.length; i++) {
-                int maxProfitFromStart = maxProfitsFromStart[i];
-                int maxProfitToEnd = i == prices.length - 1 ? 0 : maxProfitsToEnd[i + 1];
-                int profit = maxProfitFromStart + maxProfitToEnd;
-                if(maxProfit < profit) {
-                    maxProfit = profit;
-                }
-            }    
+        int max = 0;
+        int[] leftProfits = leftProfits(prices);
+        int[] rightProfits = rightProfits(prices);
+        for(int i = 0; i < prices.length; i++) {
+            int leftProfit = leftProfits[i];
+            int rightProfit = i == prices.length - 1 ? 0 : rightProfits[i + 1];
+            if(leftProfit + rightProfit > max) {
+                max = leftProfit + rightProfit;
+            }
         }
-        
-        return maxProfit;
+        return max;
     }
     
-    private int[] maxProfitsFromStart(int[] prices) {
+    private int[] leftProfits(int[] prices) {
         int[] profits = new int[prices.length];
-        int maxProfit = 0;
-        int minPrice = prices[0];
-        profits[0] = 0;
-        for(int i = 1; i < prices.length; i++) {
-            int profit = prices[i] - minPrice;
-            if(profit > maxProfit) {
-                maxProfit = profit;
-            }
-            profits[i] = maxProfit;
-            if(prices[i] < minPrice) {
-                minPrice = prices[i];
+        int min = Integer.MAX_VALUE;
+        for(int i = 0; i < prices.length; i++) {
+            if(prices[i] > min) {
+                profits[i] = Math.max(prices[i] - min, profits[i - 1]);
+            } else {
+                min = prices[i];
+                profits[i] = i == 0 ? 0 : profits[i - 1];
             }
         }
         return profits;
     }
     
-    private int[] maxProfitsToEnd(int[] prices) {
+    private int[] rightProfits(int[] prices) {
         int[] profits = new int[prices.length];
-        int maxProfit = 0;
-        profits[prices.length - 1] = 0;
-        int maxPrice = prices[prices.length - 1];
-        for(int i = prices.length - 2; i >= 0; i--) {
-            int profit = maxPrice - prices[i];
-            if(profit > maxProfit) {
-                maxProfit = profit;
-            }
-            profits[i] = maxProfit;
-            if(prices[i] > maxPrice) {
-                maxPrice = prices[i];
+        int max = Integer.MIN_VALUE;
+        for(int i = prices.length - 1; i >= 0; i--) {
+            if(prices[i] < max) {
+                profits[i] = Math.max(max - prices[i], profits[i + 1]);
+            } else {
+                max = prices[i];
+                profits[i] = i == prices.length - 1 ? 0 : profits[i + 1];
             }
         }
-        return profits;       
+        return profits;
     }
 }
