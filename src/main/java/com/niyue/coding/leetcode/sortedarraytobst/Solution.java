@@ -4,20 +4,17 @@ import com.niyue.coding.leetcode.common.TreeNode;
 
 public class Solution {
     public TreeNode sortedArrayToBST(int[] num) {
-        return toBST(num, 0, num.length - 1);           
+        return convert(num, 0, num.length - 1);
     }
     
-    private TreeNode toBST(int[] num, int start, int end) {
-        TreeNode bst = null;
+    private TreeNode convert(int[] num, int start, int end) {
+        TreeNode node = null;
         if(start <= end) {
-            int middle = (start + end) / 2;
-            TreeNode node = new TreeNode(num[middle]);
-            TreeNode leftTree = toBST(num, start, middle - 1);
-            TreeNode rightTree = toBST(num, middle + 1, end);    
-            node.left = leftTree;
-            node.right = rightTree;
-            bst = node;
+            int mid = start + (end - start) / 2;
+            node = new TreeNode(num[mid]);
+            node.left = convert(num, start, mid - 1);
+            node.right = convert(num, mid + 1, end);
         }
-        return bst;
+        return node;
     }
 }
