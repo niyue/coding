@@ -2,7 +2,10 @@ package com.niyue.coding.leetcode.mergetwosortedlist;
 
 import com.niyue.coding.leetcode.common.ListNode;
 
-// http://leetcode.com/onlinejudge#question_21
+/*
+ * http://oj.leetcode.com/problems/merge-two-sorted-lists/
+ * http://leetcode.com/onlinejudge#question_21
+ */
 public class Solution {
     public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         if(l1 == null) {
