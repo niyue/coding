@@ -3,7 +3,10 @@ package com.niyue.coding.leetcode.permutationsequence;
 import java.util.ArrayList;
 import java.util.List;
 
-// http://leetcode.com/onlinejudge#question_60
+/*
+ * http://oj.leetcode.com/problems/permutation-sequence/
+ * http://leetcode.com/onlinejudge#question_60
+ */
 public class Solution {
 
     public String getPermutation(int n, int k) {
