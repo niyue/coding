@@ -11,11 +11,11 @@ public class SolutionTwo {
         if(chars.length > 0) {
             count[chars.length] = 1;
             for(int i = chars.length - 1; i >= 0; i--) {
-            	// count single digit way for parsing
+            	// single digit cannot start with 0
                 if(chars[i] != '0') {
                     count[i] += count[i + 1];
                 }
-                // count double digits way for parsing
+                // double digits cannot start with 0 and its double digits value should be less or equal to 26
                 if(i + 1 < chars.length && chars[i] != '0') {
                     int value = (chars[i] - '0') * 10 + chars[i + 1] - '0';
                     if(value >= 10 && value <= 26) {
