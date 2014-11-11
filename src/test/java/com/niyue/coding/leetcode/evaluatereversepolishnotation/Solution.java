@@ -5,15 +5,14 @@ import java.util.Set;
 
 public class Solution {
     private final Set<String> opSet = new java.util.HashSet<String>(Arrays.asList("+", "-", "*", "/"));
+    private java.util.Deque<Integer> stack = new java.util.ArrayDeque<Integer>();
     
-    java.util.Deque<Integer> stack = new java.util.ArrayDeque<Integer>();
     public int evalRPN(String[] tokens) {
-        int value = 0;
         for(int i = 0; i < tokens.length; i++) {
             if(isOperator(tokens[i])) {
                 int b = stack.removeFirst();
                 int a = stack.removeFirst();
-                value = calculate(a, b, tokens[i]);
+                int value = calculate(a, b, tokens[i]);
                 stack.addFirst(value);
             } else {
                 stack.addFirst(Integer.parseInt(tokens[i]));
